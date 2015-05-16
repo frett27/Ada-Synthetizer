@@ -24,6 +24,8 @@
 with Win32; use Win32;
 
 with Win32.Mmsystem; use Win32.Mmsystem;
+with Ada.Unchecked_Conversion;
+with System;
 
 
 ------------------------
@@ -32,13 +34,18 @@ with Win32.Mmsystem; use Win32.Mmsystem;
 
 package Synth.Driver.Win32 is
 
+
+
    type WIN32_Driver is new Sound_Driver with private;
+
+   type WIN32_Driver_Access is access all WIN32_Driver;
+
 
    ----------
    -- Open --
    ----------
 
-   procedure Open (Driver : out WIN32_Driver);
+   procedure Open (Driver : out Sound_Driver_Access);
 
    -----------
    -- Close --
@@ -56,9 +63,24 @@ package Synth.Driver.Win32 is
 
 private
 
+   type Play_Buffer_Cursor is mod 5;
+   type Play_Buffer_Type is array (Play_Buffer_Cursor) of LPWAVEHDR;
+
+
+   function To_PWAVEHDR is new Ada.Unchecked_Conversion
+     (Source => System.Address,
+      Target => PWAVEHDR);
+
+
+
+
    type WIN32_Driver is new Synth.Driver.Sound_Driver with record
       hWo : aliased HWAVEOUT;
-      wfx : access WAVEFORMATEX;
+      wfx : LPCWAVEFORMATEX;
+      Buffer : Play_Buffer_Type := Play_Buffer_Type'(others => null);
+      Buffer_First : Play_Buffer_Cursor := Play_Buffer_Cursor'First;
+      Buffer_Last : Play_Buffer_Cursor := Play_Buffer_Cursor'First;
+      IsPlaying : boolean := false;
    end record;
 
 
@@ -75,13 +97,18 @@ private
                                     dwInstance , dwParam1 , dwParam2: LPDWORD);
    pragma Export(StdCall,Sound_Driver_Call_Back);
 
-   -- simple mutex for synchronous play
-   protected type Mutex is
-      entry Seize;
-      procedure Release;
+
+   -- simple semaphone for synchronous play and buffers creation
+   protected type Semaphore(N:Positive) is
+      entry Passen;
+      entry Verlassen;
+      function Allocated return Natural;
    private
-      Owned : Boolean := False;
-   end Mutex;
+      Current : Natural := N;
+   end Semaphore;
+
+   SBuffer : Semaphore(3); -- for handling the buffers
+   SBufferCursor : Semaphore(1); -- for handling the cursors
 
 
 end Synth.Driver.Win32;

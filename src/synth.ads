@@ -27,7 +27,7 @@ package Synth is
 
    -- basic types used in this synthetizer
 
-   subtype Frame is Float;
+   subtype Frame is Float range -1.0 .. 1.0;
 
    type Frame_Array is array (Natural range <>) of aliased Frame;
    type Frame_Array_Access is access all Frame_Array;
@@ -69,7 +69,7 @@ package Synth is
 
    -- 16 bits PCM structure types
 
-   type PCM_Frame is range -(2**15) .. 2**15 - 1;
+   type PCM_Frame is range  -(2**15) .. 2**15 - 1;
 
    for PCM_Frame'Size use 16;
 

@@ -35,7 +35,8 @@ package body Synth is
 
       for i in FA'Range loop
 
-         R (i) := PCM_Frame (Frame (2**15 - 1) * FA (i));
+         R (i) := PCM_Frame (Float( (2**15 - 1)) * FA (i));
+
 
       end loop;
 
