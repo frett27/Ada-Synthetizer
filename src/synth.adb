@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Synthetizer                                 --
 --                                                                          --
---                         Copyright (C) 2015-2016                          --
+--                         Copyright (C) 2015-2018                          --
 --                                                                          --
 --  Authors: Patrice Freydiere                                              --
 --                                                                          --
@@ -21,8 +21,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
-With Ada.Text_IO;use Ada.Text_IO;
 package body Synth is
 
    --------------------
@@ -36,7 +34,7 @@ package body Synth is
          pragma Assert(FA(i) <= 1.0);
          pragma Assert(FA(i) >= -1.0);
          declare
-            F : Float := Float((2**15 - 1)) * FA (i);
+            F : constant Float := Float((2**15 - 1)) * FA (i);
             P : PCM_Frame;
          begin
             P := PCM_Frame(F);

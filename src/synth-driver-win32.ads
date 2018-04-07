@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Synthetizer                                 --
 --                                                                          --
---                         Copyright (C) 2015-2016                          --
+--                         Copyright (C) 2015-2018                          --
 --                                                                          --
 --  Authors: Patrice Freydiere                                              --
 --                                                                          --
@@ -43,7 +43,7 @@ package Synth.Driver.Win32 is
    ----------
    -- Open --
    ----------
-
+   -- factory
    procedure Open (Driver : out Sound_Driver_Access);
 
    -----------
@@ -59,6 +59,7 @@ package Synth.Driver.Win32 is
    overriding procedure Play
      (Driver : in out WIN32_Driver;
       Buffer : in     PCM_Frame_Array_Access);
+
 
 private
 

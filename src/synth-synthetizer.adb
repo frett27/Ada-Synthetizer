@@ -1,4 +1,30 @@
+------------------------------------------------------------------------------
+--                              Synthetizer                                 --
+--                                                                          --
+--                         Copyright (C) 2015-2018                          --
+--                                                                          --
+--  Authors: Patrice Freydiere                                              --
+--                                                                          --
+--  This library is free software; you can redistribute it and/or modify    --
+--  it under the terms of the GNU General Public License as published by    --
+--  the Free Software Foundation; either version 2 of the License, or (at   --
+--  your option) any later version.                                         --
+--                                                                          --
+--  This library is distributed in the hope that it will be useful, but     --
+--  WITHOUT ANY WARRANTY; without even the implied warranty of              --
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU       --
+--  General Public License for more details.                                --
+--                                                                          --
+--  You should have received a copy of the GNU General Public License       --
+--  along with this library; if not, write to the Free Software Foundation, --
+--  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.          --
+--                                                                          --
+------------------------------------------------------------------------------
+with Ada.Text_IO;use Ada.Text_IO;
+with Ada.Exceptions;
+with GNAT.Traceback.Symbolic;
 package body Synth.Synthetizer is
+
 
    ----------
    -- Open --
@@ -16,7 +42,6 @@ package body Synth.Synthetizer is
              Buffer_Length => 10000);
 
 
-
    end Open;
 
    -----------
@@ -25,8 +50,9 @@ package body Synth.Synthetizer is
 
    procedure Close (S : in out Synthetizer_Type) is
    begin
-      pragma Compile_Time_Warning (Standard.True, "Close unimplemented");
-      raise Program_Error with "Unimplemented procedure Close";
+      -- unallocate the objects
+      null; --
+
    end Close;
 
    ----------
@@ -42,9 +68,10 @@ package body Synth.Synthetizer is
    is
    begin
 
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Play unimplemented");
-      raise Program_Error with "Unimplemented procedure Play";
+      Synt.Play(S            => S,
+                Frequency    => Frequency,
+                Channel => Channel,
+                Opened_Voice => Opened_Voice);
 
    end Play;
 
@@ -78,7 +105,6 @@ package body Synth.Synthetizer is
             Buffers(i).BP.all := (Buffers(i).BP'Range => 0);
             Buffers(i).BF := new Frame_Array(1..Buffer_Length);
             Buffers(i).BF.all := (Buffers(i).BF'Range => 0.0);
-
          end loop;
 
       end Init;
@@ -108,13 +134,12 @@ package body Synth.Synthetizer is
       -- Freeze_New_Buffer --
       -----------------------
 
-      entry Freeze_New_Buffer (Buffer : out Frame_Array_Access) when Free_Buffers > 0
+      entry Freeze_New_Buffer (Buffer : out Frame_Array_Access)
+        when Free_Buffers > 0
       is
          Search_Index : Natural := Current_Consume;
          Sanity_Check_Indice : Natural := NBBuffer;
       begin
-
-
 
          -- search for the next available buffer
          while Outed_Frame_Buffer(Search_Index) or Available_For_Consume(Search_Index) loop
@@ -165,12 +190,43 @@ package body Synth.Synthetizer is
    ---------------------------
    -- Buffer_Play_Task_Type --
    ---------------------------
-
+   -- this task continuously send buffer to the play
    task body Buffer_Play_Task_Type is
+      Task_BR : Buffer_Ring_Access;
+      Task_Driver : Driver.Sound_Driver_Access;
+      Terminated : Boolean := false;
    begin
+
+      accept Start (D : in Driver.Sound_Driver_Access; BR : Buffer_Ring_Access) do
+         Task_BR := BR;
+         Task_Driver := D;
+      end Start;
+       -- Put_Line("Play Task Started");
+      loop
+         select
+           accept Stop do
+              Terminated := True;
+            end;
+          else
+            if not Terminated then
+            declare
+               Buffer : PCM_Frame_Array_Access;
+               begin
+                   -- Put_Line("Play Task Started Consumming buffer");
+                  Task_BR.Consume_Buffer(Buffer);
+                          --           Put_Line("Play Task buffer consummed");
+               Synth.Driver.Play(Driver => Task_Driver.all,
+                                 Buffer => Buffer);
+                           --         Put_Line("Done");
+            end;
+            end if;
+         end select;
+      end loop;
+
+
       --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Buffer_Play_Task_Type unimplemented");
-      raise Program_Error with "Unimplemented task Buffer_Play_Task_Type";
+      -- pragma Compile_Time_Warning (Standard.True, "Buffer_Play_Task_Type unimplemented");
+      -- raise Program_Error with "Unimplemented task Buffer_Play_Task_Type";
    end Buffer_Play_Task_Type;
 
    --------------------------------
@@ -178,17 +234,194 @@ package body Synth.Synthetizer is
    --------------------------------
 
    task body Buffer_Preparing_Task_Type is
+      Task_BR : Buffer_Ring_Access;
+      Task_VSA : Voices_Access;
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Buffer_Preparing_Task_Type unimplemented");
-      raise Program_Error with "Unimplemented task Buffer_Preparing_Task_Type";
+
+      accept Start (BR : in Buffer_Ring_Access;
+                    VSA : Voices_Access) do
+         Task_BR := BR;
+         Task_VSA := VSA;
+      end Start;
+      -- Put_Line("Preparing Task Started");
+      loop
+         select
+            accept Stop  do
+               null;
+            end Stop;
+
+
+
+          else
+
+
+
+         -- Put_Line("Check Buffer");
+
+         -- take buffer, process the voices
+         --
+         declare
+            Preparing_Buffer : Frame_Array_Access;
+            ReachEndSample : Boolean := False;
+            Opened_Voice : Voice_Array := Task_VSA.Get_All_Opened_Voices;
+            Returned_Sample_Position : Play_Second;
+         begin
+
+            if Opened_Voice'Length > 0 then
+
+               -- Put_Line("Prepare Buffer");
+
+
+               Task_BR.Freeze_New_Buffer(Buffer => Preparing_Buffer);
+
+               for V of Opened_Voice loop
+                  -- Put_Line("Process Buffer for Voice " & Voice'Image(V));
+                  --
+                  Process_Buffer(VSA           => Task_VSA.Get_Voice(V => Voice(V)),
+                                 Buffer        =>  Preparing_Buffer,
+                                 ReachEndSample => ReachEndSample,
+                                 Returned_Current_Sample_Position => Returned_Sample_Position);
+                  if ReachEndSample then
+                     -- Put_Line("Closing Voice");
+
+                        Task_VSA.Close_Voice(Voice(V));
+                     else
+                        Task_VSA.Update_Position(Voice(V), Returned_Sample_Position);
+                  end if;
+               end loop;
+               -- Put_Line("End Of Preparation");
+               Task_BR.UnFreeze_New_Buffer(Buffer => Preparing_Buffer);
+               -- Put_Line("Done");
+
+               end if;
+
+            exception
+               when E : others =>
+               New_Line (Standard_Error);
+               Put_Line
+                 (Standard_Error,
+                  "--------------------[ Unhandled exception ]-----------------");
+               Put_Line
+                 (Standard_Error,
+                  " > Name of exception . . . . .: " &
+                    Ada.Exceptions.Exception_Name (E));
+               Put_Line
+                 (Standard_Error,
+                  " > Message for exception . . .: " &
+                    Ada.Exceptions.Exception_Message (E));
+               Put_Line (Standard_Error, " > Trace-back of call stack: ");
+               Put_Line
+                 (Standard_Error,
+                  GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
+
+            end;
+
+         end select;
+
+      end loop;
+
+   --  Generated stub: replace with real body!
+   --      pragma Compile_Time_Warning (Standard.True, "Buffer_Preparing_Task_Type unimplemented");
+   --    raise Program_Error with "Unimplemented task Buffer_Preparing_Task_Type";
    end Buffer_Preparing_Task_Type;
+
+   -----------------
+   -- Voices_Type --
+   -----------------
+
+   protected body Voices_Type is
+
+      -- allocate a new voice, and cleaning if necessary
+      procedure Allocate_New_Voice(Voice_Structure : in Voice_Structure_Type; TheVoice : out Voice) is
+      begin
+         for I in 1..Max_All_Opened_Voice_Indice loop
+            -- try close finished ones
+            if Is_Voice_Opened(TheVoice) and then Get_Voice(TheVoice).Stopped then
+               Close_Voice(TheVoice);
+            end if;
+
+            if not Opened_Voice(Voice(i)) then
+               Opened_Voice(Voice(i)) := true;
+               TheVoice := Voice(i);
+               All_Voices(TheVoice) := Voice_Structure;
+               return;
+            end if;
+         end loop;
+
+         -- reach the Max_All_Opened_Voice_Indice, enlarge the process
+
+         if Max_all_opened_Voice_Indice >= 0 and then Max_all_opened_Voice_Indice < MAX_VOICES then
+
+               Max_All_Opened_Voice_Indice := Natural'Succ(Max_All_Opened_Voice_Indice);
+               Opened_Voice(Voice(Max_All_Opened_Voice_Indice)) := true;
+               TheVoice := Voice(Max_All_Opened_Voice_Indice);
+               All_Voices(TheVoice) := Voice_Structure;
+               return;
+
+         end if;
+
+         raise Program_Error with "Cannot allocate new voice";
+
+      end Allocate_New_Voice;
+
+      -- retreive the voice structure pointer
+      function Get_Voice(V : Voice) return ReadOnly_Voice_Structure_Access is
+      begin
+         pragma Assert (Opened_Voice(V));
+         return  All_Voices(V)'Unchecked_Access;
+      end Get_Voice;
+
+      -- is the voice Opened
+      function Is_Voice_Opened(V : Voice) return Boolean is
+      begin
+         return Opened_Voice(V);
+      end Is_Voice_Opened;
+
+      -- close an opened voice
+      procedure  Close_Voice(V : Voice) is
+      begin
+         pragma Assert (Opened_Voice(V));
+         if not Opened_Voice(V) then
+            return;
+         end if;
+
+         Opened_Voice(V) := False;
+         All_Voices(V) := Null_Voice_Structure;
+         if V = Voice(Max_All_Opened_Voice_Indice) then
+            while Max_All_Opened_Voice_Indice > 0 and then
+              not Is_Voice_Opened(Voice(Max_All_Opened_Voice_Indice)) loop
+               Max_All_Opened_Voice_Indice := Natural'Pred(Max_All_Opened_Voice_Indice);
+            end loop;
+         end if;
+      end Close_Voice;
+
+      function Get_All_Opened_Voices return Voice_Array is
+         I : Natural := 0;
+         V : Voice_Array(1..Max_All_Opened_Voice_Indice);
+      begin
+         for It in 1..Max_All_Opened_Voice_Indice loop
+            if Is_Voice_Opened(Voice(It)) then
+               I := Natural'Succ(I);
+               V(I) := Voice(I);
+            end if;
+         end loop;
+         return V(1..I);
+      end;
+
+      procedure Update_Position(V : Voice; Current_Sample_Position : Play_Second) is
+      begin
+         All_Voices(V).Current_Sample_Position := Current_Sample_Position;
+      end;
+
+   end Voices_Type;
+
 
    --------------------------------
    -- Synthetizer_Structure_Type --
    --------------------------------
 
-   protected body Synthetizer_Structure_Type is
+
+    protected body Synthetizer_Structure_Type is
 
       procedure Init(D : Synth.Driver.Sound_Driver_Access;
                      NBBuffer : Positive;
@@ -198,12 +431,14 @@ package body Synth.Synthetizer is
          BR := new Buffer_Ring(NBBuffer, Buffer_Length);
          BR.Init;
 
+         Voices := new Voices_Type;
+
          Play_Task := new Buffer_Play_Task_Type;
          Play_Task.Start(D  => D,
                          BR => BR);
 
          Prepare_Task := new Buffer_Preparing_Task_Type;
-         Prepare_Task.Start(BR => BR);
+         Prepare_Task.Start(BR => BR, VSA => Voices);
 
          Inited := true;
       end;
@@ -223,15 +458,22 @@ package body Synth.Synthetizer is
       procedure Play
         (S            : in     SoundSample;
          Frequency    : in     Float;
+          Channel : in Natural := 1;
          Opened_Voice :    out Voice)
       is
+         Allocated_Voice : Voice;
       begin
          Test_Inited;
+         -- push the sample to tasks
+         Put_Line("Allocate_New_Voice");
+         Voices.Allocate_New_Voice( Voice_Structure_Type'(Note_Play_Frequency     => Frequency,
+                                                          Play_Sample             => S,
+                                                          Current_Sample_Position => 0.0,
+                                                          Channel => Channel,
+                                                          Stopped                 => False),
+                                    TheVoice => Allocated_Voice );
 
-
-         --  Generated stub: replace with real body!
-         pragma Compile_Time_Warning (Standard.True, "Play unimplemented");
-         raise Program_Error with "Unimplemented procedure Play";
+         Put_Line("Allocated_Voice :"  & Voice'Image(Allocated_Voice));
       end Play;
 
       ----------
@@ -242,9 +484,10 @@ package body Synth.Synthetizer is
       begin
          Test_Inited;
 
-         --  Generated stub: replace with real body!
-         pragma Compile_Time_Warning (Standard.True, "Stop unimplemented");
-         raise Program_Error with "Unimplemented procedure Stop";
+         Play_Task.Stop;
+
+         Prepare_Task.Stop;
+
       end Stop;
 
       ---------------------------
@@ -258,42 +501,55 @@ package body Synth.Synthetizer is
             raise Synthetizer_Not_Inited;
          end if;
 
-
          return Empty;
 
       end Get_All_Opened_Voices;
 
-   end Synthetizer_Structure_Type;
+
+    end Synthetizer_Structure_Type;
 
    -----------------
    -- Fill_Buffer --
    -----------------
 
-   procedure Process_Buffer (VSA : in Voice_Structure_Access;
+   function "/"(f : Play_Second; f2 : Float) return Play_Second is
+   begin
+      return f / Play_Second(f2);
+   end;
+
+   function "*"(f : Play_Second; f2 : Float) return Play_Second is
+   begin
+      return f * Play_Second(f2);
+   end;
+
+
+   procedure Process_Buffer (VSA : in ReadOnly_Voice_Structure_Access;
                              Buffer : in Frame_Array_Access;
-                             Volume_Factor : in Float := 1.0) is
+                             Volume_Factor : in Float := 1.0;
+                             ReachEndSample : out Boolean;
+                             Returned_Current_Sample_Position : out Play_Second) is
 
       Driver_Play_Frequency : constant Frequency_Type := 44_100.0;
 
-      Current_Sample_Position : Play_Second := 0.0;
+      Current_Sample_Position : Play_Second := VSA.Current_Sample_Position;
 
       Play_Period : constant Play_Second :=
-        Play_Second (1) / Float (Driver_Play_Frequency);
+        Play_Second (1) / Play_Second( Driver_Play_Frequency );
 
       One_Sample_Frame_Period : constant Play_Second :=
-        1.0 /
-          Float (Driver_Play_Frequency) *
-        Float (VSA.Play_Sample.Frequency) /
-        Float (Driver_Play_Frequency);
+        Play_Second(1.0) /
+        (Play_Second(Driver_Play_Frequency) *
+        VSA.Play_Sample.Frequency /
+        Driver_Play_Frequency);
 
       One_Played_Sample_Frame_Period : constant Play_Second :=
-        One_Sample_Frame_Period *
-          Float (VSA.Play_Sample.Note_Frequency) /
-        Float (VSA.Note_Play_Frequency);
+        Play_Second(One_Sample_Frame_Period) *
+          VSA.Play_Sample.Note_Frequency /
+        VSA.Note_Play_Frequency;
 
       function To_Second (Frame_Pos : in Natural) return Play_Second is
       begin
-         return Play_Second (Frame_Pos -  VSA.Play_Sample.Mono_Data'First) *
+         return Play_Second (Frame_Pos - VSA.Play_Sample.Mono_Data'First ) *
            One_Played_Sample_Frame_Period;
       end To_Second;
 
@@ -310,6 +566,7 @@ package body Synth.Synthetizer is
       is
       begin
          -- increment
+
          Pos := Pos + Play_Period;
 
          Reach_End := False;
@@ -320,47 +577,62 @@ package body Synth.Synthetizer is
                   Pos := Pos - To_Second (VSA.Play_Sample.Loop_Start);
                end if;
             when False =>
-               if Pos > To_Second (VSA.Play_Sample.Mono_Data.all'Length) then
+               declare
+                  Sample_Data_Seconds : Play_Second :=
+                    To_Second(VSA.Play_Sample.Mono_Data'Length);
+               begin
+
+               if Pos > Sample_Data_Seconds then
                   Reach_End := True;
-               end if;
+                  end if;
+               end;
+
          end case;
       end Move_Next;
 
    begin
 
       if VSA.Stopped then
+         ReachEndSample := True;
+         return;
+      end if;
+
+      if VSA.Play_Sample = Null_Sound_Sample then
+         Put_Line("Null sample");
          return;
       end if;
 
       for i in Buffer'Range loop
 
-         -- interpolate
-
+         -- interpolate ?
          declare
             p  : constant Natural        := To_Pos (Current_Sample_Position);
             V1 : constant Float := VSA.Play_Sample.Mono_Data (p);
             R  : Boolean;
+            F : Float :=  Buffer (i) + V1 * Volume_Factor;
          begin
 
-            Buffer (i) := Buffer (i) + V1 * Volume_Factor;
-
-            if Buffer(i) > 1.0 then
-               -- put_line ("saturation " & Float'Image(Buffer(i)));
-               Buffer(i) := 1.0;  -- saturation
+            if F > 1.0 then
+               F := 1.0;  -- saturation
             end if;
 
-            if Buffer(i) < -1.0 then
-               -- put_line ("saturation " & Float'Image(Buffer(i)));
-               Buffer(i) := -1.0;  -- saturation
+            if F < -1.0 then
+               F := -1.0;  -- saturation
             end if;
+
+             Buffer (i) := F;
 
             Move_Next (Pos => Current_Sample_Position, Reach_End => R);
             if R then
-               VSA.Stopped := True;
+               ReachEndSample := True;
+               Returned_Current_Sample_Position := Current_Sample_Position;
                return;
             end if;
          end;
       end loop;
+      ReachEndSample := False;
+      Returned_Current_Sample_Position := Current_Sample_Position;
+
    end Process_Buffer;
 
 

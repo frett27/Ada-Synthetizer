@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Synthetizer                                 --
 --                                                                          --
---                         Copyright (C) 2015-2016                          --
+--                         Copyright (C) 2015-2018                          --
 --                                                                          --
 --  Authors: Patrice Freydiere                                              --
 --                                                                          --
@@ -31,7 +31,7 @@ package Synth is
 
    type Frame_Array is array (Natural range <>) of aliased Frame;
    type Frame_Array_Access is access all Frame_Array;
-   subtype Frequency_Type is float range 1.0 .. 100_000.0;
+   subtype Frequency_Type is Float range 1.0 .. 100_000.0;
 
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type;
 
@@ -82,7 +82,7 @@ package Synth is
    function To_Frame_Array (FA : in Frame_Array) return PCM_Frame_Array;
 
    -- type representing a position in second in the sample
-   subtype Play_Second is Float;
+   subtype Play_Second is Long_Float;
 
 
 
