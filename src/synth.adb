@@ -22,7 +22,7 @@
 ------------------------------------------------------------------------------
 
 
-
+With Ada.Text_IO;use Ada.Text_IO;
 package body Synth is
 
    --------------------
@@ -32,12 +32,16 @@ package body Synth is
    function To_Frame_Array (FA : in Frame_Array) return PCM_Frame_Array is
       R : PCM_Frame_Array (FA'Range);
    begin
-
       for i in FA'Range loop
-
-         R (i) := PCM_Frame (Float( (2**15 - 1)) * FA (i));
-
-
+         pragma Assert(FA(i) <= 1.0);
+         pragma Assert(FA(i) >= -1.0);
+         declare
+            F : Float := Float((2**15 - 1)) * FA (i);
+            P : PCM_Frame;
+         begin
+            P := PCM_Frame(F);
+            R (i) := P;
+         end;
       end loop;
 
       return R;

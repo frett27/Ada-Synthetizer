@@ -1,5 +1,6 @@
 with "win32ada.gpr";
 
+
 project Synthetizer is
 
    -- for Main use ("test_read_wav.adb", "test_win32_driver.adb", "test_voice_play.adb");
@@ -9,7 +10,8 @@ project Synthetizer is
    for Object_Dir use "obj";
 
    package Compiler is
-      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnatQ", "-gnat12", "-fstack-check");
+      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata",
+            "-gnatQ", "-gnat12", "-fstack-check");
    end Compiler;
 
    package Linker is

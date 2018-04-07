@@ -22,7 +22,6 @@
 ------------------------------------------------------------------------------
 
 with Win32; use Win32;
-
 with Win32.Mmsystem; use Win32.Mmsystem;
 with Ada.Unchecked_Conversion;
 with System;

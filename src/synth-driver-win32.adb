@@ -22,16 +22,16 @@
 ------------------------------------------------------------------------------
 
 with Ada;
-with System;
-with Ada.Unchecked_Conversion;
 with Ada.Real_Time; use Ada.Real_Time;
+With Ada.Exceptions;
+With GNAT.Traceback.Symbolic;
 
 with Interfaces.C; use Interfaces.C;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
+-- use windows api for sounds
 with Win32.Winbase; use Win32.Winbase;
-with Win32.WinDef; use Win32.WinDef;
 
 
 ------------------------
@@ -39,8 +39,6 @@ with Win32.WinDef; use Win32.WinDef;
 ------------------------
 
 package body Synth.Driver.Win32 is
-
-
 
    -- Call back for the sound playing, to avoid the gaps between plays
 
@@ -54,6 +52,7 @@ package body Synth.Driver.Win32 is
    function to_Address is new Ada.Unchecked_Conversion
      (Source => LPDWORD,
       Target => System.Address);
+   pragma Unreferenced (to_Address);
 
    function to_WIN32_Driver is new Ada.Unchecked_Conversion
      (Source => LPDWORD,
@@ -63,28 +62,24 @@ package body Synth.Driver.Win32 is
      (Source => WIN32_Driver_Access,
       Target => DWORD);
 
-
    function to_LPWAVEHDR is new Ada.Unchecked_Conversion
      (Source => LPVOID,
       Target => LPWAVEHDR);
 
-   function to_LPWAVEHDR is new Ada.Unchecked_Conversion
-     (Source => LPDWORD,
-      Target => LPWAVEHDR);
 
    procedure Sound_Driver_Call_Back
      (hwo                            : in HWAVEOUT;
       uMsg                           : in UINT;
       dwInstance, dwParam1, dwParam2 : in LPDWORD)
    is
+      pragma Unreferenced (hwo, dwParam2, dwParam1);
 
-      Driver : WIN32_Driver_Access := to_Win32_Driver(dwInstance);
+      Driver : constant WIN32_Driver_Access := to_Win32_Driver(dwInstance);
 
       Buffer_Empty : boolean;
 
       result : MMRESULT;
 
-      LPHDR : LPWAVEHDR := to_LPWAVEHDR(dwParam1);
 
 
    begin
@@ -97,7 +92,7 @@ package body Synth.Driver.Win32 is
          when WOM_DONE =>
             -- Put_Line ("play done, unallocate the buffer");
 
-            --ada.Text_IO.Put_Line("Play Done Event..");
+            -- ada.Text_IO.Put_Line("Play Done Event..");
 
             SBuffer.Verlassen; -- block if there are no more buffers
 
@@ -107,10 +102,21 @@ package body Synth.Driver.Win32 is
 
 
                SBufferCursor.Passen;
-               Driver.Buffer_Last := Play_Buffer_Cursor'Succ(Driver.Buffer_Last);
+
                Buffer_Empty := (Driver.Buffer_First = Driver.Buffer_Last);
-               BufferToPlay := Driver.Buffer(Driver.Buffer_Last);
-               SBufferCursor.Verlassen;
+               if (Buffer_Empty) then
+
+                      SBufferCursor.Verlassen;
+                     return;
+               end if;
+
+               Driver.Buffer_Last := Play_Buffer_Cursor'Succ(Driver.Buffer_Last);
+                  BufferToPlay := Driver.Buffer(Driver.Buffer_Last);
+
+                      SBufferCursor.Verlassen;
+
+
+
 
                -- ada.Text_IO.Put_Line("Play the next ..");
 
@@ -120,10 +126,30 @@ package body Synth.Driver.Win32 is
                     pwh  => BufferToPlay,
                     cbwh => WAVEHDR'Size);
 
+
                if result > 0 then
-                  raise Program_Error
-                    with "Error calling the play procedure waveOutWrite :" &
-                    MMRESULT'Image (result);
+
+                  case result is
+
+                     when MMSYSERR_INVALHANDLE =>
+                        raise Program_Error with "Specified device handle is invalid";
+                     when MMSYSERR_NODRIVER =>
+                        raise Program_Error with "No device driver is present";
+                     when MMSYSERR_NOMEM =>
+                        raise Program_Error with "Unable to allocate or lock memory.";
+
+                     when WAVERR_UNPREPARED =>
+                        raise Program_Error with "The data block pointed to by the pwh parameter hasn't been prepared";
+
+
+
+                     when others =>
+
+                        raise Program_Error
+                          with "Error calling the play procedure waveOutWrite :" &
+                          MMRESULT'Image (result);
+
+                  end case;
                end if;
 
             end;
@@ -157,8 +183,11 @@ package body Synth.Driver.Win32 is
       end case;
 
    exception
-      when others =>
+      when E : others =>
          Put_Line ("exception in call back");
+         Put_Line(Ada.Exceptions.Exception_Message(E));
+         put_line(GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
+
 
    end Sound_Driver_Call_Back;
 
@@ -306,7 +335,7 @@ package body Synth.Driver.Win32 is
          Dest : Buffer_Range;
          for Dest'Address use To_Address(H.lpData);
       begin
-
+         -- copy the buffer ???
          Dest := Buffer_Range(Buffer.all);
 
          -- To_ByteArray_Access(H.lpData).all(0 .. Integer(H.dwBufferLength)) := To_ByteArray_Access(Buffer).all(0 .. Integer(H.dwBufferLength));
@@ -343,17 +372,14 @@ package body Synth.Driver.Win32 is
       Driver.buffer(Driver.Buffer_First) := H;
       SBufferCursor.Verlassen;
 
-
-
       declare
-
          BufferToPlay : PWAVEHDR;
       begin
 
          --Ada.Text_IO.Put_Line("Elements in buffer :" & Natural'Image(SBuffer.Allocated));
 
          if SBuffer.Allocated <= 2 then
-            --Ada.Text_IO.Put_Line("** First Play");
+            Ada.Text_IO.Put_Line("** First Play");
 
 
             SBufferCursor.Passen;
@@ -361,7 +387,7 @@ package body Synth.Driver.Win32 is
             BufferToPlay := Driver.Buffer(Driver.Buffer_Last);
             SBufferCursor.Verlassen;
 
-            --ada.Text_IO.Put_Line("Play the next ..");
+            ada.Text_IO.Put_Line("Play the next ..");
 
             result :=
               waveOutWrite
@@ -383,55 +409,54 @@ package body Synth.Driver.Win32 is
       end;
 
 
-end Play;
+   end Play;
 
 
 
 
 
 
------------
--- Close --
------------
+   -----------
+   -- Close --
+   -----------
 
-procedure Close (Driver : in out WIN32_Driver) is
-   result : MMRESULT;
-begin
-
-
-   result := waveOutClose (Driver.hWo);
-
-   if result > 0 then
-      raise Program_Error
-        with "Error closing the device :" & MMRESULT'Image (result);
-   end if;
-
-end Close;
-
-
-
-protected body Semaphore is
-
-   entry Passen when Current > 0 is
+   procedure Close (Driver : in out WIN32_Driver) is
+      result : MMRESULT;
    begin
-      -- Ada.text_IO.put_line("Allocate Semaphore");
-      Current := Current - 1;
-   end Passen;
 
-   entry Verlassen when Current < N is
-   begin
-      -- Ada.text_IO.put_line("Release Semaphore");
 
-      Current := Current + 1;
-   end Verlassen;
+      result := waveOutClose (Driver.hWo);
+
+      if result > 0 then
+         raise Program_Error
+           with "Error closing the device :" & MMRESULT'Image (result);
+      end if;
+
+   end Close;
+
+
+
+   protected body Semaphore is
+
+      entry Passen when Current > 0 is
+      begin
+         -- Ada.text_IO.put_line("Allocate Semaphore");
+         Current := Current - 1;
+      end Passen;
+
+      entry Verlassen when Current < N is
+      begin
+         -- Ada.text_IO.put_line("Release Semaphore");
+
+         Current := Current + 1;
+      end Verlassen;
 
       function Allocated return Natural is
       begin
          return N - Current;
       end;
 
+   end Semaphore;
 
-
-end Semaphore;
 
 end Synth.Driver.Win32;

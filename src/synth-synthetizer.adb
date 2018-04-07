@@ -25,8 +25,8 @@ package body Synth.Synthetizer is
 
    procedure Close (S : in out Synthetizer_Type) is
    begin
-        pragma Compile_Time_Warning (Standard.True, "Close unimplemented");
-     raise Program_Error with "Unimplemented procedure Close";
+      pragma Compile_Time_Warning (Standard.True, "Close unimplemented");
+      raise Program_Error with "Unimplemented procedure Close";
    end Close;
 
    ----------
@@ -75,7 +75,10 @@ package body Synth.Synthetizer is
          -- init the buffers
          for i in Buffers'Range loop
             Buffers(i).BP := new PCM_Frame_Array(1..Buffer_Length);
+            Buffers(i).BP.all := (Buffers(i).BP'Range => 0);
             Buffers(i).BF := new Frame_Array(1..Buffer_Length);
+            Buffers(i).BF.all := (Buffers(i).BF'Range => 0.0);
+
          end loop;
 
       end Init;
@@ -205,12 +208,13 @@ package body Synth.Synthetizer is
          Inited := true;
       end;
 
+      -- sanity check for opened synthetizer
       procedure Test_Inited is
       begin
          if not Inited then
-               raise Synthetizer_Not_Inited;
-            end if;
-         end;
+            raise Synthetizer_Not_Inited;
+         end if;
+      end;
 
       ----------
       -- Play --
@@ -252,7 +256,7 @@ package body Synth.Synthetizer is
       begin
          if not Inited then
             raise Synthetizer_Not_Inited;
-            end if;
+         end if;
 
 
          return Empty;
@@ -265,7 +269,9 @@ package body Synth.Synthetizer is
    -- Fill_Buffer --
    -----------------
 
-   procedure Process_Buffer (V : in Voice_Structure_Access; Buffer : in Frame_Array_Access; Volume_Factor : in Float := 1.0) is
+   procedure Process_Buffer (VSA : in Voice_Structure_Access;
+                             Buffer : in Frame_Array_Access;
+                             Volume_Factor : in Float := 1.0) is
 
       Driver_Play_Frequency : constant Frequency_Type := 44_100.0;
 
@@ -277,17 +283,17 @@ package body Synth.Synthetizer is
       One_Sample_Frame_Period : constant Play_Second :=
         1.0 /
           Float (Driver_Play_Frequency) *
-        Float (V.Play_Sample.Frequency) /
+        Float (VSA.Play_Sample.Frequency) /
         Float (Driver_Play_Frequency);
 
       One_Played_Sample_Frame_Period : constant Play_Second :=
         One_Sample_Frame_Period *
-          Float (V.Play_Sample.Note_Frequency) /
-        Float (V.Note_Play_Frequency);
+          Float (VSA.Play_Sample.Note_Frequency) /
+        Float (VSA.Note_Play_Frequency);
 
       function To_Second (Frame_Pos : in Natural) return Play_Second is
       begin
-         return Play_Second (Frame_Pos - V.Play_Sample.Mono_Data'First) *
+         return Play_Second (Frame_Pos -  VSA.Play_Sample.Mono_Data'First) *
            One_Played_Sample_Frame_Period;
       end To_Second;
 
@@ -295,7 +301,7 @@ package body Synth.Synthetizer is
          Pos_In_Array : constant Natural :=
            Natural (Pos / One_Played_Sample_Frame_Period);
       begin
-         return V.Play_Sample.Mono_Data'First + Pos_In_Array;
+         return VSA.Play_Sample.Mono_Data'First + Pos_In_Array;
       end To_Pos;
 
       procedure Move_Next
@@ -308,13 +314,13 @@ package body Synth.Synthetizer is
 
          Reach_End := False;
 
-         case V.Play_Sample.HasLoop is
+         case VSA.Play_Sample.HasLoop is
             when True =>
-               if Pos > To_Second (V.Play_Sample.Loop_End) then
-                  Pos := Pos - To_Second (V.Play_Sample.Loop_Start);
+               if Pos > To_Second (VSA.Play_Sample.Loop_End) then
+                  Pos := Pos - To_Second (VSA.Play_Sample.Loop_Start);
                end if;
             when False =>
-               if Pos > To_Second (V.Play_Sample.Mono_Data.all'Length) then
+               if Pos > To_Second (VSA.Play_Sample.Mono_Data.all'Length) then
                   Reach_End := True;
                end if;
          end case;
@@ -322,7 +328,7 @@ package body Synth.Synthetizer is
 
    begin
 
-      if V.Stopped then
+      if VSA.Stopped then
          return;
       end if;
 
@@ -332,7 +338,7 @@ package body Synth.Synthetizer is
 
          declare
             p  : constant Natural        := To_Pos (Current_Sample_Position);
-            V1 : constant Float := V.Play_Sample.Mono_Data (p);
+            V1 : constant Float := VSA.Play_Sample.Mono_Data (p);
             R  : Boolean;
          begin
 
@@ -350,7 +356,7 @@ package body Synth.Synthetizer is
 
             Move_Next (Pos => Current_Sample_Position, Reach_End => R);
             if R then
-               V.Stopped := True;
+               VSA.Stopped := True;
                return;
             end if;
          end;

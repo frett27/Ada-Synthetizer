@@ -25,6 +25,7 @@ with Synth.Driver;
 
 package Synth.Synthetizer is
 
+
    -- synth object, that embed the sound system connection
    type Synthetizer_Type is limited private;
 
@@ -43,7 +44,6 @@ package Synth.Synthetizer is
    type Voice is new Natural;
 
 
-
    -- array of voices
    type Voice_Array is array (Positive range <>) of Voice;
 
@@ -59,7 +59,7 @@ package Synth.Synthetizer is
    --
    -- Fill a buffer with the given voice
    --
-   procedure Process_Buffer(V : in Voice_Structure_Access;
+   procedure Process_Buffer(VSA : in Voice_Structure_Access;
                             Buffer : in Frame_Array_Access;
                             Volume_Factor : in Float := 1.0);
 
@@ -134,7 +134,8 @@ private
       Buffers : Buffers_Type(1 .. NBBuffer);
 
       -- buffers that can be consumed
-      Available_For_Consume : Boolean_Array(1 .. NBBuffer) := (others => False);
+      Available_For_Consume : Boolean_Array(1 .. NBBuffer) :=
+        (others => False);
 
       -- available buffers
       Free_Buffers : Natural := NBBuffer;
@@ -144,7 +145,8 @@ private
       Current_Consume : Natural := 1;
 
       -- outed frames
-      Outed_Frame_Buffer : Boolean_Array(1 .. NBBuffer) := (others => False);
+      Outed_Frame_Buffer : Boolean_Array(1 .. NBBuffer) :=
+        (others => False);
 
    end Buffer_Ring;
 
@@ -188,10 +190,12 @@ private
       Note_Play_Frequency => 440.0,
      Channel => 1);
 
-   -- Synthetizer type
+   -- Synthetizer type as protected object
    protected type Synthetizer_Structure_Type is
 
-      procedure Init(D : Synth.Driver.Sound_Driver_Access;NBBuffer : Positive; Buffer_Length : Positive);
+      procedure Init(D : Synth.Driver.Sound_Driver_Access;
+                     NBBuffer : Positive;
+                     Buffer_Length : Positive);
 
       procedure Play
         (S            : in     SoundSample;
