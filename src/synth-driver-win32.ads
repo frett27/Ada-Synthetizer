@@ -71,9 +71,6 @@ private
      (Source => System.Address,
       Target => PWAVEHDR);
 
-
-
-
    type WIN32_Driver is new Synth.Driver.Sound_Driver with record
       hWo : aliased HWAVEOUT;
       wfx : LPCWAVEFORMATEX;
