@@ -1,10 +1,14 @@
 # AdaSynthetizer
 
-This simple library provides a synthetizer for making music from samples (.wav files).
+*Patrice Freydiere - 2018*
 
-A Synthetizer take on one side the samples, and on the other the Notes to play and Notes to Mix.
 
-Disclamer : This is the early stage of 
+
+This simple **library** provides a **synthetizer** for making music from samples (.wav files). As for example timidity.
+
+A Synthetizer take on one side the samples, and on the other side the Notes to play.
+
+**Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production.
 
 ### Features
 
@@ -17,6 +21,7 @@ you can also create your own file format reading, populating the SoundSample typ
 #### Synthetizer
 
 - 0.05 ms lattency for the moment, suitable for a lot of applications
+- The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the MAX_VOICES constant, and see whether it match the requierments.
 
 #### Drivers
 
@@ -24,7 +29,7 @@ you can also create your own file format reading, populating the SoundSample typ
 
 
 
-## Using the Synthetizer
+## Example using the Synthetizer by code
 
 Samples are provided, but the code is shown below for using it in 5 mins:
 
