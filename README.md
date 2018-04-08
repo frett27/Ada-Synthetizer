@@ -103,6 +103,7 @@ Samples are provided, but the code is shown below for using it in 5 mins:
 Version 0.1:
 
 - Fix Memory Leak for Win32 driver
+- Eval portaudio for output rendering (X Plateform sound toolkit)
 - Add Alsa Driver for linux plateforms
 - Add Wav Driver for debugging purpose or to disk exports
 - Interfaçing with C, Java for consuming the library
@@ -114,7 +115,3 @@ Version 0.2:
 Version 0.3:
 
 - Porting to Spark, remove the task part for embedded usage
-
-  ​
-
-  ​
