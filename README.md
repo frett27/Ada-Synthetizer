@@ -8,6 +8,8 @@ This simple **library** provides a **synthetizer** for making music from samples
 
 A Synthetizer take on one side the samples, and on the other side the Notes to play.
 
+![](doc/Synthetizer.png)
+
 **Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production.
 
 ### Features
