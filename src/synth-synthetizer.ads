@@ -103,7 +103,7 @@ package Synth.Synthetizer is
 private
 
    -- max voice
-   MAX_VOICES : constant Natural := 100;
+   MAX_VOICES : constant Natural := 1000;
    MAX_VOICES_INDICE : constant Voice := Voice(MAX_VOICES);
 
    type Preallocated_Voices_Range is range 1..MAX_VOICES;
@@ -111,7 +111,7 @@ private
    --
    -- Fill a buffer with the given voice
    --
-   procedure Process_Buffer(VSA : in ReadOnly_Voice_Structure_Access;
+   procedure Process_Buffer(VSA : in Voice_Structure_Type;
                             Buffer : in Frame_Array_Access;
                             Volume_Factor : in Float := 1.0;
                             ReachEndSample : out Boolean;
@@ -198,7 +198,7 @@ private
 
    type Voice_Play_Structure is record
       V : Voice;
-      VSA : ReadOnly_Voice_Structure_Access;
+      VSA : Voice_Structure_Type;
       UpdatedPosition : Play_Second;
       Closing : Boolean;
 
@@ -230,7 +230,10 @@ private
         (others =>
            Null_Voice_Structure);
 
+      -- round buffer
       Max_All_Opened_Voice_Indice : Natural := 0;
+      Min_All_Opened_Voice_Indice : Natural := 1;
+
 
       -- list all opened voice indices
       Opened_Voice : Voice_Boolean_Array (1..MAX_VOICES_INDICE) := (others => False);

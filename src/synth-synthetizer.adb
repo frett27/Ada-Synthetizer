@@ -34,10 +34,13 @@ package body Synth.Synthetizer is
    is
    begin
 
+      -- human perceived sound within 0.05 s
+
+
       S := new Synthetizer_Structure_Type;
       S.Init(D             => D,
-             NBBuffer =>3,
-             Buffer_Length => 5000);
+             NBBuffer =>1,
+             Buffer_Length => 2000);
 
    exception
             when E : others =>
@@ -311,7 +314,8 @@ package body Synth.Synthetizer is
 
                         -- Put_Line("Process Buffer for Voice " & Voice'Image(V));
                         --
-                        if not V.VSA.Stopped then -- and not Terminated
+                        if V.VSA = Null_Voice_Structure or else
+                          not V.VSA.Stopped then -- and not Terminated
 
                            Process_Buffer(VSA           => V.VSA,
                                           Buffer        =>  Preparing_Buffer,
@@ -359,95 +363,99 @@ end Buffer_Preparing_Task_Type;
 -- Voices_Type --
 -----------------
 
-protected body Voices_Type is
+   protected body Voices_Type is
 
-   -- allocate a new voice, and cleaning if necessary
+      -- allocate a new voice, and cleaning if necessary
       procedure Allocate_New_Voice(Voice_Structure : in Voice_Structure_Type;
                                    TheVoice : out Voice) is
          V : Voice;
       begin
 
-      --for I in 1..Max_All_Opened_Voice_Indice loop
-      --   -- try close finished ones
-      --   if Is_Voice_Opened(TheVoice) and then Get_Voice(TheVoice).Stopped then
-      --      Close_Voice(TheVoice);
-      --   end if;
+         --for I in 1..Max_All_Opened_Voice_Indice loop
+         --   -- try close finished ones
+         --   if Is_Voice_Opened(TheVoice) and then Get_Voice(TheVoice).Stopped then
+         --      Close_Voice(TheVoice);
+         --   end if;
 
-      --   if not Opened_Voice(Voice(i)) then
-      --      Opened_Voice(Voice(i)) := true;
-      --      TheVoice := Voice(i);
-      --      All_Voices(TheVoice) := Voice_Structure;
-      --      return;
-      --   end if;
-      --end loop;
+         --   if not Opened_Voice(Voice(i)) then
+         --      Opened_Voice(Voice(i)) := true;
+         --      TheVoice := Voice(i);
+         --      All_Voices(TheVoice) := Voice_Structure;
+         --      return;
+         --   end if;
+         --end loop;
 
-      -- reach the Max_All_Opened_Voice_Indice, enlarge the process
+         -- reach the Max_All_Opened_Voice_Indice, enlarge the process
 
-      if Max_all_opened_Voice_Indice < MAX_VOICES then
+         if Max_all_opened_Voice_Indice < MAX_VOICES then
 
-         Max_All_Opened_Voice_Indice := Natural'Succ(Max_All_Opened_Voice_Indice);
-         V := Voice(Max_All_Opened_Voice_Indice);
+            Max_All_Opened_Voice_Indice := Natural'Succ(Max_All_Opened_Voice_Indice);
+            V := Voice(Max_All_Opened_Voice_Indice);
 
-         Opened_Voice(V) := true;
+            Opened_Voice(V) := true;
             All_Voices(V) := Voice_Structure;
             TheVoice := V;
-         return;
+            return;
 
-      end if;
+         end if;
 
-      raise Program_Error with "Cannot allocate new voice";
+         raise Program_Error with "Cannot allocate new voice";
 
-   end Allocate_New_Voice;
+      end Allocate_New_Voice;
 
-   -- retreive the voice structure pointer
-   function Get_Voice(V : Voice) return ReadOnly_Voice_Structure_Access is
-   begin
-      pragma Assert (Opened_Voice(V));
-      return  All_Voices(V)'Unchecked_Access;
-   end Get_Voice;
+      -- retreive the voice structure pointer
+      function Get_Voice(V : Voice) return ReadOnly_Voice_Structure_Access is
+      begin
+         pragma Assert (Opened_Voice(V));
+         return  All_Voices(V)'Unchecked_Access;
+      end Get_Voice;
 
-   -- is the voice Opened
-   function Is_Voice_Opened(V : Voice) return Boolean is
-   begin
-      return Opened_Voice(V);
-   end Is_Voice_Opened;
-
-
+      -- is the voice Opened
+      function Is_Voice_Opened(V : Voice) return Boolean is
+      begin
+         return Opened_Voice(V);
+      end Is_Voice_Opened;
 
 
-   -- close an opened voice
-   procedure Close_Voice(V : Voice) is
-   begin
-      pragma Assert (Opened_Voice(V));
+
+
+      -- close an opened voice
+      procedure Close_Voice(V : Voice) is
+      begin
+         pragma Assert (Opened_Voice(V));
          if not Opened_Voice(V) then
             -- already closed
-         return;
-      end if;
-
-      Opened_Voice(V) := False;
-      All_Voices(V) := Null_Voice_Structure;
-
-      --if V = Voice(Max_All_Opened_Voice_Indice) then
-      --   while Max_All_Opened_Voice_Indice > 0 and then
-      --     not Is_Voice_Opened(Voice(Max_All_Opened_Voice_Indice)) loop
-      --      Max_All_Opened_Voice_Indice := Natural'Pred(Max_All_Opened_Voice_Indice);
-      --   end loop;
-      --end if;
-
-   end Close_Voice;
-
-   function Get_All_Opened_Voices return Voice_Array is
-      I : Natural := 0;
-      V : Voice_Array(1..Max_All_Opened_Voice_Indice);
-   begin
-      for It in 1..Max_All_Opened_Voice_Indice loop
-         if Opened_Voice(Voice(It)) then
-            I := Natural'Succ(I);
-            V(I) := Voice(I);
+            return;
          end if;
-      end loop;
-      return V(1..I);
-   end;
+
+         Opened_Voice(V) := False;
+         All_Voices(V) := Null_Voice_Structure;
+         if Natural(V) = Min_All_Opened_Voice_Indice then
+            Min_All_Opened_Voice_Indice := Natural'Succ(Min_All_Opened_Voice_Indice);
+         end if;
+
+         --if V = Voice(Max_All_Opened_Voice_Indice) then
+         --   while Max_All_Opened_Voice_Indice > 0 and then
+         --     not Is_Voice_Opened(Voice(Max_All_Opened_Voice_Indice)) loop
+         --      Max_All_Opened_Voice_Indice := Natural'Pred(Max_All_Opened_Voice_Indice);
+         --   end loop;
+         --end if;
+
+      end Close_Voice;
+
+
+      function Get_All_Opened_Voices return Voice_Array is
+         I : Natural := 0;
+         V : Voice_Array(Min_All_Opened_Voice_Indice..Max_All_Opened_Voice_Indice);
+      begin
+         for It in Min_All_Opened_Voice_Indice..Max_All_Opened_Voice_Indice loop
+            if Opened_Voice(Voice(It)) then
+               I := Natural'Succ(I);
+               V(I) := Voice(I);
+            end if;
+         end loop;
+         return V(1..I);
+      end;
 
 
 
@@ -461,16 +469,16 @@ protected body Voices_Type is
          I : Natural := 0;
          V : Voice_Play_Structure_Array(1..Max_All_Opened_Voice_Indice);
       begin
-         for It in 1..Max_All_Opened_Voice_Indice loop
+         for It in Min_All_Opened_Voice_Indice..Max_All_Opened_Voice_Indice loop
             if Opened_Voice(Voice(It)) then
                I := Natural'Succ(I); -- increment the index
                declare
                   TheVoice : constant Voice := Voice(It);
                begin
                   V(I) := Voice_Play_Structure'(V => TheVoice,
-                                             VSA =>  All_Voices(TheVoice)'Unchecked_Access,
-                                             UpdatedPosition => 0.0,
-                                             Closing => False);
+                                                VSA =>  All_Voices(TheVoice),
+                                                UpdatedPosition => 0.0,
+                                                Closing => False);
                end;
             end if;
          end loop;
@@ -487,9 +495,7 @@ protected body Voices_Type is
                if V.Closing then
                   Opened_Voice(TheVoice) := false;
                   All_Voices(TheVoice).Stopped := True;
-
                end if;
-
                All_Voices(TheVoice).Current_Sample_Position := V.UpdatedPosition;
             end;
 
@@ -497,7 +503,7 @@ protected body Voices_Type is
       end;
 
 
-end Voices_Type;
+   end Voices_Type;
 
 --------------------------------
 -- Synthetizer_Structure_Type --
@@ -573,7 +579,7 @@ protected body Synthetizer_Structure_Type is
    begin
       Test_Inited;
       -- push the sample to tasks
-      Put_Line("Allocate_New_Voice");
+     -- Put_Line("Allocate_New_Voice");
       Voices.Allocate_New_Voice( Voice_Structure_Type'(Note_Play_Frequency     => Frequency,
                                                        Play_Sample             => S,
                                                        Current_Sample_Position => 0.0,
@@ -581,7 +587,7 @@ protected body Synthetizer_Structure_Type is
                                                        Stopped                 => False),
                                  TheVoice => Allocated_Voice );
 
-      Put_Line("Allocated_Voice :"  & Voice'Image(Allocated_Voice));
+      --  Put_Line("Allocated_Voice :"  & Voice'Image(Allocated_Voice));
       Opened_Voice := Allocated_Voice;
    end Play;
 
@@ -629,7 +635,7 @@ begin
 end;
 
 
-procedure Process_Buffer (VSA : in ReadOnly_Voice_Structure_Access;
+procedure Process_Buffer (VSA : in Voice_Structure_Type;
                           Buffer : in Frame_Array_Access;
                           Volume_Factor : in Float := 1.0;
                           ReachEndSample : out Boolean;
@@ -684,8 +690,9 @@ procedure Process_Buffer (VSA : in ReadOnly_Voice_Structure_Access;
             end if;
          when False =>
             declare
+               SS : SoundSample := VSA.Play_Sample;
                Sample_Data_Seconds : constant Play_Second :=
-                 To_Second(VSA.Play_Sample.Mono_Data'Length);
+                 To_Second(SS.Mono_Data'Length);
             begin
 
                if Pos > Sample_Data_Seconds then
