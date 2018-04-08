@@ -62,16 +62,6 @@ package Synth.Synthetizer is
 
    type ReadOnly_Voice_Structure_Access is access constant Voice_Structure_Type;
 
-   -- internal functions
-
-   --
-   -- Fill a buffer with the given voice
-   --
-   procedure Process_Buffer(VSA : in ReadOnly_Voice_Structure_Access;
-                            Buffer : in Frame_Array_Access;
-                            Volume_Factor : in Float := 1.0;
-                            ReachEndSample : out Boolean;
-                            Returned_Current_Sample_Position : out Play_Second);
 
 
 
@@ -105,7 +95,8 @@ package Synth.Synthetizer is
 
    -- stop the voice (or the sound associated to it)
 
-   procedure Stop (Opened_Voice : in Voice);
+   procedure Stop (Synt         : in     Synthetizer_Type;
+                   Opened_Voice : in Voice);
 
    Synthetizer_Not_Inited : exception;
 
@@ -116,6 +107,17 @@ private
    MAX_VOICES_INDICE : constant Voice := Voice(MAX_VOICES);
 
    type Preallocated_Voices_Range is range 1..MAX_VOICES;
+
+   --
+   -- Fill a buffer with the given voice
+   --
+   procedure Process_Buffer(VSA : in ReadOnly_Voice_Structure_Access;
+                            Buffer : in Frame_Array_Access;
+                            Volume_Factor : in Float := 1.0;
+                            ReachEndSample : out Boolean;
+                            Returned_Current_Sample_Position : out Play_Second);
+
+
 
 
    type Buffer_Type is record

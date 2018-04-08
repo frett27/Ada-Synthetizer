@@ -38,8 +38,8 @@ package body Synth.Synthetizer is
 
       S := new Synthetizer_Structure_Type;
       S.Init(D             => D,
-             NBBuffer =>3,
-             Buffer_Length => 10000);
+             NBBuffer =>1,
+             Buffer_Length => 1700);
 
 
    end Open;
@@ -67,6 +67,11 @@ package body Synth.Synthetizer is
    is
    begin
 
+      if SoundSample.Note_Frequency <= 1 then
+         raise Program_Error with "Sound sample does not have a valid Note_Frequency";
+      end if;
+
+
       Synt.Play(S            => S,
                 Frequency    => Frequency,
                 Channel => Channel,
@@ -78,11 +83,10 @@ package body Synth.Synthetizer is
    -- Stop --
    ----------
 
-   procedure Stop (Opened_Voice : in Voice) is
+   procedure Stop (Synt         : in     Synthetizer_Type;
+                   Opened_Voice : in Voice) is
    begin
-      --  Generated stub: replace with real body!
-      pragma Compile_Time_Warning (Standard.True, "Stop unimplemented");
-      raise Program_Error with "Unimplemented procedure Stop";
+      Synt.Stop(Opened_Voice);
    end Stop;
 
    -----------------
@@ -279,7 +283,7 @@ package body Synth.Synthetizer is
          declare
             Preparing_Buffer : Frame_Array_Access;
             ReachEndSample : Boolean := False;
-            Opened_Voice : Voice_Array := Task_VSA.Get_All_Opened_Voices;
+            Opened_Voice : constant Voice_Array := Task_VSA.Get_All_Opened_Voices;
             Returned_Sample_Position : Play_Second;
          begin
 
@@ -371,7 +375,8 @@ protected body Voices_Type is
 
       -- reach the Max_All_Opened_Voice_Indice, enlarge the process
 
-      if Max_all_opened_Voice_Indice >= 0 and then Max_all_opened_Voice_Indice < MAX_VOICES then
+      if Max_all_opened_Voice_Indice >= 0
+           and then Max_all_opened_Voice_Indice < MAX_VOICES then
 
          Max_All_Opened_Voice_Indice := Natural'Succ(Max_All_Opened_Voice_Indice);
          Opened_Voice(Voice(Max_All_Opened_Voice_Indice)) := true;
@@ -605,7 +610,7 @@ procedure Process_Buffer (VSA : in ReadOnly_Voice_Structure_Access;
             end if;
          when False =>
             declare
-               Sample_Data_Seconds : Play_Second :=
+               Sample_Data_Seconds : constant Play_Second :=
                  To_Second(VSA.Play_Sample.Mono_Data'Length);
             begin
 
