@@ -22,6 +22,8 @@ you can also create your own file format reading, populating the SoundSample typ
 
 - 0.05 ms lattency for the moment, suitable for a lot of applications
 - The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the MAX_VOICES constant, and see whether it match the requierments.
+- Specify volume for each playing sound
+- Nearest neighborhood algorithm for resampling (can be improved)
 
 #### Drivers
 
@@ -96,3 +98,23 @@ Samples are provided, but the code is shown below for using it in 5 mins:
 
 
 
+## Next actions
+
+Version 0.1:
+
+- Fix Memory Leak for Win32 driver
+- Add Alsa Driver for linux plateforms
+- Add Wav Driver for debugging purpose or to disk exports
+- Interfaçing with C, Java for consuming the library
+
+Version 0.2: 
+
+- Improving Sound quality, add filters
+
+Version 0.3:
+
+- Porting to Spark, remove the task part for embedded usage
+
+  ​
+
+  ​
