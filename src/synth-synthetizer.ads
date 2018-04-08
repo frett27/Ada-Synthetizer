@@ -140,6 +140,8 @@ private
 
       entry UnFreeze_New_Buffer(Buffer : in Frame_Array_Access);
 
+      function Available_Buffer_For_Consume return Boolean;
+
    private
 
 
@@ -258,6 +260,7 @@ private
 
       function Get_All_Opened_Voices return Voice_Array;
 
+      procedure Close;
 
 
    private

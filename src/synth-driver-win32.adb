@@ -379,7 +379,7 @@ package body Synth.Driver.Win32 is
          --Ada.Text_IO.Put_Line("Elements in buffer :" & Natural'Image(SBuffer.Allocated));
 
          if SBuffer.Allocated <= 2 then
-            Ada.Text_IO.Put_Line("** First Play");
+            -- Ada.Text_IO.Put_Line("** First Play");
 
 
             SBufferCursor.Passen;
@@ -387,7 +387,7 @@ package body Synth.Driver.Win32 is
             BufferToPlay := Driver.Buffer(Driver.Buffer_Last);
             SBufferCursor.Verlassen;
 
-            ada.Text_IO.Put_Line("Play the next ..");
+            -- ada.Text_IO.Put_Line("Play the next ..");
 
             result :=
               waveOutWrite
