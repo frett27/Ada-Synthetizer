@@ -67,7 +67,9 @@ package body Synth.Wav is
    --
    --  [Bloc des données]
    --    DataBlocID      (4 octets) : Constante «data»  (0x64,0x61,0x74,0x61)
-   --    DataSize        (4 octets) : Nombre d'octets des données (i.e. "Data[]", i.e. taille_du_fichier - taille_de_l'entête  (qui fait 44 octets normalement).
+   --    DataSize        (4 octets) : Nombre d'octets des données (i.e. "Data[]",
+   --                                i.e. taille_du_fichier - taille_de_l'entête
+   --                                (qui fait 44 octets normalement).
    --    DATAS[] : [Octets du Sample 1 du Canal 1] [Octets du Sample 1 du Canal 2] [Octets du Sample 2 du Canal 1] [Octets du Sample 2 du Canal 2]
    --
    --    * Les Canaux :
@@ -202,7 +204,8 @@ package body Synth.Wav is
       return Samples;
    end Convert_Bytes_To_Frame_Array;
 
-   procedure Load (FileName : String; Sample : out SoundSample) is
+   procedure Load (FileName : String; Sample : out SoundSample)
+   is
 
       File             : File_Type;
       File_Stream      : Stream_Access;
@@ -220,7 +223,7 @@ package body Synth.Wav is
          --  Ada.Text_IO.Put_Line("new Block of type :" & Block_Type'Image(B.Type_Block));
          case B.Type_Block is
             when HEADER =>
-               null;
+               null; -- not read
             when FMT =>
                if To_Integer (B.AudioFormat) /= 1 then
                   raise MUST_BE_PCM_FORMAT;

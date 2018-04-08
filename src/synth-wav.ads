@@ -21,9 +21,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-package Synth.Wav is
-
+package Synth.Wav
+  with SPARK_Mode => On
+is
    --  Load a Wav File from the file
-   procedure Load (FileName : String; Sample : out SoundSample);
+   procedure Load (FileName : String; Sample : out SoundSample)
+     with Post =>
+       (Sample.Mono_Data /= null) and (Sample.Frequency >= 1.0) and
+       (if Sample.HasLoop then Sample.Loop_Start >= Sample.Loop_End),
+          Depends => (Sample => (FileName));
 
 end Synth.Wav;

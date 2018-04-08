@@ -1,17 +1,18 @@
 with "win32ada.gpr";
 
-
 project Synthetizer is
+
+   type Build_Kind is
+      ("default", "relocatable");
 
    -- for Main use ("test_read_wav.adb", "test_win32_driver.adb", "test_voice_play.adb");
 
    for Source_Dirs use ("src");
-
    for Object_Dir use "obj";
+   WIN32ADA_BUILD : Build_Kind := external ("WIN32ADA_BUILD");
 
    package Compiler is
-      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata",
-            "-gnatQ", "-gnat12", "-fstack-check", "-gnatyaAbBcefhiIklnprSmtux");
+      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
    end Compiler;
 
    package Linker is
@@ -23,8 +24,28 @@ project Synthetizer is
    end Builder;
 
    package Ide is
-      for Compiler_Command ("ada") use "gnatmake";
       for Compiler_Command ("c") use "gcc";
+
+      case WIN32ADA_BUILD is
+
+         when "default" =>
+
+         when "relocatable" =>
+            for Compiler_Command ("ada") use "gnatmake";
+      end case;
    end Ide;
 
+   package Pretty_Printer is
+
+      case WIN32ADA_BUILD is
+
+         when "default" =>
+            for Switches ("ada") use ("-M100");
+
+         when "relocatable" =>
+
+      end case;
+   end Pretty_Printer;
+
 end Synthetizer;
+
