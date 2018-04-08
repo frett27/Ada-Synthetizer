@@ -4,7 +4,7 @@
 
 
 
-This simple **library** provides a **synthetizer** for making music from samples (.wav files). As for example timidity.
+This simple **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity.
 
 A Synthetizer take on one side the samples, and on the other side the Notes to play.
 
