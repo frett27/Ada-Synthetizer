@@ -26,24 +26,20 @@ with Win32.Mmsystem; use Win32.Mmsystem;
 with Ada.Unchecked_Conversion;
 with System;
 
-
 ------------------------
 -- Synth.Driver.Win32 --
 ------------------------
 
 package Synth.Driver.Win32 is
 
-
-
    type WIN32_Driver is new Sound_Driver with private;
 
    type WIN32_Driver_Access is access all WIN32_Driver;
 
-
    ----------
    -- Open --
    ----------
-   -- factory
+   --  factory
    procedure Open (Driver : out Sound_Driver_Access);
 
    -----------
@@ -58,14 +54,12 @@ package Synth.Driver.Win32 is
 
    overriding procedure Play
      (Driver : in out WIN32_Driver;
-      Buffer : in     PCM_Frame_Array_Access);
-
+      Buffer : PCM_Frame_Array_Access);
 
 private
 
    type Play_Buffer_Cursor is mod 5;
    type Play_Buffer_Type is array (Play_Buffer_Cursor) of LPWAVEHDR;
-
 
    function To_PWAVEHDR is new Ada.Unchecked_Conversion
      (Source => System.Address,
@@ -77,26 +71,23 @@ private
       Buffer : Play_Buffer_Type := Play_Buffer_Type'(others => null);
       Buffer_First : Play_Buffer_Cursor := Play_Buffer_Cursor'First;
       Buffer_Last : Play_Buffer_Cursor := Play_Buffer_Cursor'First;
-      IsPlaying : boolean := false;
+      IsPlaying : Boolean := False;
    end record;
 
+   --  call back definition
 
-   -- call back definition
-
-   type Sound_Call_Back_Type is access procedure(hwo : HWAVEOUT ;
+   type Sound_Call_Back_Type is access procedure (hwo : HWAVEOUT;
                                     uMsg : UINT;
-                                    dwInstance , dwParam1 , dwParam2: LPDWORD);
-   pragma Convention(StdCall, Sound_Call_Back_Type);
+                                    dwInstance, dwParam1 , dwParam2: LPDWORD);
+   pragma Convention (StdCall, Sound_Call_Back_Type);
 
-
-   procedure Sound_Driver_Call_Back(hwo : HWAVEOUT ;
+   procedure Sound_Driver_Call_Back (hwo : HWAVEOUT;
                                     uMsg : UINT;
-                                    dwInstance , dwParam1 , dwParam2: LPDWORD);
-   pragma Export(StdCall,Sound_Driver_Call_Back);
+                                    dwInstance, dwParam1 , dwParam2: LPDWORD);
+   pragma Export (StdCall, Sound_Driver_Call_Back);
 
-
-   -- simple semaphone for synchronous play and buffers creation
-   protected type Semaphore(N:Positive) is
+   --  simple semaphone for synchronous play and buffers creation
+   protected type Semaphore (N : Positive) is
       entry Passen;
       entry Verlassen;
       function Allocated return Natural;
@@ -104,8 +95,7 @@ private
       Current : Natural := N;
    end Semaphore;
 
-   SBuffer : Semaphore(3); -- for handling the buffers
-   SBufferCursor : Semaphore(1); -- for handling the cursors
-
+   SBuffer : Semaphore (3); -- for handling the buffers
+   SBufferCursor : Semaphore (1); -- for handling the cursors
 
 end Synth.Driver.Win32;

@@ -21,12 +21,8 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
--- mixer mix all the voices in a proper frame stream
+--  mixer mix all the voices in a proper frame stream
 
 package Synth.Mixer is
-
-
-
 
 end Synth.Mixer;

@@ -25,7 +25,7 @@ with Ada.Exceptions;
 
 package Synth is
 
-   -- basic types used in this synthetizer
+   --  basic types used in this synthetizer
 
    subtype Frame is Float range -1.0 .. 1.0;
 
@@ -35,12 +35,11 @@ package Synth is
 
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type;
 
-
    ---------------------------------------------------------------------------
-   -- This is a recorded Sound
+   --  This is a recorded Sound
 
    type SoundSample (HasLoop : Boolean := False) is record
-      -- File Frequency
+      --  File Frequency
       Frequency : Frequency_Type;
 
       Note_Frequency : Frequency_Type;
@@ -56,35 +55,28 @@ package Synth is
       end case;
    end record;
 
+   Null_Sound_Sample : constant SoundSample :=
+     SoundSample'(HasLoop    => False,
+                  Frequency  => 44_100.0,
+                  Note_Frequency => 440.0,
+                  Mono_Data  => null);
 
-   Null_Sound_Sample : constant SoundSample := SoundSample'(HasLoop    => False,
-                                                            Frequency  => 44_100.0,
-                                                            Note_Frequency => 440.0,
-                                                            Mono_Data  => null);
-
-
-   -- Voice represent a play in the sound
-  -- type Voice is private;
-
-
-   -- 16 bits PCM structure types
+   --  16 bits PCM structure types
 
    type PCM_Frame is range  -(2**15) .. 2**15 - 1;
 
    for PCM_Frame'Size use 16;
 
-  -- type PCM_Frame is private;
+   --  type PCM_Frame is private;
    type PCM_Frame_Access is access all PCM_Frame;
    type PCM_Frame_Array is array (Natural range <>) of aliased PCM_Frame;
    type PCM_Frame_Array_Access is access all PCM_Frame_Array;
 
+   function To_Frame_Array (FA : Frame_Array) return PCM_Frame_Array;
 
-   function To_Frame_Array (FA : in Frame_Array) return PCM_Frame_Array;
-
-   -- type representing a position in second in the sample
+   --  type representing a position in second in the sample
    subtype Play_Second is Long_Float;
 
-   procedure DumpException(E : Ada.Exceptions.Exception_Occurrence);
-
+   procedure DumpException (E : Ada.Exceptions.Exception_Occurrence);
 
 end Synth;

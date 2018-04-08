@@ -20,12 +20,10 @@
 --  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.          --
 --                                                                          --
 ------------------------------------------------------------------------------
-With Ada.Numerics.Generic_Elementary_Functions;
+with Ada.Numerics.Generic_Elementary_Functions;
 
-With Ada.Text_IO;use Ada.Text_IO;
-With Ada.Exceptions;
-With GNAT.Traceback.Symbolic;
-
+with Ada.Text_IO; use Ada.Text_IO;
+with GNAT.Traceback.Symbolic;
 
 package body Synth is
 
@@ -33,17 +31,17 @@ package body Synth is
    -- To_Frame_Array --
    --------------------
 
-   function To_Frame_Array (FA : in Frame_Array) return PCM_Frame_Array is
+   function To_Frame_Array (FA : Frame_Array) return PCM_Frame_Array is
       R : PCM_Frame_Array (FA'Range);
    begin
       for i in FA'Range loop
-         pragma Assert(FA(i) <= 1.0);
-         pragma Assert(FA(i) >= -1.0);
+         pragma Assert (FA (i) <= 1.0);
+         pragma Assert (FA (i) >= -1.0);
          declare
-            F : constant Float := Float((2**15 - 1)) * FA (i);
+            F : constant Float := Float ((2**15 - 1)) * FA (i);
             P : PCM_Frame;
          begin
-            P := PCM_Frame(F);
+            P := PCM_Frame (F);
             R (i) := P;
          end;
       end loop;
@@ -51,24 +49,25 @@ package body Synth is
       return R;
    end To_Frame_Array;
 
-
    package Float_Gen is
-     new Ada.Numerics.Generic_Elementary_Functions(Float_Type => Float);
+     new Ada.Numerics.Generic_Elementary_Functions (Float_Type => Float);
 
-   -- convert a midi code to frequency
+   --  convert a midi code to frequency
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type is
       LA_440_MIDICODE : constant Natural := 69;
       use Float_Gen;
    begin
-      return 2.0**(Float(Midi_Code-LA_440_MIDICODE)/12.0)*Frequency_Type'(440.0);
-   end;
+      return 2.0**(Float (Midi_Code - LA_440_MIDICODE) / 12.0)
+        * Frequency_Type'(440.0);
+   end MIDICode_To_Frequency;
 
-   procedure DumpException(E : Ada.Exceptions.Exception_Occurrence) is
+   procedure DumpException (E : Ada.Exceptions.Exception_Occurrence) is
    begin
         New_Line (Standard_Error);
                Put_Line
                  (Standard_Error,
-                  "--------------------[ Unhandled exception ]-----------------");
+                  "--------------------[ Unhandled exception ]------"
+                  & "-----------");
                Put_Line
                  (Standard_Error,
                   " > Name of exception . . . . .: " &
@@ -82,9 +81,6 @@ package body Synth is
                  (Standard_Error,
                   GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
 
-   end;
-
-
-
+   end DumpException;
 
 end Synth;

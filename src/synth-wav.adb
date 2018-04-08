@@ -23,12 +23,11 @@
 
 with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
 
-
 package body Synth.Wav is
 
-   -- FILE FORMAT SPECIFICATION
+   --  FILE FORMAT SPECIFICATION
 
-   -- [Bloc de déclaration d'un fichier au format WAVE]
+   --  [Bloc de déclaration d'un fichier au format WAVE]
    --    FileTypeBlocID  (4 octets) : Constante «RIFF»  (0x52,0x49,0x46,0x46)
    --    FileSize        (4 octets) : Taille du fichier moins 8 octets
    --    FileFormatID    (4 octets) : Format = «WAVE»  (0x57,0x41,0x56,0x45)
@@ -55,7 +54,7 @@ package body Synth.Wav is
 
    for DWord'Size use 32;
 
-   -- [Bloc décrivant le format audio]
+   --  [Bloc décrivant le format audio]
    --    FormatBlocID    (4 octets) : Identifiant «fmt »  (0x66,0x6D, 0x74,0x20)
    --    BlocSize        (4 octets) : Nombre d'octets du bloc - 16  (0x10)
    --
@@ -66,7 +65,7 @@ package body Synth.Wav is
    --    BytePerBloc     (2 octets) : Nombre d'octets par bloc d'échantillonnage (i.e., tous canaux confondus : NbrCanaux * BitsPerSample/8).
    --    BitsPerSample   (2 octets) : Nombre de bits utilisés pour le codage de chaque échantillon (8, 16, 24)
    --
-   -- [Bloc des données]
+   --  [Bloc des données]
    --    DataBlocID      (4 octets) : Constante «data»  (0x64,0x61,0x74,0x61)
    --    DataSize        (4 octets) : Nombre d'octets des données (i.e. "Data[]", i.e. taille_du_fichier - taille_de_l'entête  (qui fait 44 octets normalement).
    --    DATAS[] : [Octets du Sample 1 du Canal 1] [Octets du Sample 1 du Canal 2] [Octets du Sample 2 du Canal 1] [Octets du Sample 2 du Canal 2]
@@ -79,8 +78,8 @@ package body Synth.Wav is
    --       5 pour gauche, centre, droit, surround (ambiant)
    --       6 pour centre gauche, gauche, centre, centre droit, droit, surround (ambiant)
    --
-   -- NOTES IMPORTANTES :  Les octets des mots sont stockés sous la forme  (i.e., en "little endian")
-   -- [87654321][16..9][24..17] [8..1][16..9][24..17] [...
+   --  NOTES IMPORTANTES :  Les octets des mots sont stockés sous la forme  (i.e., en "little endian")
+   --  [87654321][16..9][24..17] [8..1][16..9][24..17] [...
 
    type Block_Type is (HEADER, FMT, DATA_HEADER, DATA);
 
@@ -143,18 +142,18 @@ package body Synth.Wav is
       Header_Block : Wav_Block) return Wav_Block
    is
       Bytes_To_Read : constant Natural :=
-        Natural (To_Integer (Header_Block.Size) );
+        Natural (To_Integer (Header_Block.Size));
       Index : Positive := 1;
       BA    : Byte_Array (1 .. Bytes_To_Read) := (others => 0);
    begin
-      -- read the data block
-      -- ada.text_io.put_line(" bytes to read " & Natural'image(bytes_to_read));
-      while Bytes_To_Read > 0 and not End_Of_File (File) loop
+      --  read the data block
+      --  ada.text_io.put_line(" bytes to read " & Natural'image(bytes_to_read));
+      while Bytes_To_Read > 0 and then not End_Of_File (File) loop
          Byte'Read (File_Stream, BA (Index));
          Index := Positive'Succ (Index);
       end loop;
 
-      -- return the new block
+      --  return the new block
       return Wav_Block'
         (Type_Block => DATA,
          DataSize   => To_Integer (Header_Block.Size),
@@ -170,8 +169,8 @@ package body Synth.Wav is
       Samples : Frame_Array (1 .. BA'Length / 2);
    begin
 
---        ada.text_io.put_line(" array size " & Integer'Image(BA'Length));
---        ada.text_io.put_line(" future frame size " & Integer'Image(samples'Length));
+      --        ada.text_io.put_line(" array size " & Integer'Image(BA'Length));
+      --        ada.text_io.put_line(" future frame size " & Integer'Image(samples'Length));
 
       for i in 0 .. BA'Length / 2 - 1 loop
          declare
@@ -203,7 +202,7 @@ package body Synth.Wav is
       return Samples;
    end Convert_Bytes_To_Frame_Array;
 
-   procedure Load (FileName : in String; Sample : out SoundSample) is
+   procedure Load (FileName : String; Sample : out SoundSample) is
 
       File             : File_Type;
       File_Stream      : Stream_Access;
@@ -218,7 +217,7 @@ package body Synth.Wav is
 
       procedure Parse (B : Wav_Block) is
       begin
-         -- Ada.Text_IO.Put_Line("new Block of type :" & Block_Type'Image(B.Type_Block));
+         --  Ada.Text_IO.Put_Line("new Block of type :" & Block_Type'Image(B.Type_Block));
          case B.Type_Block is
             when HEADER =>
                null;
@@ -240,9 +239,9 @@ package body Synth.Wav is
             when DATA_HEADER =>
                raise BAD_FORMAT;
             when DATA =>
-               -- convert bits
+               --  convert bits
                if Samples /= null then
-                  -- multiple Data block
+                  --  multiple Data block
                   raise BAD_FORMAT;
                end if;
 
@@ -268,7 +267,7 @@ package body Synth.Wav is
 
       while not End_Of_File (File) loop
 
-         -- Read the block type
+         --  Read the block type
          DWord'Read (File_Stream, Block_Type_Value);
 
          declare
@@ -290,17 +289,17 @@ package body Synth.Wav is
                B : TheBlock;
             begin
 
-               -- Ada.Text_IO.Put_Line("Read Size :" & Integer'Image(TheBlock'Size / System.Storage_Unit));
-               -- Ada.Text_IO.Put_Line("Reading block type :" & Block_Type'Image(BT));
+               --  Ada.Text_IO.Put_Line("Read Size :" & Integer'Image(TheBlock'Size / System.Storage_Unit));
+               --  Ada.Text_IO.Put_Line("Reading block type :" & Block_Type'Image(BT));
 
                TheBlock'Read (File_Stream, B);  -- read the block
 
-               -- Ada.Text_IO.Put_Line("Block Size :" & Integer'Image( To_Integer(B.Size)));
+               --  Ada.Text_IO.Put_Line("Block Size :" & Integer'Image( To_Integer(B.Size)));
 
                if BT = DATA_HEADER then
-                  -- in case we have a data_header
-                  -- we convert it in data block
-                  -- with samples
+                  --  in case we have a data_header
+                  --  we convert it in data block
+                  --  with samples
                   Parse (Read_Data_From_Header (File, File_Stream, B));
                else
                   Parse (B);
@@ -312,7 +311,7 @@ package body Synth.Wav is
 
       end loop;
 
-      -- all block must have been read
+      --  all block must have been read
 
       Sample.Frequency := Frequence;
       Sample.Mono_Data := Samples;

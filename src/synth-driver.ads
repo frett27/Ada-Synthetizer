@@ -21,12 +21,11 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+--  This package define the sound driver to use for the synthetizer
+--  this can be either alsa, or an other embeded device
 
--- This package define the sound driver to use for the synthetizer
--- this can be either alsa, or an other embeded device
-
--- this driver play synchronousely a block of sound
--- constructor of the driver is done be the derived type
+--  this driver play synchronousely a block of sound
+--  constructor of the driver is done be the derived type
 
 package Synth.Driver is
 
@@ -40,7 +39,7 @@ package Synth.Driver is
 
    procedure Play
      (Driver : in out Sound_Driver;
-      Buffer : in     PCM_Frame_Array_Access) is abstract;
+      Buffer : PCM_Frame_Array_Access) is abstract;
 
    -----------
    -- Close --

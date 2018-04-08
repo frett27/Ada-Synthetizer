@@ -23,7 +23,7 @@
 
 package Synth.Wav is
 
-   -- Load a Wav File from the file
-   procedure Load (FileName : in String; Sample : out SoundSample);
+   --  Load a Wav File from the file
+   procedure Load (FileName : String; Sample : out SoundSample);
 
 end Synth.Wav;
