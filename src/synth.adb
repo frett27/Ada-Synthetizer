@@ -20,6 +20,12 @@
 --  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.          --
 --                                                                          --
 ------------------------------------------------------------------------------
+With Ada.Numerics.Generic_Elementary_Functions;
+
+With Ada.Text_IO;use Ada.Text_IO;
+With Ada.Exceptions;
+With GNAT.Traceback.Symbolic;
+
 
 package body Synth is
 
@@ -46,13 +52,37 @@ package body Synth is
    end To_Frame_Array;
 
 
+   package Float_Gen is
+     new Ada.Numerics.Generic_Elementary_Functions(Float_Type => Float);
+
    -- convert a midi code to frequency
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type is
       LA_440_MIDICODE : constant Natural := 69;
+      use Float_Gen;
    begin
-      return 2.0**((Midi_Code-LA_440_MIDICODE)/12)*Frequency_Type'(440.0);
+      return 2.0**(Float(Midi_Code-LA_440_MIDICODE)/12.0)*Frequency_Type'(440.0);
    end;
 
+   procedure DumpException(E : Ada.Exceptions.Exception_Occurrence) is
+   begin
+        New_Line (Standard_Error);
+               Put_Line
+                 (Standard_Error,
+                  "--------------------[ Unhandled exception ]-----------------");
+               Put_Line
+                 (Standard_Error,
+                  " > Name of exception . . . . .: " &
+                    Ada.Exceptions.Exception_Name (E));
+               Put_Line
+                 (Standard_Error,
+                  " > Message for exception . . .: " &
+                    Ada.Exceptions.Exception_Message (E));
+               Put_Line (Standard_Error, " > Trace-back of call stack: ");
+               Put_Line
+                 (Standard_Error,
+                  GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
+
+   end;
 
 
 

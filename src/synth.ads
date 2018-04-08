@@ -21,7 +21,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
+with Ada.Exceptions;
 
 package Synth is
 
@@ -84,9 +84,7 @@ package Synth is
    -- type representing a position in second in the sample
    subtype Play_Second is Long_Float;
 
-
-
-
+   procedure DumpException(E : Ada.Exceptions.Exception_Occurrence);
 
 
 end Synth;

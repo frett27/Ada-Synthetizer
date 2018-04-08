@@ -21,8 +21,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 with Ada.Text_IO;use Ada.Text_IO;
-with Ada.Exceptions;
-with GNAT.Traceback.Symbolic;
 package body Synth.Synthetizer is
 
 
@@ -38,9 +36,12 @@ package body Synth.Synthetizer is
 
       S := new Synthetizer_Structure_Type;
       S.Init(D             => D,
-             NBBuffer =>1,
-             Buffer_Length => 1700);
+             NBBuffer =>3,
+             Buffer_Length => 5000);
 
+   exception
+            when E : others =>
+                  DumpException(E);
 
    end Open;
 
@@ -51,6 +52,9 @@ package body Synth.Synthetizer is
    procedure Close (S : in out Synthetizer_Type) is
    begin
      S.Close;
+    exception
+            when E : others =>
+                  DumpException(E);
 
    end Close;
 
@@ -67,7 +71,7 @@ package body Synth.Synthetizer is
    is
    begin
 
-      if SoundSample.Note_Frequency <= 1 then
+      if Float(S.Note_Frequency) <= 1.0 then
          raise Program_Error with "Sound sample does not have a valid Note_Frequency";
       end if;
 
@@ -76,6 +80,9 @@ package body Synth.Synthetizer is
                 Frequency    => Frequency,
                 Channel => Channel,
                 Opened_Voice => Opened_Voice);
+   exception
+            when E : others =>
+                  DumpException(E);
 
    end Play;
 
@@ -86,7 +93,10 @@ package body Synth.Synthetizer is
    procedure Stop (Synt         : in     Synthetizer_Type;
                    Opened_Voice : in Voice) is
    begin
-      Synt.Stop(Opened_Voice);
+    Synt.Stop(Opened_Voice);
+   exception
+            when E : others =>
+                  DumpException(E);
    end Stop;
 
    -----------------
@@ -101,7 +111,6 @@ package body Synth.Synthetizer is
 
       procedure Init is
       begin
-
          -- init the buffers
          for i in Buffers'Range loop
             Buffers(i).BP := new PCM_Frame_Array(1..Buffer_Length);
@@ -235,6 +244,9 @@ package body Synth.Synthetizer is
                    --         Put_Line("Done");
                    end if;
                    delay 0.01;
+            exception
+               when E : others =>
+                  DumpException(E);
 
             end;
 
@@ -242,10 +254,8 @@ package body Synth.Synthetizer is
          end select;
       end loop;
 
+       Put_Line("End of Playing Thread");
 
-      --  Generated stub: replace with real body!
-      -- pragma Compile_Time_Warning (Standard.True, "Buffer_Play_Task_Type unimplemented");
-      -- raise Program_Error with "Unimplemented task Buffer_Play_Task_Type";
    end Buffer_Play_Task_Type;
 
    --------------------------------
@@ -292,49 +302,36 @@ package body Synth.Synthetizer is
                -- Put_Line("Prepare Buffer");
 
 
-               Task_BR.Freeze_New_Buffer(Buffer => Preparing_Buffer);
+                  Task_BR.Freeze_New_Buffer(Buffer => Preparing_Buffer);
 
-               for V of Opened_Voice loop
-                  -- Put_Line("Process Buffer for Voice " & Voice'Image(V));
-                  --
-                  Process_Buffer(VSA           => Task_VSA.Get_Voice(V => Voice(V)),
-                                 Buffer        =>  Preparing_Buffer,
-                                 ReachEndSample => ReachEndSample,
-                                 Returned_Current_Sample_Position => Returned_Sample_Position);
-                  if ReachEndSample then
-                     -- Put_Line("Closing Voice");
+                  for V of Opened_Voice loop
+                     -- Put_Line("Process Buffer for Voice " & Voice'Image(V));
+                     --
+                     if Task_VSA.Is_Voice_Opened(V)  then -- and not Terminated
 
-                     Task_VSA.Close_Voice(Voice(V));
-                  else
-                     Task_VSA.Update_Position(Voice(V), Returned_Sample_Position);
-                  end if;
-               end loop;
-               -- Put_Line("End Of Preparation");
-               Task_BR.UnFreeze_New_Buffer(Buffer => Preparing_Buffer);
-               -- Put_Line("Done");
+                              Process_Buffer(VSA           => Task_VSA.Get_Voice(V => V),
+                                             Buffer        =>  Preparing_Buffer,
+                                             ReachEndSample => ReachEndSample,
+                                             Returned_Current_Sample_Position => Returned_Sample_Position);
+                              if ReachEndSample then
+                                 -- Put_Line("Closing Voice " & Voice'Image(V));
 
+                                 Task_VSA.Close_Voice(V);
+                              else
+                                 Task_VSA.Update_Position(V, Returned_Sample_Position);
+                              end if;
+
+
+                     end if;
+                  end loop;
+                  -- Put_Line("End Of Preparation");
+                 -- if (not Terminated) then
+                     Task_BR.UnFreeze_New_Buffer(Buffer => Preparing_Buffer);
+                  -- Put_Line("Done");
+                 -- end if;
             end if;
 
-         exception
-            when E : others =>
-               New_Line (Standard_Error);
-               Put_Line
-                 (Standard_Error,
-                  "--------------------[ Unhandled exception ]-----------------");
-               Put_Line
-                 (Standard_Error,
-                  " > Name of exception . . . . .: " &
-                    Ada.Exceptions.Exception_Name (E));
-               Put_Line
-                 (Standard_Error,
-                  " > Message for exception . . .: " &
-                    Ada.Exceptions.Exception_Message (E));
-               Put_Line (Standard_Error, " > Trace-back of call stack: ");
-               Put_Line
-                 (Standard_Error,
-                  GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
-
-            end;
+           end;
          end select;
 
 
@@ -343,11 +340,12 @@ package body Synth.Synthetizer is
 
       end loop;
 
+      Put_Line("End of Preparing Thread");
+      exception
+            when E : others =>
+                  DumpException(E);
 
 
-   --  Generated stub: replace with real body!
-   --      pragma Compile_Time_Warning (Standard.True, "Buffer_Preparing_Task_Type unimplemented");
-   --    raise Program_Error with "Unimplemented task Buffer_Preparing_Task_Type";
 end Buffer_Preparing_Task_Type;
 
 -----------------
@@ -358,19 +356,20 @@ protected body Voices_Type is
 
    -- allocate a new voice, and cleaning if necessary
    procedure Allocate_New_Voice(Voice_Structure : in Voice_Structure_Type; TheVoice : out Voice) is
-   begin
+      begin
+
       for I in 1..Max_All_Opened_Voice_Indice loop
          -- try close finished ones
          if Is_Voice_Opened(TheVoice) and then Get_Voice(TheVoice).Stopped then
             Close_Voice(TheVoice);
          end if;
 
-         if not Opened_Voice(Voice(i)) then
-            Opened_Voice(Voice(i)) := true;
-            TheVoice := Voice(i);
-            All_Voices(TheVoice) := Voice_Structure;
-            return;
-         end if;
+      --   if not Opened_Voice(Voice(i)) then
+      --      Opened_Voice(Voice(i)) := true;
+      --      TheVoice := Voice(i);
+      --      All_Voices(TheVoice) := Voice_Structure;
+      --      return;
+      --   end if;
       end loop;
 
       -- reach the Max_All_Opened_Voice_Indice, enlarge the process
@@ -379,8 +378,9 @@ protected body Voices_Type is
            and then Max_all_opened_Voice_Indice < MAX_VOICES then
 
          Max_All_Opened_Voice_Indice := Natural'Succ(Max_All_Opened_Voice_Indice);
-         Opened_Voice(Voice(Max_All_Opened_Voice_Indice)) := true;
          TheVoice := Voice(Max_All_Opened_Voice_Indice);
+
+         Opened_Voice(TheVoice) := true;
          All_Voices(TheVoice) := Voice_Structure;
          return;
 
@@ -407,18 +407,21 @@ protected body Voices_Type is
    procedure  Close_Voice(V : Voice) is
    begin
       pragma Assert (Opened_Voice(V));
-      if not Opened_Voice(V) then
+         if not Opened_Voice(V) then
+            -- already closed
          return;
       end if;
 
       Opened_Voice(V) := False;
       All_Voices(V) := Null_Voice_Structure;
-      if V = Voice(Max_All_Opened_Voice_Indice) then
-         while Max_All_Opened_Voice_Indice > 0 and then
-           not Is_Voice_Opened(Voice(Max_All_Opened_Voice_Indice)) loop
-            Max_All_Opened_Voice_Indice := Natural'Pred(Max_All_Opened_Voice_Indice);
-         end loop;
-      end if;
+
+      --if V = Voice(Max_All_Opened_Voice_Indice) then
+      --   while Max_All_Opened_Voice_Indice > 0 and then
+      --     not Is_Voice_Opened(Voice(Max_All_Opened_Voice_Indice)) loop
+      --      Max_All_Opened_Voice_Indice := Natural'Pred(Max_All_Opened_Voice_Indice);
+      --   end loop;
+      --end if;
+
    end Close_Voice;
 
    function Get_All_Opened_Voices return Voice_Array is
@@ -434,7 +437,7 @@ protected body Voices_Type is
       return V(1..I);
    end;
 
-   procedure Update_Position(V : Voice; Current_Sample_Position : Play_Second) is
+   procedure Update_Position(V : Voice; Current_Sample_Position : Play_Second)  is
    begin
       All_Voices(V).Current_Sample_Position := Current_Sample_Position;
    end;
@@ -471,7 +474,17 @@ protected body Synthetizer_Structure_Type is
 
       procedure Close is
       begin
-          Play_Task.Stop;
+         Play_Task.Stop;
+
+         -- consume remaining buffers for not blocking the preparing task
+         while BR.Available_Buffer_For_Consume loop
+            declare
+               Buffer : PCM_Frame_Array_Access;
+            begin
+               BR.Consume_Buffer(Buffer);
+            end;
+         end loop;
+
           Prepare_Task.Stop;
       end;
 
