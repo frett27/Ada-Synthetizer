@@ -69,6 +69,7 @@ package body Synth.Synthetizer is
       Channel : in Positive := 1;
       Opened_Voice :    out Voice)
    is
+      OutVoced : Voice;
    begin
 
       if Float(S.Note_Frequency) <= 1.0 then
@@ -79,7 +80,8 @@ package body Synth.Synthetizer is
       Synt.Play(S            => S,
                 Frequency    => Frequency,
                 Channel => Channel,
-                Opened_Voice => Opened_Voice);
+                Opened_Voice => OutVoced);
+      Opened_Voice := OutVoced;
    exception
             when E : others =>
                   DumpException(E);
@@ -284,8 +286,6 @@ package body Synth.Synthetizer is
 
          else
 
-
-
          -- Put_Line("Check Buffer");
 
          -- take buffer, process the voices
@@ -293,51 +293,58 @@ package body Synth.Synthetizer is
          declare
             Preparing_Buffer : Frame_Array_Access;
             ReachEndSample : Boolean := False;
-            Opened_Voice : constant Voice_Array := Task_VSA.Get_All_Opened_Voices;
+            Opened_Voice : Voice_Play_Structure_Array := Task_VSA.Get_All_Opened_Voices_Play_Structure;
             Returned_Sample_Position : Play_Second;
          begin
 
-            if Opened_Voice'Length > 0 then
+               if Opened_Voice'Length > 0 then
 
-               -- Put_Line("Prepare Buffer");
+                  -- Put_Line("Prepare Buffer");
 
 
                   Task_BR.Freeze_New_Buffer(Buffer => Preparing_Buffer);
 
-                  for V of Opened_Voice loop
-                     -- Put_Line("Process Buffer for Voice " & Voice'Image(V));
-                     --
-                     if Task_VSA.Is_Voice_Opened(V)  then -- and not Terminated
+                  for I in Opened_Voice'Range loop
+                     declare
+                        V : constant Voice_Play_Structure := Opened_Voice(I);
+                     begin
 
-                              Process_Buffer(VSA           => Task_VSA.Get_Voice(V => V),
-                                             Buffer        =>  Preparing_Buffer,
-                                             ReachEndSample => ReachEndSample,
-                                             Returned_Current_Sample_Position => Returned_Sample_Position);
-                              if ReachEndSample then
-                                 -- Put_Line("Closing Voice " & Voice'Image(V));
+                        -- Put_Line("Process Buffer for Voice " & Voice'Image(V));
+                        --
+                        if not V.VSA.Stopped then -- and not Terminated
 
-                                 Task_VSA.Close_Voice(V);
-                              else
-                                 Task_VSA.Update_Position(V, Returned_Sample_Position);
-                              end if;
+                           Process_Buffer(VSA           => V.VSA,
+                                          Buffer        =>  Preparing_Buffer,
+                                          ReachEndSample => ReachEndSample,
+                                          Returned_Current_Sample_Position => Returned_Sample_Position);
+
+                           --                        Task_VSA.Update_Position(V, Returned_Sample_Position);
+                           Opened_Voice(I).updatedPosition := Returned_Sample_Position;
+                           if ReachEndSample then
+
+                              Opened_Voice(I).Closing := True;
+                           end if;
 
 
-                     end if;
+                        end if;
+                     end;
                   end loop;
                   -- Put_Line("End Of Preparation");
-                 -- if (not Terminated) then
-                     Task_BR.UnFreeze_New_Buffer(Buffer => Preparing_Buffer);
+                  -- if (not Terminated) then
+                  Task_BR.UnFreeze_New_Buffer(Buffer => Preparing_Buffer);
                   -- Put_Line("Done");
-                 -- end if;
-            end if;
+                  -- end if;
+                  Task_VSA.Update_Close_And_Positions_Status(Opened_Voice);
+               end if;
 
-           end;
+            end;
+
          end select;
 
 
+
+
          delay 0.01;
-
-
       end loop;
 
       Put_Line("End of Preparing Thread");
@@ -355,14 +362,16 @@ end Buffer_Preparing_Task_Type;
 protected body Voices_Type is
 
    -- allocate a new voice, and cleaning if necessary
-   procedure Allocate_New_Voice(Voice_Structure : in Voice_Structure_Type; TheVoice : out Voice) is
+      procedure Allocate_New_Voice(Voice_Structure : in Voice_Structure_Type;
+                                   TheVoice : out Voice) is
+         V : Voice;
       begin
 
-      for I in 1..Max_All_Opened_Voice_Indice loop
-         -- try close finished ones
-         if Is_Voice_Opened(TheVoice) and then Get_Voice(TheVoice).Stopped then
-            Close_Voice(TheVoice);
-         end if;
+      --for I in 1..Max_All_Opened_Voice_Indice loop
+      --   -- try close finished ones
+      --   if Is_Voice_Opened(TheVoice) and then Get_Voice(TheVoice).Stopped then
+      --      Close_Voice(TheVoice);
+      --   end if;
 
       --   if not Opened_Voice(Voice(i)) then
       --      Opened_Voice(Voice(i)) := true;
@@ -370,18 +379,18 @@ protected body Voices_Type is
       --      All_Voices(TheVoice) := Voice_Structure;
       --      return;
       --   end if;
-      end loop;
+      --end loop;
 
       -- reach the Max_All_Opened_Voice_Indice, enlarge the process
 
-      if Max_all_opened_Voice_Indice >= 0
-           and then Max_all_opened_Voice_Indice < MAX_VOICES then
+      if Max_all_opened_Voice_Indice < MAX_VOICES then
 
          Max_All_Opened_Voice_Indice := Natural'Succ(Max_All_Opened_Voice_Indice);
-         TheVoice := Voice(Max_All_Opened_Voice_Indice);
+         V := Voice(Max_All_Opened_Voice_Indice);
 
-         Opened_Voice(TheVoice) := true;
-         All_Voices(TheVoice) := Voice_Structure;
+         Opened_Voice(V) := true;
+            All_Voices(V) := Voice_Structure;
+            TheVoice := V;
          return;
 
       end if;
@@ -403,8 +412,11 @@ protected body Voices_Type is
       return Opened_Voice(V);
    end Is_Voice_Opened;
 
+
+
+
    -- close an opened voice
-   procedure  Close_Voice(V : Voice) is
+   procedure Close_Voice(V : Voice) is
    begin
       pragma Assert (Opened_Voice(V));
          if not Opened_Voice(V) then
@@ -429,7 +441,7 @@ protected body Voices_Type is
       V : Voice_Array(1..Max_All_Opened_Voice_Indice);
    begin
       for It in 1..Max_All_Opened_Voice_Indice loop
-         if Is_Voice_Opened(Voice(It)) then
+         if Opened_Voice(Voice(It)) then
             I := Natural'Succ(I);
             V(I) := Voice(I);
          end if;
@@ -437,13 +449,55 @@ protected body Voices_Type is
       return V(1..I);
    end;
 
-   procedure Update_Position(V : Voice; Current_Sample_Position : Play_Second)  is
-   begin
-      All_Voices(V).Current_Sample_Position := Current_Sample_Position;
-   end;
+
+
+      procedure Update_Position(V : Voice; Current_Sample_Position : Play_Second)  is
+      begin
+         All_Voices(V).Current_Sample_Position := Current_Sample_Position;
+      end;
+
+
+      function Get_All_Opened_Voices_Play_Structure return Voice_Play_Structure_Array is
+         I : Natural := 0;
+         V : Voice_Play_Structure_Array(1..Max_All_Opened_Voice_Indice);
+      begin
+         for It in 1..Max_All_Opened_Voice_Indice loop
+            if Opened_Voice(Voice(It)) then
+               I := Natural'Succ(I); -- increment the index
+               declare
+                  TheVoice : constant Voice := Voice(It);
+               begin
+                  V(I) := Voice_Play_Structure'(V => TheVoice,
+                                             VSA =>  All_Voices(TheVoice)'Unchecked_Access,
+                                             UpdatedPosition => 0.0,
+                                             Closing => False);
+               end;
+            end if;
+         end loop;
+         return V(1..I);
+      end;
+
+      procedure Update_Close_And_Positions_Status(VA : Voice_Play_Structure_Array) is
+      begin
+         for V of VA loop
+            declare
+               TheVoice : constant Voice := V.V;
+            begin
+
+               if V.Closing then
+                  Opened_Voice(TheVoice) := false;
+                  All_Voices(TheVoice).Stopped := True;
+
+               end if;
+
+               All_Voices(TheVoice).Current_Sample_Position := V.UpdatedPosition;
+            end;
+
+         end loop;
+      end;
+
 
 end Voices_Type;
-
 
 --------------------------------
 -- Synthetizer_Structure_Type --
@@ -485,7 +539,16 @@ protected body Synthetizer_Structure_Type is
             end;
          end loop;
 
-          Prepare_Task.Stop;
+         Prepare_Task.Stop;
+
+          -- consume remaining buffers for not blocking the preparing task
+         while BR.Available_Buffer_For_Consume loop
+            declare
+               Buffer : PCM_Frame_Array_Access;
+            begin
+               BR.Consume_Buffer(Buffer);
+            end;
+         end loop;
       end;
 
    -- sanity check for opened synthetizer
@@ -519,6 +582,7 @@ protected body Synthetizer_Structure_Type is
                                  TheVoice => Allocated_Voice );
 
       Put_Line("Allocated_Voice :"  & Voice'Image(Allocated_Voice));
+      Opened_Voice := Allocated_Voice;
    end Play;
 
    ----------
@@ -526,13 +590,10 @@ protected body Synthetizer_Structure_Type is
    ----------
 
    procedure Stop (V : in Voice) is
-   begin
-      Test_Inited;
-
-      Play_Task.Stop;
-
-      Prepare_Task.Stop;
-
+      begin
+         if Voices.Is_Voice_Opened(V) then
+            Voices.Close_Voice(V);
+         end if;
    end Stop;
 
    ---------------------------

@@ -192,8 +192,18 @@ private
       Stopped                 => True,
       Play_Sample             => Null_Sound_Sample,
       Note_Play_Frequency => 440.0
-        ,Channel => 1
+      ,Channel => 1
      );
+
+
+   type Voice_Play_Structure is record
+      V : Voice;
+      VSA : ReadOnly_Voice_Structure_Access;
+      UpdatedPosition : Play_Second;
+      Closing : Boolean;
+
+   end record;
+   type Voice_Play_Structure_Array is array (Natural range <>) of Voice_Play_Structure;
 
 
    -----------------
@@ -208,6 +218,10 @@ private
        procedure Close_Voice(V : Voice);
       function Get_All_Opened_Voices return Voice_Array;
       procedure Update_Position(V : Voice; Current_Sample_Position : Play_Second);
+
+      -- specialized play structures
+      function Get_All_Opened_Voices_Play_Structure return Voice_Play_Structure_Array;
+      procedure Update_Close_And_Positions_Status(VA : Voice_Play_Structure_Array);
 
    private
 
