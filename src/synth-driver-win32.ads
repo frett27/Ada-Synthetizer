@@ -95,7 +95,7 @@ private
       Current : Natural := N;
    end Semaphore;
 
-   SBuffer : Semaphore (3); -- for handling the buffers
+   SBuffer : Semaphore (4); -- for handling the buffers
    SBufferCursor : Semaphore (1); -- for handling the cursors
 
 end Synth.Driver.Win32;

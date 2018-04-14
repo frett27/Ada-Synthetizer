@@ -62,7 +62,6 @@ package Synth is
                   Mono_Data  => null);
 
    --  16 bits PCM structure types
-
    type PCM_Frame is range  -(2**15) .. 2**15 - 1;
 
    for PCM_Frame'Size use 16;

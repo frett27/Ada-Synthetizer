@@ -30,6 +30,7 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 --  use windows api for sounds
 with Win32.Winbase; use Win32.Winbase;
+with Win32.Windef; use Win32.Windef;
 
 ------------------------
 -- Synth.Driver.Win32 --
@@ -66,6 +67,23 @@ package body Synth.Driver.Win32 is
      (Source => LPVOID,
       Target => LPWAVEHDR);
 
+
+   function To_Address is new Ada.Unchecked_Conversion
+     (Source => PWAVEHDR,
+      Target => HGLOBAL);
+
+   function To_Address is new Ada.Unchecked_Conversion
+     (Source => LPBYTE,
+      Target => HGLOBAL);
+
+   function To_System_Address is new Ada.Unchecked_Conversion
+     (Source => HGLOBAL,
+      Target => Integer);
+
+
+
+
+
    procedure Sound_Driver_Call_Back
      (hwo                            : HWAVEOUT;
       uMsg                           : UINT;
@@ -75,6 +93,39 @@ package body Synth.Driver.Win32 is
       Driver : constant WIN32_Driver_Access := to_WIN32_Driver (dwInstance);
       Buffer_Empty : Boolean;
       result : MMRESULT;
+
+
+      procedure FreeStructure(Buffer : in PWAVEHDR) is
+
+         H : HGLOBAL;
+         I : Integer;
+         use System;
+      begin
+
+         -- free the buffer
+         H := GlobalFree(hMem =>
+                           to_Address(Buffer.lpData));
+
+         I := To_System_Address(H);
+         Put_Line("System I : " & Integer'Image(I));
+         if I /= 0 then
+            raise Program_Error with "Failed to release the windows wave data buffer";
+         end if;
+
+         result := waveOutUnprepareHeader(hwo  => Driver.hWo,
+                                          pwh  => Buffer,
+                                          cbwh => Buffer
+                                          .all'Size / System.Storage_Unit);
+         -- free the buffer
+         -- H := GlobalFree (hMem => to_Address (dwParam1));
+         I := To_System_Address(GlobalFree(hMem => to_Address(Buffer)));
+         if I /= 0 then
+            raise Program_Error with "Failed to release the windows WaveHeader structure";
+         end if;
+      end FreeStructure;
+
+
+
    begin
 
       case uMsg is
@@ -84,18 +135,26 @@ package body Synth.Driver.Win32 is
          when WOM_DONE =>
             --  Put_Line ("play done, unallocate the buffer");
 
-            --  ada.Text_IO.Put_Line("Play Done Event..");
+            ada.Text_IO.Put_Line("Play Done Event..");
 
-            SBuffer.Verlassen; -- block if there are no more buffers
+            SBuffer.Verlassen; -- block if there are no more buffers ?
 
             declare
                BufferToPlay : PWAVEHDR;
+               PreviousPlayedBuffer : constant PWAVEHDR :=
+                 Driver.Buffer (Driver.Buffer_Last);
             begin
 
-               SBufferCursor.Passen;
+               -- Driver.Buffer_Last has been consumed,
+               -- we can remove it, but do it @ the end for preserving lattency
 
+               -- consume or block
+
+               SBufferCursor.Passen;
                Buffer_Empty := (Driver.Buffer_First = Driver.Buffer_Last);
                if Buffer_Empty then
+                  ada.Text_IO.Put_Line("Empty buffer the next ..");
+                  FreeStructure(Buffer => PreviousPlayedBuffer);
 
                   SBufferCursor.Verlassen;
                   return;
@@ -108,7 +167,7 @@ package body Synth.Driver.Win32 is
 
                SBufferCursor.Verlassen;
 
-               --  ada.Text_IO.Put_Line("Play the next ..");
+                ada.Text_IO.Put_Line("Play the next ..");
 
                result :=
                  waveOutWrite
@@ -141,20 +200,16 @@ package body Synth.Driver.Win32 is
                   end case;
                end if;
 
+               -- clean up the buffer passed to out
+
+               ada.Text_IO.Put_Line("clean");
+
+               FreeStructure(Buffer => PreviousPlayedBuffer);
+
+
             end;
 
-            --  declare
-            --   H : HGLOBAL;
-            --  begin
-            --   -- unprepare the buffer
-            --   result := waveOutUnprepareHeader(hwo  => Driver.hWo,
-            --                                    pwh  => LPHDR,
-            --                                    cbwh => LPHDR.all'Size / System.Storage_Unit);
-            --   -- free the buffer
-            --   H := GlobalFree (hMem => to_Address (dwParam1));
-            --   -- GlobalFree(hMem => to_Address(LPHDR.lpData));
-            --   --
-            --  end;
+
 
          when WOM_CLOSE =>
             Put_Line ("line close");
@@ -177,6 +232,7 @@ package body Synth.Driver.Win32 is
    function To_Access is new Ada.Unchecked_Conversion
      (Source => System.Address,
       Target => LPCWAVEFORMATEX);
+
 
    ----------
    -- Open --
@@ -338,10 +394,12 @@ package body Synth.Driver.Win32 is
          BufferToPlay : PWAVEHDR;
       begin
 
-         --  Ada.Text_IO.Put_Line("Elements in buffer :" & Natural'Image(SBuffer.Allocated));
+         --  Ada.Text_IO.Put_Line("Elements in buffer :"
+         -- & Natural'Image(SBuffer.Allocated));
 
          if SBuffer.Allocated <= 2 then
             --  Only one buffer, first play
+            --  the others will be played by call back
             --  Ada.Text_IO.Put_Line("** First Play");
 
             SBufferCursor.Passen; -- consume the ring buffer
