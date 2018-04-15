@@ -29,7 +29,7 @@ you can also create your own file format reading, populating the SoundSample typ
 
 #### Drivers
 
-- Win32 SoundDriver (Needs Profiling / Memory Leak check)
+- Win32 SoundDriver
 
 
 
@@ -104,7 +104,7 @@ Samples are provided, but the code is shown below for using it in 5 mins:
 
 Version 0.1:
 
-- Fix Memory Leak for Win32 driver
+- ~~Fix Memory Leak for Win32 driver~~
 - Eval portaudio for output rendering (X Plateform sound toolkit)
 - Add Alsa Driver for linux plateforms
 - Add Wav Driver for debugging purpose or to disk exports

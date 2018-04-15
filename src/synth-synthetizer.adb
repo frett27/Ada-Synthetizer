@@ -38,7 +38,7 @@ package body Synth.Synthetizer is
       S := new Synthetizer_Structure_Type;
       S.Init (D             => D,
              NBBuffer => 1,
-             Buffer_Length => 2000);
+             Buffer_Length => 1000);
 
    exception
             when E : others =>
@@ -630,7 +630,7 @@ end;
             Driver_Play_Frequency);
 
    One_Played_Sample_Frame_Period : constant Play_Second :=
-     Play_Second (One_Sample_Frame_Period) *
+     One_Sample_Frame_Period *
      VSA.Play_Sample.Note_Frequency /
        VSA.Note_Play_Frequency;
 
