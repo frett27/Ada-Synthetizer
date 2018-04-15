@@ -45,7 +45,6 @@ package Synth.Driver.Win32 is
    -----------
    -- Close --
    -----------
-
    overriding procedure Close (Driver : in out WIN32_Driver);
 
    ----------
@@ -58,7 +57,7 @@ package Synth.Driver.Win32 is
 
 private
 
-   type Play_Buffer_Cursor is mod 5;
+   type Play_Buffer_Cursor is mod 4;
    type Play_Buffer_Type is array (Play_Buffer_Cursor) of LPWAVEHDR;
 
    function To_PWAVEHDR is new Ada.Unchecked_Conversion
@@ -95,7 +94,13 @@ private
       Current : Natural := N;
    end Semaphore;
 
-   SBuffer : Semaphore (4); -- for handling the buffers
+   SBuffer : Semaphore (3); -- for handling the buffers
    SBufferCursor : Semaphore (1); -- for handling the cursors
+
+   task BufferClean is
+      entry CleanBuffer(Driver : in WIN32_Driver_Access; BufferToRelease : in PWAVEHDR);
+
+   end BufferClean;
+
 
 end Synth.Driver.Win32;
