@@ -408,29 +408,6 @@ package body Synth.Driver.Win32 is
 
    end Semaphore;
 
-   -- task to asynchronousely release buffers, this preserve then the
-   -- lattency
-   task body BufferClean is
-
-      DriverPassed : WIN32_Driver_Access;
-      BufferToReleasePassed : PWAVEHDR;
-   begin
-      loop
-      select
-         accept CleanBuffer(Driver : in WIN32_Driver_Access; BufferToRelease : in PWAVEHDR) do
-                  DriverPassed := Driver;
-                  BufferToReleasePassed := BufferToRelease;
-         end;
-       or Terminate;
-            end select;
-
-       FreeStructure(Driver => DriverPassed,
-                     Buffer => BufferToReleasePassed);
-       -- SBuffer.Verlassen;
-
-
-      end loop;
-   end BufferClean;
 
 
 end Synth.Driver.Win32;

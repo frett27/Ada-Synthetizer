@@ -97,10 +97,6 @@ private
    SBuffer : Semaphore (3); -- for handling the buffers
    SBufferCursor : Semaphore (1); -- for handling the cursors
 
-   task BufferClean is
-      entry CleanBuffer(Driver : in WIN32_Driver_Access; BufferToRelease : in PWAVEHDR);
-
-   end BufferClean;
 
 
 end Synth.Driver.Win32;
