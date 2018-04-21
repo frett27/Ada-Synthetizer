@@ -46,7 +46,7 @@ package Synth.Synthetizer is
    --  the voice type, index to the voice array structure
    type Voice is new Natural;
 
-      --  array of voices
+   --  array of voices
    type Voice_Array is array (Positive range <>) of Voice;
 
    --  array of voice that can be null, or don't have any voices
@@ -107,10 +107,10 @@ private
    --  Fill a buffer with the given voice
    --
    procedure Process_Buffer (VSA : Voice_Structure_Type;
-                            Buffer : Frame_Array_Access;
-                            Volume_Factor : Float := 1.0;
-                            ReachEndSample : out Boolean;
-                            Returned_Current_Sample_Position : out Play_Second);
+                             Buffer : Frame_Array_Access;
+                             Volume_Factor : Float := 1.0;
+                             ReachEndSample : out Boolean;
+                             Returned_Current_Sample_Position : out Play_Second);
 
    type Buffer_Type is record
       BP : PCM_Frame_Array_Access;
@@ -195,12 +195,14 @@ private
 
    protected type Voices_Type is
 
-       procedure Allocate_New_Voice (Voice_Structure : Voice_Structure_Type; TheVoice : out Voice);
-       function Get_Voice (V : Voice) return ReadOnly_Voice_Structure_Access;
-       function Is_Voice_Opened (V : Voice) return Boolean;
-       procedure Close_Voice (V : Voice);
-      function Get_All_Opened_Voices return Voice_Array;
-      procedure Update_Position (V : Voice; Current_Sample_Position : Play_Second);
+      procedure Allocate_New_Voice (Voice_Structure : Voice_Structure_Type; TheVoice : out Voice);
+      function Get_Voice (V : Voice) return ReadOnly_Voice_Structure_Access;
+      function Is_Voice_Opened (V : Voice) return Boolean;
+      procedure Close_Voice (V : Voice);
+      function Get_All_Opened_Voices
+        return Voice_Array;
+      procedure Update_Position (V : Voice;
+                                 Current_Sample_Position : Play_Second);
 
       --  specialized play structures
       function Get_All_Opened_Voices_Play_Structure return Voice_Play_Structure_Array;
@@ -208,7 +210,7 @@ private
 
    private
 
-          --  voice control
+      --  voice control
       All_Voices : aliased Voice_Structure_Array (1 .. MAX_VOICES_INDICE) :=
         (others =>
            Null_Voice_Structure);
@@ -240,8 +242,8 @@ private
    protected type Synthetizer_Structure_Type is
 
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
-                     NBBuffer : Positive;
-                     Buffer_Length : Positive);
+                      NBBuffer : Positive;
+                      Buffer_Length : Positive);
 
       procedure Play
         (S            : SoundSample;
