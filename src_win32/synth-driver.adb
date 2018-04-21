@@ -21,38 +21,19 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This package define the sound driver to use for the synthetizer
---  this can be either alsa, or an other embeded device
+-- with Synth.Driver.Win32;
+with Synth.Driver.Alsa;
 
---  this driver play synchronousely a block of sound
---  constructor of the driver is done be the derived type
+package body Synth.Driver is
 
-package Synth.Driver is
+   
+   procedure Open (Driver : out Sound_Driver_Access) is 
+   begin
+--      Synth.Driver.Win32.Open(Driver => Driver);
+      Synth.Driver.Alsa.Open(Driver => Driver);
+   end Open;
+    
 
-   type Sound_Driver is abstract tagged null record;
-
-   type Sound_Driver_Access is access all Sound_Driver'Class;
-
-   ----------
-   -- Play --
-   ----------
-
-   procedure Play
-     (Driver : in out Sound_Driver;
-      Buffer : PCM_Frame_Array_Access) is abstract;
-
-   -----------
-   -- Close --
-   -----------
-
-   procedure Close (S : in out Sound_Driver) is abstract;
-
-
-   -----------
-   -- Open  --
-   -----------
-
-   procedure Open (Driver : out Sound_Driver_Access);
-
+   
 
 end Synth.Driver;

@@ -1,22 +1,38 @@
 with "win32ada.gpr";
+with "C:\Users\use\workspaceGNAT\Synthetizer\drivers\alsa-binding\lib_alsa_binding.gpr";
 
 project Synthetizer is
 
    type Build_Kind is
       ("default", "relocatable");
 
-   -- for Main use ("test_read_wav.adb", "test_win32_driver.adb", "test_voice_play.adb");
+   type Plateform is
+      ("linux", "win32");
 
-   for Source_Dirs use ("src");
+   PLATEFORM : Plateform := external ("PLATEFORM_BUILD","default");
+
+   case PLATEFORM is
+      when "win32" =>
+          for Source_Dirs use ("src", "src_win32");
+      when "linux" =>
+          for Source_Dirs use ("src", "src_linux");
+   end case;
+
    for Object_Dir use "obj";
-   WIN32ADA_BUILD : Build_Kind := external ("WIN32ADA_BUILD");
+
 
    package Compiler is
       for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
    end Compiler;
 
    package Linker is
-      for Linker_Options use ("-lwinmm");
+      case PLATEFORM is
+           when "win32" =>
+              for Linker_Options use ("-lwinmm");
+
+           when "linux" =>
+                  
+      end case
    end Linker;
 
    package Builder is
@@ -26,23 +42,23 @@ project Synthetizer is
    package Ide is
       for Compiler_Command ("c") use "gcc";
 
-      case WIN32ADA_BUILD is
+      case PLATEFORM is
 
-         when "default" =>
+         when "linux" =>
 
-         when "relocatable" =>
+         when "win32" =>
             for Compiler_Command ("ada") use "gnatmake";
       end case;
    end Ide;
 
    package Pretty_Printer is
 
-      case WIN32ADA_BUILD is
+      case PLATEFORM is
 
-         when "default" =>
+         when "win32" =>
             for Switches ("ada") use ("-M100");
 
-         when "relocatable" =>
+         when "linux" =>
 
       end case;
    end Pretty_Printer;

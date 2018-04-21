@@ -21,38 +21,73 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
---  This package define the sound driver to use for the synthetizer
---  this can be either alsa, or an other embeded device
+with Ada;
+with Ada.Real_Time; use Ada.Real_Time;
+with Ada.Text_IO; use Ada.Text_IO;
 
---  this driver play synchronousely a block of sound
---  constructor of the driver is done be the derived type
+With Sound;
 
-package Synth.Driver is
 
-   type Sound_Driver is abstract tagged null record;
+------------------------
+-- Synth.Driver.Win32 --
+------------------------
 
-   type Sound_Driver_Access is access all Sound_Driver'Class;
+package body Synth.Driver.Alsa is
+
+
+   ----------
+   -- Open --
+   ----------
+
+   procedure Open (Driver : out Sound_Driver_Access) is
+
+       ALSADriver : ALSA_Driver_Access := new ALSA_Driver;
+       Resolution  : Sound.Sample_Frequency := 44_100;
+       Buffer_Size : Duration := 0.5;
+       Period      : Duration := 0.1;
+   begin
+       Sound.Mono.Open (Line        => ALSADriver.Speakers,
+                        Mode        => Sound.Output,
+                        Resolution  => Resolution,
+                        Buffer_Size => Buffer_Size,
+                        Period      => Period);
+
+      --  open speakers
+
+      Driver := ALSADriver.all'Access;
+
+   end Open;
 
    ----------
    -- Play --
    ----------
 
    procedure Play
-     (Driver : in out Sound_Driver;
-      Buffer : PCM_Frame_Array_Access) is abstract;
+     (Driver : in out ALSA_Driver;
+      Buffer : PCM_Frame_Array_Access)
+   is
 
-   -----------
-   -- Close --
-   -----------
+      Timing : Time;
+      pragma Unreferenced (Timing);
+      AlsaBuffer : Sound.Mono.Frame_Array(Buffer'Range);
+      Last : Integer;
+   begin
 
-   procedure Close (S : in out Sound_Driver) is abstract;
+      for I in Buffer'Range loop
+         AlsaBuffer(I) := Sound.Mono.Frame(Buffer(I) );
+      end loop;
+
+      Sound.Mono.Write(Line => Driver.Speakers,
+                         Item => AlsaBuffer,
+                       Last => Last);
+
+   end;
+
+   procedure Close (Driver : in out ALSA_Driver) is
+   begin
+      null;
+   end;
 
 
-   -----------
-   -- Open  --
-   -----------
 
-   procedure Open (Driver : out Sound_Driver_Access);
-
-
-end Synth.Driver;
+end Synth.Driver.Alsa;
