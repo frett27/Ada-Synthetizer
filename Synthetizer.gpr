@@ -1,18 +1,21 @@
 
-abstract project Synthetizer is
+aggregate library project Synthetizer is
+
+   type OS_Type is ("GNU/Linux", "Windows");
+   OS : OS_Type := external ("OS", "Windows");
+
+   for Library_Name use "synthetizer";
+   for Library_Dir use "lib";
 
 
-   package Compiler is
-      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
-   end Compiler;
+   case OS is
+      when "Windows" =>
+         for Project_Files use ("synthetizer_win32.gpr");
+      when "GNU/Linux" =>
+         for Project_Files use ("synthetizer_linux.gpr");
+   end case;
 
-   package Builder is
-      for Default_Switches ("ada") use ("-g");
-   end Builder;
 
-   package Linker is
-      for Linker_Options use ("-lasound");
-   end Linker;
 
 
 end Synthetizer;

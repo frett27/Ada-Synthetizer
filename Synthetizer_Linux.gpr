@@ -1,5 +1,4 @@
 
-with "Synthetizer";
 with "./drivers/alsa-binding/lib_alsa_binding.gpr";
 
 project Synthetizer_Linux is
@@ -8,9 +7,13 @@ project Synthetizer_Linux is
 
    for Object_Dir use "obj";
 
-   package Compiler renames Synthetizer.Compiler;
-   package Builder renames Synthetizer.Builder;
-   package Linker renames Synthetizer.Linker;
+   package Linker is
+       for Linker_Options use ("-lasound");
+   end Linker;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
+   end Compiler;
 
 end Synthetizer_Linux;
 
