@@ -1,0 +1,35 @@
+syntax: glob
+
+# Temporary files from editors:
+*~
+.\#*
+\#*\#
+.*.swp
+
+# Output from tests:
+tests/build.status
+tests/run.status
+tests/*/*.errors
+tests/*/*.output
+
+# Generated test executables:
+
+# Test output to clean up:
+
+# Generated source files:
+src/alsa_binding-mercurial.ads
+src/alsa_binding.ads
+src/sound-constants.ads
+
+# Generated object files:
+obj
+
+# Generated executables:
+build_tools/generate_sound_constants
+bin/alsa_binding-demo
+bin/generate_sound_constants
+bin/microphone_to_wav
+bin/play_mono
+bin/record_stereo_wav
+bin/test_alsa_binding
+
