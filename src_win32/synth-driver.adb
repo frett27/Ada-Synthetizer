@@ -21,16 +21,14 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
--- with Synth.Driver.Win32;
-with Synth.Driver.Alsa;
+with Synth.Driver.Win32;
 
 package body Synth.Driver is
 
    
    procedure Open (Driver : out Sound_Driver_Access) is 
    begin
---      Synth.Driver.Win32.Open(Driver => Driver);
-      Synth.Driver.Alsa.Open(Driver => Driver);
+      Synth.Driver.Win32.Open(Driver => Driver);
    end Open;
     
 

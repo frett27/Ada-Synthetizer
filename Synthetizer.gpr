@@ -3,13 +3,10 @@ with "C:\Users\use\workspaceGNAT\Synthetizer\drivers\alsa-binding\lib_alsa_bindi
 
 project Synthetizer is
 
-   type Build_Kind is
-      ("default", "relocatable");
-
    type Plateform is
       ("linux", "win32");
 
-   PLATEFORM : Plateform := external ("PLATEFORM_BUILD","default");
+   PLATEFORM : Plateform := external ("PLATEFORM_BUILD","win32");
 
    case PLATEFORM is
       when "win32" =>
@@ -32,7 +29,7 @@ project Synthetizer is
 
            when "linux" =>
                   
-      end case
+      end case;
    end Linker;
 
    package Builder is
