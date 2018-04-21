@@ -1,0 +1,5 @@
+The to-do list:
+* Reorganise stereo recording to match mono recording and playback
+* Implement stereo playback
+* WAV file I/O (both stream-based and memory-map-based)
+* Bind (or merge in a binding) to Portaudio (as an alternative backend)

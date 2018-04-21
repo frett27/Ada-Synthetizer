@@ -1,0 +1,106 @@
+#! /bin/bash
+#-----------------------------------------------------------------------------
+#                                                                            #
+#                     Copyright (C) 2012-2013, AdaHeads K/S                  #
+#       Copyright (C) 2013-, Jacob Sparre Andersen Research & Innovation     #
+#                                                                            #
+#  This is free software;  you can redistribute it  and/or modify it         #
+#  under terms of the  GNU General Public License as published  by the       #
+#  Free Software  Foundation;  either version 3,  or (at your option) any    #
+#  later version.  This software is distributed in the hope  that it will    #
+#  be useful, but WITHOUT ANY WARRANTY;  without even the implied warranty   #
+#  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU       #
+#  General Public License for  more details.                                 #
+#  You should have  received  a copy of the GNU General  Public  License     #
+#  distributed  with  this  software;   see  file COPYING3.  If not, go      #
+#  to http://www.gnu.org/licenses for a complete copy of the license.        #
+#                                                                            #
+#-----------------------------------------------------------------------------
+#--  Job:
+
+job="$1"
+
+if [ ! -x "${job}" ]; then
+   echo "'${job}' is not executable."
+   exit 201
+fi
+
+#-----------------------------------------------------------------------------
+#--  Maximum execution time (wall clock):
+
+if [ -f ${job}.allowed_time_in_seconds ]; then
+   allowed_time_in_seconds=$(cat ${job}.allowed_time_in_seconds)
+elif [ ! -z "${default_allowed_time_in_seconds}" ]; then
+   allowed_time_in_seconds=${default_allowed_time_in_seconds}
+else
+   allowed_time_in_seconds=10
+fi
+
+#-----------------------------------------------------------------------------
+#--  Command line arguments:
+
+if [ ! -f ${job}.arguments ]; then
+   touch ${job}.arguments
+fi
+
+#-----------------------------------------------------------------------------
+#--  Reporting:
+
+echo 'Running '${job}' for at most '${allowed_time_in_seconds}' seconds...' 1>&2
+
+#-----------------------------------------------------------------------------
+#--  Start job:
+
+tr '\n' '\0' < ${job}.arguments \
+  | xargs -0 ${job} 1>${job}.output \
+                    2>${job}.errors \
+                    &
+pid=$!
+
+#-----------------------------------------------------------------------------
+#--  Kill job, if it runs too long:
+
+(
+  sleep ${allowed_time_in_seconds}
+  if [ -d /proc/${pid} ]; then
+     echo ${run_number}/${number_of_runs}$'\tTerminating '${job}'...' 1>&2
+     kill ${pid} 2>/dev/null
+     sleep 1
+     if [ -d /proc/${pid} ]; then
+        echo ${run_number}/${number_of_runs}$'\tKilling '${job}'...' 1>&2
+        kill -9 ${pid} 2>/dev/null
+     fi
+  fi
+) &
+
+#-----------------------------------------------------------------------------
+#--  Get exit code:
+
+wait ${pid}
+result=$?
+
+if [ ${result} -eq 0 ]; then
+   echo 'Run succeeded.' 1>&2
+
+   echo "succeeded" > "${job}.exit_code"
+
+   rm -f ${job}.{output,errors}
+elif [ ${result} -eq 123 ]; then
+   echo 'Run was terminated by an exception.' 1>&2
+
+   echo "failed (exception)" > "${job}.exit_code"
+elif [ ${result} -eq 137 ]; then
+   echo 'Run was terminated by SIGKILL.' 1>&2
+
+   echo "failed (SIGKILL)" > "${job}.exit_code"
+elif [ ${result} -eq 143 ]; then
+   echo 'Run was terminated by SIGTERM.' 1>&2
+
+   echo "failed (SIGTERM)" > "${job}.exit_code"
+else
+   echo 'Run failed with exit code '${result}'.' 1>&2
+
+   echo "failed (${result})" > "${job}.exit_code"
+fi
+
+#-----------------------------------------------------------------------------

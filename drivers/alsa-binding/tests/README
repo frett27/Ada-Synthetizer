@@ -1,0 +1,14 @@
+A few things to remember when creating a new test:
+
+* Use Ada.Command_Line to set the exit status of the test.
+* Remember that all executable files in the test directory _will_ be executed.
+* Use the "test_name.argument" file to add command line arguments to the test.
+  One argument per line.
+* Use the "test_name.allowed_time_in_seconds" file to set an allowed running
+  time different from the 10 seconds default value.
+
+When running the tests:
+
+* "build.status" and "run.status" contains slightly more detailed output from
+  the building and running of tests.
+

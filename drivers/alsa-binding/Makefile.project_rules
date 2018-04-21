@@ -1,0 +1,11 @@
+build-depends-debian:
+	@( dpkg -l libasound2-dev | grep '^ii  libasound2-dev ' 1>/dev/null || sudo apt-get install libasound2-dev ) || echo "Needs 'libasound2-dev'."
+
+build_tools/generate_sound_constants: build_tools/generate_sound_constants.c
+	cd build_tools && $(CC) generate_sound_constants.c -lasound -o generate_sound_constants
+
+src/sound-constants.ads: build_tools/generate_sound_constants
+	./build_tools/generate_sound_constants > src/sound-constants.ads
+
+.PHONY: build-depends-debian
+
