@@ -16,7 +16,5 @@ aggregate library project Synthetizer is
    end case;
 
 
-
-
 end Synthetizer;
 

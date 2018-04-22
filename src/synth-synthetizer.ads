@@ -49,14 +49,10 @@ package Synth.Synthetizer is
    --  array of voices
    type Voice_Array is array (Positive range <>) of Voice;
 
-   --  array of voice that can be null, or don't have any voices
-   type Opened_Voice_Array is array (Natural range <>) of Voice;
-
-   --  voices structures
+   --  voices structures, maintain the voice information
+   --  associated to voice number , if voice structure type is Null_Voice_Structure, the voice is
+   --  free to reuse
    type Voice_Structure_Array is array (Voice range <>) of aliased Voice_Structure_Type;
-
-   --  access to a voice definition
-   type Voice_Structure_Access is access Voice_Structure_Type;
 
    type ReadOnly_Voice_Structure_Access is access constant Voice_Structure_Type;
 
@@ -98,10 +94,8 @@ package Synth.Synthetizer is
 private
 
    --  max voice
-   MAX_VOICES : constant Natural := 1000;
+   MAX_VOICES : constant Natural := 200;
    MAX_VOICES_INDICE : constant Voice := Voice (MAX_VOICES);
-
-   type Preallocated_Voices_Range is range 1 .. MAX_VOICES;
 
    --
    --  Fill a buffer with the given voice
@@ -124,6 +118,9 @@ private
 
    type Voice_Boolean_Array is array (Voice range <>) of Boolean;
 
+   -- protected type for the buffers preparation
+   -- buffers are prepared using a Frame_Array and provided for
+   -- sound card as PCM_Frame
    protected type Buffer_Ring (NBBuffer : Positive; Buffer_Length : Positive ) is
 
       procedure Init;
@@ -151,7 +148,8 @@ private
       --  current index for consumption
       Current_Consume : Natural := 1;
 
-      --  outed frames
+      --  outed frames, mark are "taken" buffer (outed)
+      --  multiple buffer can be "taken"
       Outed_Frame_Buffer : Boolean_Array (1 .. NBBuffer) :=
         (others => False);
 
@@ -163,7 +161,8 @@ private
    task type Buffer_Play_Task_Type is
 
       --  start the play task
-      entry Start (D : Driver.Sound_Driver_Access; BR : Buffer_Ring_Access);
+      entry Start (D : Driver.Sound_Driver_Access;
+                   BR : Buffer_Ring_Access);
 
       entry Stop;
 
@@ -185,8 +184,8 @@ private
       VSA : Voice_Structure_Type;
       UpdatedPosition : Play_Second;
       Closing : Boolean;
-
    end record;
+
    type Voice_Play_Structure_Array is array (Natural range <>) of Voice_Play_Structure;
 
    -----------------
@@ -199,8 +198,8 @@ private
       function Get_Voice (V : Voice) return ReadOnly_Voice_Structure_Access;
       function Is_Voice_Opened (V : Voice) return Boolean;
       procedure Close_Voice (V : Voice);
-      function Get_All_Opened_Voices
-        return Voice_Array;
+
+      function Get_All_Opened_Voices return Voice_Array;
       procedure Update_Position (V : Voice;
                                  Current_Sample_Position : Play_Second);
 
@@ -210,16 +209,18 @@ private
 
    private
 
-      --  voice control
+      --  voice control, for the voices
       All_Voices : aliased Voice_Structure_Array (1 .. MAX_VOICES_INDICE) :=
         (others =>
            Null_Voice_Structure);
 
-      --  round buffer
-      Max_All_Opened_Voice_Indice : Natural := 0;
+      --  min / max indices in the opened voice
+      Max_All_Opened_Voice_Indice : Natural := MAX_VOICES / 4;
       Min_All_Opened_Voice_Indice : Natural := 1;
+      Search_Open_Voice_Indice : Voice := 0;
 
-      --  list all opened voice indices
+      --  list all opened voice indices,
+      --  for a given voice say the voice is opened or not
       Opened_Voice : Voice_Boolean_Array (1 .. MAX_VOICES_INDICE) := (others => False);
 
    end Voices_Type;

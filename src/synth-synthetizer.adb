@@ -316,7 +316,6 @@ package body Synth.Synthetizer is
                            --                        Task_VSA.Update_Position(V, Returned_Sample_Position);
                            Opened_Voice (I).updatedPosition := Returned_Sample_Position;
                            if ReachEndSample then
-
                               Opened_Voice (I).Closing := True;
                            end if;
 
@@ -355,21 +354,43 @@ package body Synth.Synthetizer is
       procedure Allocate_New_Voice (Voice_Structure : Voice_Structure_Type;
                                     TheVoice : out Voice) is
          V : Voice;
+         Search_Indice : Voice := Search_Open_Voice_Indice + 1;
       begin
 
-         --for I in 1..Max_All_Opened_Voice_Indice loop
-         --   -- try close finished ones
-         --   if Is_Voice_Opened(TheVoice) and then Get_Voice(TheVoice).Stopped then
-         --      Close_Voice(TheVoice);
-         --   end if;
+         Ada.Text_IO.Put_Line(Voice'Image(Search_Indice)
+                              & " " & Natural'Image(Max_All_Opened_Voice_Indice) );
+         for I in 1..Max_All_Opened_Voice_Indice loop
+            -- try close finished ones
+            -- No, this will be done by the sequencer task
 
-         --   if not Opened_Voice(Voice(i)) then
-         --      Opened_Voice(Voice(i)) := true;
-         --      TheVoice := Voice(i);
-         --      All_Voices(TheVoice) := Voice_Structure;
-         --      return;
-         --   end if;
-         --end loop;
+            if Search_Indice > Voice(Max_All_Opened_Voice_Indice) then
+               Search_Indice := All_Voices'First;
+            end if;
+
+            if Is_Voice_Opened(Search_Indice) and then Get_Voice(Search_Indice).Stopped then
+               Close_Voice(Search_Indice);
+            end if;
+
+            if not Opened_Voice(Search_Indice) then
+               -- open the voice
+               Opened_Voice(Search_Indice) := true;
+               TheVoice := Search_Indice;
+               All_Voices(TheVoice) := Voice_Structure;
+
+               if Natural(Search_Indice) < Min_All_Opened_Voice_Indice then
+                  Min_All_Opened_Voice_Indice := Natural(Search_Indice);
+               end if;
+               if Natural(Search_Indice) > Max_All_Opened_Voice_Indice then
+                  Max_All_Opened_Voice_Indice := Natural(Search_Indice);
+               end if;
+
+               Search_Open_Voice_Indice := Search_Indice;
+
+               return;
+            end if;
+
+            Search_Indice := Search_Indice + 1;
+         end loop;
 
          --  reach the Max_All_Opened_Voice_Indice, enlarge the process
 
@@ -381,6 +402,7 @@ package body Synth.Synthetizer is
             Opened_Voice (V) := true;
             All_Voices (V) := Voice_Structure;
             TheVoice := V;
+             Search_Open_Voice_Indice := 1; --raz search
             return;
 
          end if;
@@ -411,9 +433,13 @@ package body Synth.Synthetizer is
             return;
          end if;
 
+         -- close the voice
          Opened_Voice (V) := False;
          All_Voices (V) := Null_Voice_Structure;
+
+         -- if the voice is the minimum
          if Natural (V) = Min_All_Opened_Voice_Indice then
+            -- take the minimum
             Min_All_Opened_Voice_Indice := Natural'Succ (Min_All_Opened_Voice_Indice);
          end if;
 
@@ -618,7 +644,8 @@ package body Synth.Synthetizer is
 
       Driver_Play_Frequency : constant Frequency_Type := 44_100.0;
 
-      Current_Sample_Position : Play_Second := VSA.Current_Sample_Position;
+      Current_Sample_Position : Play_Second :=
+        VSA.Current_Sample_Position;
 
       Play_Period : constant Play_Second :=
         Play_Second (1) / Play_Second (Driver_Play_Frequency );
@@ -694,28 +721,44 @@ package body Synth.Synthetizer is
 
          --  interpolate ?
          declare
-            p  : constant Natural        := To_Pos (Current_Sample_Position);
-            V1 : constant Float := VSA.Play_Sample.Mono_Data (p);
-            R  : Boolean;
-            F : Float :=  Buffer (i) + V1 * Volume_Factor;
+            p  : constant Natural := To_Pos (Current_Sample_Position);
+
          begin
 
-            if F > 1.0 then
-               F := 1.0;  -- saturation
+            if P > VSA.Play_Sample.Mono_Data'Last then
+               Ada.Text_IO.Put_Line(" pos : " & Natural'Image(P));
+               Ada.Text_IO.Put_Line(" index pos : " & Natural'Image(VSA.Play_Sample.Mono_Data'Last));
+
             end if;
 
-            if F < -1.0 then
-               F := -1.0;  -- saturation
-            end if;
+            Pragma Assert(P >= VSA.Play_Sample.Mono_Data'First);
+            Pragma Assert(P <= VSA.Play_Sample.Mono_Data'Last);
 
-            Buffer (i) := F;
+            Pragma Assert(P in VSA.Play_Sample.Mono_Data'range);
 
-            Move_Next (Pos => Current_Sample_Position, Reach_End => R);
-            if R then
-               ReachEndSample := True;
-               Returned_Current_Sample_Position := Current_Sample_Position;
-               return;
-            end if;
+            declare
+               V1 : constant Float := VSA.Play_Sample.Mono_Data (p);
+               R  : Boolean;
+               F : Float :=  Buffer (i) + V1 * Volume_Factor;
+            begin
+
+               if F > 1.0 then
+                  F := 1.0;  -- saturation
+               end if;
+
+               if F < -1.0 then
+                  F := -1.0;  -- saturation
+               end if;
+
+               Buffer (i) := F;
+
+               Move_Next (Pos => Current_Sample_Position, Reach_End => R);
+               if R then
+                  ReachEndSample := True;
+                  Returned_Current_Sample_Position := Current_Sample_Position;
+                  return;
+               end if;
+            end;
          end;
       end loop;
       ReachEndSample := False;

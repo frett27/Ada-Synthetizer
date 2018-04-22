@@ -51,8 +51,8 @@ Samples are provided, but the code is shown below for using it in 5 mins:
       V,V1 : Voice;
    begin
 
-      Put_Line("Load the Sound Driver, from WIN32 driver");
-      Synth.Driver.Win32.Open (Driver => D);
+      Put_Line("Load the Sound Driver, from WIN32/Linux driver");
+      Synth.Driver.Open (Driver => D);
       
       Put_Line("Open the synth");
       Open (D => D, S => S);
