@@ -1,44 +1,59 @@
 # AdaSynthetizer
 
-*Patrice Freydiere - 2018*
+*Patrice Freydiere - Avril 2018*
 
 
 
-This simple **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity.
+This **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity. This library has been setted up to be able to handle Highly Polyphonic rendering. 
 
-A Synthetizer take on one side the samples, and on the other side the Notes to play.
+[Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Nota : The record made is not as good as the real time rendering)
+
+
+
+The Synthetizer take on one side the samples, and on the other side the Notes to play. Each Wav can be reused for multiple play. 
+
+
 
 ![](doc/Synthetizer.png)
 
-**Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production.
+As this library handle a simple level of synthetizer, there are no notions of instruments. These concepts can be introduced easily in a layer based on this library.
 
-### Features
+An example of a result, reading a Midi File can be listened here : 2018-04-22_example_rendering
 
-The API now works on Windows and Linux (Rpi).
+**Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production. But opened to any contributions, or improvements
+
+
+
+### Current Features
+
+The API now works on Windows and Linux (Rpi). A conditional compilation, depending on the OS, compile the associated default driver. There may not have any Linux or Windows dependent code in using the library.  
 
 #### Sound input
 
 - Wav File (16 bits / Signed PCM / Mono) reading
 
-you can also create your own file format reading, populating the SoundSample type
+Implementing your own file format reading is possible in populating the **SoundSample** type. Additional contribution can permit to handle more input file format.
 
-#### Synthetizer
+#### Synthetizer capabilities
 
 - 0.05 ms lattency for the moment, suitable for a lot of applications
-- The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the MAX_VOICES constant, and see whether it match the requierments.
-- Specify volume for each playing sound
-- Nearest neighborhood algorithm for resampling (can be improved)
+- The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the **MAX_VOICES** constant, and see whether it match the requierments. (As the number of polyphonie is increased, the processing may be heavier and can lead to increase the jitter and buffer sizes).
+- Parametrized volume for each playing sound.
+- Resampling : currently Nearest neighborhood algorithm (can be improved)
 
-#### Drivers
+#### Current Drivers
 
 - Win32 SoundDriver
 - Alsa SoundDriver
 
 
+Can be extended outside the library, depending on needs. Theses drivers show how to implement one.
 
-## Example using the Synthetizer by code
 
-Samples are provided, but the code is shown below for using it in 5 mins:
+
+## Using the Synthetizer by example : the code
+
+Below, an example of the use of the synthetizer in 5 mins:
 
 
 
@@ -103,6 +118,14 @@ Samples are provided, but the code is shown below for using it in 5 mins:
 
 
 
+## Feedbacks
+
+The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, be can be improved.
+
+CPU consumption is not large, but on typical computer, process priority has to be upgraded to populate the sound buffer.
+
+
+
 ## Next actions
 
 Version 0.1:
@@ -120,3 +143,11 @@ Version 0.2:
 Version 0.3:
 
 - Porting to Spark, remove the task part for embedded usage
+
+  ​
+
+### Areas That can be covered next (if time permit)
+
+Digital Signal processing : Permit to have Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
+
+FM generators : The current buffers are filled with Wav samples, but a short abstraction can be done to introduce signal generators and modulators to extends the use to "analog like" synthetizers.
