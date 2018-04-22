@@ -49,8 +49,16 @@ package body Synth is
       return R;
    end To_Frame_Array;
 
+   ---------------
+   -- Float_Gen --
+   ---------------
+
    package Float_Gen is
      new Ada.Numerics.Generic_Elementary_Functions (Float_Type => Float);
+
+   ---------------------------
+   -- MIDICode_To_Frequency --
+   ---------------------------
 
    --  convert a midi code to frequency
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type is
@@ -60,6 +68,10 @@ package body Synth is
       return 2.0**(Float (Midi_Code - LA_440_MIDICODE) / 12.0)
         * Frequency_Type'(440.0);
    end MIDICode_To_Frequency;
+
+   --------------------
+   -- Dump Exception --
+   --------------------
 
    procedure DumpException (E : Ada.Exceptions.Exception_Occurrence) is
    begin

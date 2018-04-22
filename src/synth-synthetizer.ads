@@ -198,6 +198,7 @@ private
       procedure Allocate_New_Voice (Voice_Structure : Voice_Structure_Type; TheVoice : out Voice);
       function Get_Voice (V : Voice) return ReadOnly_Voice_Structure_Access;
       function Is_Voice_Opened (V : Voice) return Boolean;
+      function Can_Be_Stopped (V : Voice) return Boolean;
       procedure Close_Voice (V : Voice);
 
       function Get_All_Opened_Voices return Voice_Array;

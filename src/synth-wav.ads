@@ -24,6 +24,11 @@
 package Synth.Wav
   with SPARK_Mode => On
 is
+
+   ----------
+   -- Load --
+   ----------
+
    --  Load a Wav File from the file
    procedure Load (FileName : String; Sample : out SoundSample)
      with Post =>

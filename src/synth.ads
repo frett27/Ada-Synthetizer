@@ -46,6 +46,8 @@ package Synth is
 
       Mono_Data : Frame_Array_Access;
 
+      Cant_Stop : Boolean;
+
       case HasLoop is
          when True =>
             Loop_Start : Natural;
@@ -53,13 +55,15 @@ package Synth is
          when False =>
             null;
       end case;
+
    end record;
 
    Null_Sound_Sample : constant SoundSample :=
      SoundSample'(HasLoop    => False,
                   Frequency  => 44_100.0,
                   Note_Frequency => 440.0,
-                  Mono_Data  => null);
+                  Mono_Data  => null,
+                  Cant_Stop => False);
 
    --  16 bits PCM structure types
    type PCM_Frame is range  -(2**15) .. 2**15 - 1;

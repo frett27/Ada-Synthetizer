@@ -107,12 +107,21 @@ package body Synth.Wav is
 
    ---------------------------------------------------------------------------
 
+   ----------------
+   -- To_Integer --
+   ----------------
+
    function To_Integer (W : Word) return Integer is
    begin
       return Integer (W.A) + Integer (W.B) * 2**8;
    end To_Integer;
 
    ---------------------------------------------------------------------------
+
+   ----------------
+   -- To_Integer --
+   ----------------
+
 
    function To_Integer (W : DWord) return Integer is
    begin
@@ -137,6 +146,10 @@ package body Synth.Wav is
    ---------------------------------------------------------------------------
 
    BAD_FORMAT : exception;
+
+   ---------------------------
+   -- Read_Data_From_Header --
+   ---------------------------
 
    function Read_Data_From_Header
      (File         : File_Type;
@@ -164,6 +177,10 @@ package body Synth.Wav is
    end Read_Data_From_Header;
 
    ---------------------------------------------------------------------------
+
+   ----------------------------------
+   -- Convert_Bytes_To_Frame_Array --
+   ----------------------------------
 
    function Convert_Bytes_To_Frame_Array
      (BA : Byte_Array) return Frame_Array
@@ -203,6 +220,10 @@ package body Synth.Wav is
       end loop;
       return Samples;
    end Convert_Bytes_To_Frame_Array;
+
+   ----------
+   -- Load --
+   ----------
 
    procedure Load (FileName : String; Sample : out SoundSample)
    is

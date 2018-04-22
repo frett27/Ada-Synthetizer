@@ -264,6 +264,7 @@ package body Synth.Synthetizer is
       Terminated : Boolean := False;
    begin
 
+
       accept Start (BR : Buffer_Ring_Access;
                     VSA : Voices_Access) do
          Task_BR := BR;
@@ -352,6 +353,10 @@ package body Synth.Synthetizer is
 
    protected body Voices_Type is
 
+      ------------------------
+      -- Allocate_New_Voice --
+      ------------------------
+
       --  allocate a new voice, and cleaning if necessary
       procedure Allocate_New_Voice (Voice_Structure : Voice_Structure_Type;
                                     TheVoice : out Voice) is
@@ -409,6 +414,11 @@ package body Synth.Synthetizer is
 
       end Allocate_New_Voice;
 
+
+      ---------------
+      -- Get_Voice --
+      ---------------
+
       --  retreive the voice structure pointer
       function Get_Voice (V : Voice) return ReadOnly_Voice_Structure_Access is
       begin
@@ -416,11 +426,29 @@ package body Synth.Synthetizer is
          return  All_Voices (V)'Unchecked_Access;
       end Get_Voice;
 
+      ---------------------
+      -- Is_Voice_Opened --
+      ---------------------
+
       --  is the voice Opened
       function Is_Voice_Opened (V : Voice) return Boolean is
       begin
          return Opened_Voice (V);
       end Is_Voice_Opened;
+
+      --------------------
+      -- Can_Be_Stopped --
+      --------------------
+
+      function Can_Be_Stopped (V : Voice) return Boolean is
+      begin
+         return not All_Voices (V).Play_Sample.Cant_Stop;
+      end Can_Be_Stopped;
+
+
+      -----------------
+      -- Close_Voice --
+      -----------------
 
       --  close an opened voice
       procedure Close_Voice (V : Voice) is
@@ -450,6 +478,11 @@ package body Synth.Synthetizer is
 
       end Close_Voice;
 
+
+      ---------------------------
+      -- Get_All_Opened_Voices --
+      ---------------------------
+
       function Get_All_Opened_Voices return Voice_Array is
          I : Natural := 0;
          V : Voice_Array (Min_All_Opened_Voice_Indice ..Max_All_Opened_Voice_Indice);
@@ -463,10 +496,19 @@ package body Synth.Synthetizer is
          return V (1 ..I);
       end;
 
+
+      ---------------------
+      -- Update_Position --
+      ---------------------
+
       procedure Update_Position (V : Voice; Current_Sample_Position : Play_Second)  is
       begin
          All_Voices (V).Current_Sample_Position := Current_Sample_Position;
       end;
+
+      ------------------------------------------
+      -- Get_All_Opened_Voices_Play_Structure --
+      ------------------------------------------
 
       function Get_All_Opened_Voices_Play_Structure return Voice_Play_Structure_Array is
          I : Natural := 0;
@@ -487,6 +529,10 @@ package body Synth.Synthetizer is
          end loop;
          return V (1 ..I);
       end;
+
+      ---------------------------------------
+      -- Update_Close_And_Positions_Status --
+      ---------------------------------------
 
       procedure Update_Close_And_Positions_Status (VA : Voice_Play_Structure_Array) is
       begin
@@ -512,6 +558,10 @@ package body Synth.Synthetizer is
 
    protected body Synthetizer_Structure_Type is
 
+      ----------
+      -- Init --
+      ----------
+
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
                       Buffer_Length : Positive) is
@@ -531,6 +581,10 @@ package body Synth.Synthetizer is
 
          Inited := true;
       end;
+
+      -----------
+      -- Close --
+      -----------
 
       procedure Close is
       begin
@@ -556,6 +610,10 @@ package body Synth.Synthetizer is
             end;
          end loop;
       end;
+
+      -----------------
+      -- Test_Inited --
+      -----------------
 
       --  sanity check for opened synthetizer
       procedure Test_Inited is
@@ -597,6 +655,11 @@ package body Synth.Synthetizer is
 
       procedure Stop (V : Voice) is
       begin
+
+         if not Voices.Can_Be_Stopped (V) then
+            return; -- wait for the end of sound
+         end if;
+
          if Voices.Is_Voice_Opened (V) then
             Voices.Close_Voice (V);
          end if;
@@ -632,6 +695,10 @@ package body Synth.Synthetizer is
    begin
       return f * Play_Second (f2);
    end;
+
+   --------------------
+   -- Process_Buffer --
+   --------------------
 
    procedure Process_Buffer (VSA : in Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
