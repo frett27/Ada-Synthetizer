@@ -14,6 +14,8 @@ A Synthetizer take on one side the samples, and on the other side the Notes to p
 
 ### Features
 
+The API now works on Windows and Linux (Rpi).
+
 #### Sound input
 
 - Wav File (16 bits / Signed PCM / Mono) reading

@@ -218,9 +218,9 @@ package body Synth.Synthetizer is
       Terminated : Boolean := false;
    begin
 
-      accept Start (D : Driver.Sound_Driver_Access; BR : Buffer_Ring_Access) do
-         Task_BR := BR;
-         Task_Driver := D;
+      accept Start (TheDriver : Driver.Sound_Driver_Access; BufferRing : Buffer_Ring_Access) do
+         Task_BR := BufferRing;
+         Task_Driver := TheDriver;
       end Start;
       --  Put_Line("Play Task Started");
       while not Terminated loop
@@ -245,7 +245,6 @@ package body Synth.Synthetizer is
             exception
                when E : others =>
                   DumpException (E);
-
             end;
 
          end select;
@@ -313,7 +312,10 @@ package body Synth.Synthetizer is
                                            ReachEndSample => ReachEndSample,
                                            Returned_Current_Sample_Position => Returned_Sample_Position);
 
-                           --                        Task_VSA.Update_Position(V, Returned_Sample_Position);
+                           -- calling this is too costy in synchronization
+                           -- Task_VSA.Update_Position(V, Returned_Sample_Position);
+
+                           -- update tha array for upward (by copy passing)
                            Opened_Voice (I).updatedPosition := Returned_Sample_Position;
                            if ReachEndSample then
                               Opened_Voice (I).Closing := True;
@@ -334,7 +336,7 @@ package body Synth.Synthetizer is
 
          end select;
 
-         delay 0.01;
+         delay 0.005;
       end loop;
 
       Put_Line ("End of Preparing Thread");
@@ -365,10 +367,6 @@ package body Synth.Synthetizer is
 
             if Search_Indice > Voice(Max_All_Opened_Voice_Indice) then
                Search_Indice := All_Voices'First;
-            end if;
-
-            if Is_Voice_Opened(Search_Indice) and then Get_Voice(Search_Indice).Stopped then
-               Close_Voice(Search_Indice);
             end if;
 
             if not Opened_Voice(Search_Indice) then
@@ -438,10 +436,10 @@ package body Synth.Synthetizer is
          All_Voices (V) := Null_Voice_Structure;
 
          -- if the voice is the minimum
-         if Natural (V) = Min_All_Opened_Voice_Indice then
+         --if Natural (V) < Min_All_Opened_Voice_Indice then
             -- take the minimum
-            Min_All_Opened_Voice_Indice := Natural'Succ (Min_All_Opened_Voice_Indice);
-         end if;
+         --   Min_All_Opened_Voice_Indice := Natural'Succ (Min_All_Opened_Voice_Indice);
+         --end if;
 
          --if V = Voice(Max_All_Opened_Voice_Indice) then
          --   while Max_All_Opened_Voice_Indice > 0 and then
@@ -496,7 +494,6 @@ package body Synth.Synthetizer is
             declare
                TheVoice : constant Voice := V.V;
             begin
-
                if V.Closing then
                   Opened_Voice (TheVoice) := false;
                   All_Voices (TheVoice).Stopped := True;
@@ -526,8 +523,8 @@ package body Synth.Synthetizer is
          Voices := new Voices_Type;
 
          Play_Task := new Buffer_Play_Task_Type;
-         Play_Task.Start (D  => D,
-                          BR => BR);
+         Play_Task.Start (TheDriver  => D,
+                          BufferRing => BR);
 
          Prepare_Task := new Buffer_Preparing_Task_Type;
          Prepare_Task.Start (BR => BR, VSA => Voices);

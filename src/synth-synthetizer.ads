@@ -21,6 +21,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
+With System;
 with Synth.Driver;
 
 package Synth.Synthetizer is
@@ -159,10 +160,10 @@ private
 
    --  task that play all the buffers
    task type Buffer_Play_Task_Type is
-
+      pragma Priority(System.Priority'First);
       --  start the play task
-      entry Start (D : Driver.Sound_Driver_Access;
-                   BR : Buffer_Ring_Access);
+      entry Start (TheDriver : Driver.Sound_Driver_Access;
+                   BufferRing : Buffer_Ring_Access);
 
       entry Stop;
 
@@ -230,6 +231,7 @@ private
    --  task handling the buffer_fill
 
    task type Buffer_Preparing_Task_Type is
+      pragma Priority(System.Priority'First);
 
       entry Start (BR : Buffer_Ring_Access; VSA : Voices_Access);
 
