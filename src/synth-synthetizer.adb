@@ -656,7 +656,9 @@ package body Synth.Synthetizer is
       procedure Stop (V : Voice) is
       begin
 
-         if not Voices.Can_Be_Stopped (V) then
+         if not Voices.Can_Be_Stopped (V)
+            and (not Voices.Get_Voice (V).Play_Sample.HasLoop)
+         then
             return; -- wait for the end of sound
          end if;
 
