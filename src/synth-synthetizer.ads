@@ -40,6 +40,7 @@ package Synth.Synthetizer is
       Note_Play_Frequency          : Frequency_Type; -- the played frequency
       Play_Sample             : SoundSample; -- the sound sample to play
       Current_Sample_Position : Play_Second := 0.0; -- the position in second
+      Volume       : Float := 1.0; -- volume factor
       Stopped : Boolean := False;
       Channel : Positive := 1; -- used for getting associated voices
    end record;
@@ -78,6 +79,7 @@ package Synth.Synthetizer is
      (Synt         : Synthetizer_Type;
       S            : SoundSample;
       Frequency    : Float;
+      Volume       : Float := 1.0;
       Channel : Positive := 1;
       Opened_Voice :    out Voice);
 
@@ -160,6 +162,7 @@ private
 
    --  task that play all the buffers
    task type Buffer_Play_Task_Type is
+
       pragma Priority(System.Priority'First);
       --  start the play task
       entry Start (TheDriver : Driver.Sound_Driver_Access;
@@ -176,8 +179,8 @@ private
      (Current_Sample_Position => 0.0,
       Stopped                 => True,
       Play_Sample             => Null_Sound_Sample,
-      Note_Play_Frequency => 440.0
-      , Channel => 1
+      Note_Play_Frequency => 440.0,
+      Channel => 1, Volume => 1.0
      );
 
    type Voice_Play_Structure is record
@@ -252,6 +255,7 @@ private
       procedure Play
         (S            : SoundSample;
          Frequency    : Float;
+         Volume : Float := 1.0;
          Channel : Natural := 1;
          Opened_Voice :    out Voice);
 

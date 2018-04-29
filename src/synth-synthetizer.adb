@@ -21,6 +21,7 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Real_Time; use Ada.Real_Time;
 package body Synth.Synthetizer is
 
    ----------
@@ -67,6 +68,7 @@ package body Synth.Synthetizer is
      (Synt         : Synthetizer_Type;
       S            : SoundSample;
       Frequency    : Float;
+      Volume       : Float := 1.0;
       Channel : Positive := 1;
       Opened_Voice :    out Voice)
    is
@@ -80,6 +82,7 @@ package body Synth.Synthetizer is
       Synt.Play (S            => S,
                  Frequency    => Frequency,
                  Channel => Channel,
+                 Volume => Volume,
                  Opened_Voice => OutVoced);
       Opened_Voice := OutVoced;
    exception
@@ -262,6 +265,13 @@ package body Synth.Synthetizer is
       Task_BR : Buffer_Ring_Access;
       Task_VSA : Voices_Access;
       Terminated : Boolean := False;
+
+
+      Elapse_Time : Time_Span;
+      Max_Elapse_Time : Time_Span := To_Time_Span(Duration(0.0));
+      Counter : Integer := 0;
+      Processed_Voices : Natural := 0;
+
    begin
 
 
@@ -292,39 +302,68 @@ package body Synth.Synthetizer is
                Returned_Sample_Position : Play_Second;
             begin
 
+
                if Opened_Voice'Length > 0 then
 
                   --  Put_Line("Prepare Buffer");
 
                   Task_BR.Freeze_New_Buffer (Buffer => Preparing_Buffer);
 
-                  for I in Opened_Voice'Range loop
-                     declare
-                        V : constant Voice_Play_Structure := Opened_Voice (I);
-                     begin
 
-                        --  Put_Line("Process Buffer for Voice " & Voice'Image(V));
-                        --
-                        if V.VSA = Null_Voice_Structure or else
-                          not V.VSA.Stopped then -- and not Terminated
+                  declare
+                     Start_Time : Time := Clock;
+                     Number_Of_Processed_Voices : Natural := 0;
+                  begin
 
-                           Process_Buffer (VSA           => V.VSA,
-                                           Buffer        =>  Preparing_Buffer,
-                                           ReachEndSample => ReachEndSample,
-                                           Returned_Current_Sample_Position => Returned_Sample_Position);
+                     for I in Opened_Voice'Range loop
+                        declare
+                           V : constant Voice_Play_Structure := Opened_Voice (I);
+                        begin
+                           Number_Of_Processed_Voices := Natural'Succ (Number_Of_Processed_Voices);
+                           --  Put_Line("Process Buffer for Voice " & Voice'Image(V));
+                           --
+                           if V.VSA = Null_Voice_Structure or else
+                             not V.VSA.Stopped then -- and not Terminated
 
-                           -- calling this is too costy in synchronization
-                           -- Task_VSA.Update_Position(V, Returned_Sample_Position);
+                              Process_Buffer (VSA           => V.VSA,
+                                              Buffer        =>  Preparing_Buffer,
 
-                           -- update tha array for upward (by copy passing)
-                           Opened_Voice (I).updatedPosition := Returned_Sample_Position;
-                           if ReachEndSample then
-                              Opened_Voice (I).Closing := True;
+                                              ReachEndSample => ReachEndSample,
+                                              Returned_Current_Sample_Position => Returned_Sample_Position);
+
+                              -- calling this is too costy in synchronization
+                              -- Task_VSA.Update_Position(V, Returned_Sample_Position);
+
+                              -- update tha array for upward (by copy passing)
+                              Opened_Voice (I).updatedPosition := Returned_Sample_Position;
+                              if ReachEndSample then
+                                 Opened_Voice (I).Closing := True;
+                              end if;
+                              Elapse_Time := Clock - Start_Time;
+                              if Elapse_Time > Max_Elapse_Time then
+                                 Max_Elapse_Time := Elapse_Time;
+                              end if;
+
+
+
                            end if;
+                        end;
+                     end loop;
 
-                        end if;
-                     end;
-                  end loop;
+                     Processed_Voices := Number_Of_Processed_Voices;
+
+                     Counter := Integer'Succ(Counter);
+                     if (Counter mod 100) = 0 then
+                        Ada.Text_IO.Put_Line("Max Elapse time :" &
+                                               Duration'Image (To_Duration(Max_Elapse_Time))
+                                            & " Processed Voices :" & Natural'Image (Processed_Voices));
+                        Counter := 0;
+                        Max_Elapse_Time := To_Time_Span(Duration(0.0));
+                     end if;
+
+                  end;
+
+
                   --  Put_Line("End Of Preparation");
                   --  if (not Terminated) then
                   Task_BR.UnFreeze_New_Buffer (Buffer => Preparing_Buffer);
@@ -335,9 +374,10 @@ package body Synth.Synthetizer is
 
             end;
 
+
          end select;
 
-         delay 0.005;
+         delay 0.002;
       end loop;
 
       Put_Line ("End of Preparing Thread");
@@ -364,8 +404,8 @@ package body Synth.Synthetizer is
          Search_Indice : Voice := Search_Open_Voice_Indice + 1;
       begin
 
-         Ada.Text_IO.Put_Line(Voice'Image(Search_Indice)
-                              & " " & Natural'Image(Max_All_Opened_Voice_Indice) );
+         -- Ada.Text_IO.Put_Line(Voice'Image(Search_Indice)
+         --                      & " " & Natural'Image(Max_All_Opened_Voice_Indice) );
          for I in 1..Max_All_Opened_Voice_Indice loop
             -- try close finished ones
             -- No, this will be done by the sequencer task
@@ -405,7 +445,7 @@ package body Synth.Synthetizer is
             Opened_Voice (V) := true;
             All_Voices (V) := Voice_Structure;
             TheVoice := V;
-             Search_Open_Voice_Indice := 1; --raz search
+            Search_Open_Voice_Indice := 1; --raz search
             return;
 
          end if;
@@ -465,7 +505,7 @@ package body Synth.Synthetizer is
 
          -- if the voice is the minimum
          --if Natural (V) < Min_All_Opened_Voice_Indice then
-            -- take the minimum
+         -- take the minimum
          --   Min_All_Opened_Voice_Indice := Natural'Succ (Min_All_Opened_Voice_Indice);
          --end if;
 
@@ -630,6 +670,7 @@ package body Synth.Synthetizer is
       procedure Play
         (S            : SoundSample;
          Frequency    : Float;
+         Volume       : Float := 1.0;
          Channel : Natural := 1;
          Opened_Voice :    out Voice)
       is
@@ -641,6 +682,7 @@ package body Synth.Synthetizer is
          Voices.Allocate_New_Voice ( Voice_Structure_Type'(Note_Play_Frequency     => Frequency,
                                                            Play_Sample             => S,
                                                            Current_Sample_Position => 0.0,
+                                                           Volume => Volume,
                                                            Channel => Channel,
                                                            Stopped                 => False),
                                      TheVoice => Allocated_Voice );
@@ -657,7 +699,7 @@ package body Synth.Synthetizer is
       begin
 
          if not Voices.Can_Be_Stopped (V)
-            and (not Voices.Get_Voice (V).Play_Sample.HasLoop)
+           and (not Voices.Get_Voice (V).Play_Sample.HasLoop)
          then
             return; -- wait for the end of sound
          end if;
@@ -698,15 +740,34 @@ package body Synth.Synthetizer is
       return f * Play_Second (f2);
    end;
 
-   --------------------
-   -- Process_Buffer --
-   --------------------
+   -- forward
+   procedure Internal_Process_Buffer (VSA : in Voice_Structure_Type;
+                                      Buffer : Frame_Array_Access;
+                                      Volume_Factor : Float := 1.0;
+                                      ReachEndSample : out Boolean;
+                                      Returned_Current_Sample_Position : out Play_Second);
 
    procedure Process_Buffer (VSA : in Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second) is
+   begin
+      Internal_Process_Buffer (VSA, Buffer, Volume_Factor, ReachEndSample, Returned_Current_Sample_Position);
+
+   end;
+
+
+   --------------------
+   -- Process_Buffer --
+   --------------------
+
+   procedure Internal_Process_Buffer (VSA : in Voice_Structure_Type;
+                                      Buffer : Frame_Array_Access;
+                                      Volume_Factor : Float := 1.0;
+                                      ReachEndSample : out Boolean;
+                                      Returned_Current_Sample_Position : out Play_Second) is
+
 
       Driver_Play_Frequency : constant Frequency_Type := 44_100.0;
 
@@ -805,7 +866,7 @@ package body Synth.Synthetizer is
             declare
                V1 : constant Float := VSA.Play_Sample.Mono_Data (p);
                R  : Boolean;
-               F : Float :=  Buffer (i) + V1 * Volume_Factor;
+               F : Float :=  Buffer (i) + V1 * Volume_Factor * VSA.Volume;
             begin
 
                if F > 1.0 then
@@ -830,6 +891,6 @@ package body Synth.Synthetizer is
       ReachEndSample := False;
       Returned_Current_Sample_Position := Current_Sample_Position;
 
-   end Process_Buffer;
+   end Internal_Process_Buffer;
 
 end Synth.Synthetizer;
