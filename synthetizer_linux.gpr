@@ -14,7 +14,7 @@ project Synthetizer_Linux is
    end Linker;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
+      for Default_Switches ("Ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
    end Compiler;
 
 end Synthetizer_Linux;

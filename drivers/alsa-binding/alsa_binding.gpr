@@ -1,6 +1,7 @@
 with "ada_2005";
 
 project ALSA_Binding is
+   for Languages use ("Ada");
    for Source_Dirs use ("src/");
 
    for Main use ( -- "record_stereo_wav.adb",
