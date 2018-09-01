@@ -21,7 +21,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Real_Time; use Ada.Real_Time;
 package body Synth.Synthetizer is
 
    ----------
@@ -30,7 +29,9 @@ package body Synth.Synthetizer is
 
    procedure Open
      (D : Driver.Sound_Driver_Access;
-      S :    out Synthetizer_Type)
+      S :    out Synthetizer_Type;
+      Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
+      Buffers_Number : Positive := 1)
    is
    begin
 
@@ -38,13 +39,12 @@ package body Synth.Synthetizer is
 
       S := new Synthetizer_Structure_Type;
       S.Init (D             => D,
-              NBBuffer => 1,
-              Buffer_Length => 1000);
+              NBBuffer => Buffers_Number,
+              Buffer_Length => Buffer_Size);
 
    exception
       when E : others =>
          DumpException (E);
-
    end Open;
 
    -----------
@@ -72,7 +72,7 @@ package body Synth.Synthetizer is
       Channel : Positive := 1;
       Opened_Voice :    out Voice)
    is
-      OutVoced : Voice;
+      OutVoice : Voice;
    begin
 
       if Float (S.Note_Frequency) <= 1.0 then
@@ -83,8 +83,8 @@ package body Synth.Synthetizer is
                  Frequency    => Frequency,
                  Channel => Channel,
                  Volume => Volume,
-                 Opened_Voice => OutVoced);
-      Opened_Voice := OutVoced;
+                 Opened_Voice => OutVoice);
+      Opened_Voice := OutVoice;
    exception
       when E : others =>
          DumpException (E);
@@ -226,6 +226,7 @@ package body Synth.Synthetizer is
          Task_Driver := TheDriver;
       end Start;
       --  Put_Line("Play Task Started");
+
       while not Terminated loop
          select
             accept Stop do
@@ -264,21 +265,44 @@ package body Synth.Synthetizer is
    task body Buffer_Preparing_Task_Type is
       Task_BR : Buffer_Ring_Access;
       Task_VSA : Voices_Access;
-      Terminated : Boolean := False;
 
+      Task_Buffer_Number : Positive;
+      Task_Buffer_Length : Natural;
+
+      Terminated : Boolean := False;
 
       Elapse_Time : Time_Span;
       Max_Elapse_Time : Time_Span := To_Time_Span(Duration(0.0));
+
       Counter : Integer := 0;
       Processed_Voices : Natural := 0;
+
+      Last_Clock : Time := Clock;
+      Init_Clock : Time := Last_Clock;
+
+      Time_Jitter : Time_Span;
 
    begin
 
 
       accept Start (BR : Buffer_Ring_Access;
-                    VSA : Voices_Access) do
+                    VSA : Voices_Access;
+                    Buffer_Number : Positive;
+                    Buffer_Length : Natural) do
          Task_BR := BR;
          Task_VSA := VSA;
+         Task_Buffer_Length := Buffer_Length;
+         Task_Buffer_Number := Buffer_Number;
+
+         Time_Jitter := Microseconds
+           ( Natural( Long_Float(Task_Buffer_Length)
+             * 1_000_000.0 / 44_100.0 ) );
+
+         -- must be late in the pipeline,
+         -- TODO: change it
+         Last_Clock := Clock - 10 * Task_Buffer_Number * Time_Jitter; -- attention
+
+         Init_Clock := Last_Clock;
       end Start;
       --  Put_Line("Preparing Task Started");
 
@@ -291,86 +315,88 @@ package body Synth.Synthetizer is
 
          else
 
-            --  Put_Line("Check Buffer");
-
             --  take buffer, process the voices
             --
             declare
                Preparing_Buffer : Frame_Array_Access;
                ReachEndSample : Boolean := False;
-               Opened_Voice : Voice_Play_Structure_Array := Task_VSA.Get_All_Opened_Voices_Play_Structure;
+               Opened_Voice : Voice_Play_Structure_Array :=
+                 Task_VSA.Get_All_Opened_Voices_Play_Structure;
                Returned_Sample_Position : Play_Second;
+
             begin
 
-
-               if Opened_Voice'Length > 0 then
-
-                  --  Put_Line("Prepare Buffer");
-
-                  Task_BR.Freeze_New_Buffer (Buffer => Preparing_Buffer);
-
-
-                  declare
-                     Start_Time : Time := Clock;
-                     Number_Of_Processed_Voices : Natural := 0;
-                  begin
-
-                     for I in Opened_Voice'Range loop
-                        declare
-                           V : constant Voice_Play_Structure := Opened_Voice (I);
-                        begin
-                           Number_Of_Processed_Voices := Natural'Succ (Number_Of_Processed_Voices);
-                           --  Put_Line("Process Buffer for Voice " & Voice'Image(V));
-                           --
-                           if V.VSA = Null_Voice_Structure or else
-                             not V.VSA.Stopped then -- and not Terminated
-
-                              Process_Buffer (VSA           => V.VSA,
-                                              Buffer        =>  Preparing_Buffer,
-
-                                              ReachEndSample => ReachEndSample,
-                                              Returned_Current_Sample_Position => Returned_Sample_Position);
-
-                              -- calling this is too costy in synchronization
-                              -- Task_VSA.Update_Position(V, Returned_Sample_Position);
-
-                              -- update tha array for upward (by copy passing)
-                              Opened_Voice (I).updatedPosition := Returned_Sample_Position;
-                              if ReachEndSample then
-                                 Opened_Voice (I).Closing := True;
-                              end if;
-                              Elapse_Time := Clock - Start_Time;
-                              if Elapse_Time > Max_Elapse_Time then
-                                 Max_Elapse_Time := Elapse_Time;
-                              end if;
+               Task_BR.Freeze_New_Buffer (Buffer => Preparing_Buffer);
+               -- Put_Line("Buffer Acquired");
 
 
 
+               declare
+
+                  Start_Buffer_Time : Time;
+
+                  Number_Of_Processed_Voices : Natural := 0;
+
+                  Buffer_Allocation_End : Time := Clock;
+               begin
+
+                  Last_Clock := Last_Clock + Time_Jitter;
+                  Start_Buffer_Time := Last_Clock;
+
+                  for I in Opened_Voice'Range loop
+                     declare
+                        Start_Time : Time := Clock;
+                        V : constant Voice_Play_Structure := Opened_Voice (I);
+                     begin
+
+                        Number_Of_Processed_Voices := Natural'Succ (Number_Of_Processed_Voices);
+                        --  Put_Line("Process Buffer for Voice " & Voice'Image(V));
+                        --
+                        if V.VSA = Null_Voice_Structure or else
+                          not V.VSA.Stopped then -- and not Terminated
+
+                           Process_Buffer (VSA           => V.VSA,
+                                           Buffer        =>  Preparing_Buffer,
+                                           Start_Buffer_Time  => Start_Buffer_Time,
+                                           ReachEndSample => ReachEndSample,
+                                           Returned_Current_Sample_Position => Returned_Sample_Position);
+
+                           -- calling this is too costy in synchronization
+                           -- Task_VSA.Update_Position(V, Returned_Sample_Position);
+
+                           -- update the array for upward (by copy passing)
+                           Opened_Voice (I).updatedPosition := Returned_Sample_Position;
+                           if ReachEndSample then
+                              Opened_Voice (I).Closing := True;
                            end if;
-                        end;
-                     end loop;
+                           Elapse_Time := Clock - Start_Time;
+                           if Elapse_Time > Max_Elapse_Time then
+                              Max_Elapse_Time := Elapse_Time;
+                           end if;
 
-                     Processed_Voices := Number_Of_Processed_Voices;
+                        end if;
+                     end;
+                  end loop;
 
-                     Counter := Integer'Succ(Counter);
-                     if (Counter mod 100) = 0 then
-                        Ada.Text_IO.Put_Line("Max Elapse time :" &
-                                               Duration'Image (To_Duration(Max_Elapse_Time))
-                                            & " Processed Voices :" & Natural'Image (Processed_Voices));
-                        Counter := 0;
-                        Max_Elapse_Time := To_Time_Span(Duration(0.0));
-                     end if;
+                  Processed_Voices := Number_Of_Processed_Voices;
 
-                  end;
+                  Counter := Integer'Succ(Counter);
+                  if (Counter mod 100) = 0 then
+                     -- report elements for statistics
+                     Ada.Text_IO.Put_Line("Max Elapse time :"
+                                          & Duration'Image (To_Duration (Max_Elapse_Time))
+                                          & " Processed Voices :"
+                                          & Natural'Image (Processed_Voices));
+                     Counter := 0;
+                     Max_Elapse_Time := To_Time_Span(Duration(0.0));
+                  end if;
+
+               end;
 
 
-                  --  Put_Line("End Of Preparation");
-                  --  if (not Terminated) then
-                  Task_BR.UnFreeze_New_Buffer (Buffer => Preparing_Buffer);
-                  --  Put_Line("Done");
-                  --  end if;
-                  Task_VSA.Update_Close_And_Positions_Status (Opened_Voice);
-               end if;
+               Task_BR.UnFreeze_New_Buffer (Buffer => Preparing_Buffer);
+               Task_VSA.Update_Close_And_Positions_Status (Opened_Voice);
+
 
             end;
 
@@ -459,10 +485,11 @@ package body Synth.Synthetizer is
       -- Get_Voice --
       ---------------
 
-      --  retreive the voice structure pointer
+      --  retrieve the voice structure pointer
       function Get_Voice (V : Voice) return ReadOnly_Voice_Structure_Access is
       begin
-         pragma Assert (Opened_Voice (V));
+         -- note PFR : not always true ? -> voice may be stopped in given time
+         -- pragma Assert (Opened_Voice (V));
          return  All_Voices (V)'Unchecked_Access;
       end Get_Voice;
 
@@ -617,7 +644,10 @@ package body Synth.Synthetizer is
                           BufferRing => BR);
 
          Prepare_Task := new Buffer_Preparing_Task_Type;
-         Prepare_Task.Start (BR => BR, VSA => Voices);
+         Prepare_Task.Start (BR => BR,
+                             VSA => Voices,
+                             Buffer_Number => NBBuffer,
+                             Buffer_Length => Buffer_Length);
 
          Inited := true;
       end;
@@ -682,6 +712,7 @@ package body Synth.Synthetizer is
          Voices.Allocate_New_Voice ( Voice_Structure_Type'(Note_Play_Frequency     => Frequency,
                                                            Play_Sample             => S,
                                                            Current_Sample_Position => 0.0,
+                                                           Start_Play_Sample => Clock,
                                                            Volume => Volume,
                                                            Channel => Channel,
                                                            Stopped                 => False),
@@ -709,20 +740,6 @@ package body Synth.Synthetizer is
          end if;
       end Stop;
 
-      ---------------------------
-      -- Get_All_Opened_Voices --
-      ---------------------------
-
-      function Get_All_Opened_Voices return Voice_Array is
-         Empty : constant Voice_Array (2 ..1) := (others => 0);
-      begin
-         if not Inited then
-            raise Synthetizer_Not_Inited;
-         end if;
-
-         return Empty;
-
-      end Get_All_Opened_Voices;
 
    end Synthetizer_Structure_Type;
 
@@ -744,16 +761,19 @@ package body Synth.Synthetizer is
    procedure Internal_Process_Buffer (VSA : in Voice_Structure_Type;
                                       Buffer : Frame_Array_Access;
                                       Volume_Factor : Float := 1.0;
+                                      Start_Buffer_Time : Time;
                                       ReachEndSample : out Boolean;
                                       Returned_Current_Sample_Position : out Play_Second);
 
    procedure Process_Buffer (VSA : in Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
+                             Start_Buffer_Time : Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second) is
    begin
-      Internal_Process_Buffer (VSA, Buffer, Volume_Factor, ReachEndSample, Returned_Current_Sample_Position);
+      Internal_Process_Buffer (VSA, Buffer, Volume_Factor, Start_Buffer_Time, ReachEndSample,
+                               Returned_Current_Sample_Position);
 
    end;
 
@@ -765,8 +785,10 @@ package body Synth.Synthetizer is
    procedure Internal_Process_Buffer (VSA : in Voice_Structure_Type;
                                       Buffer : Frame_Array_Access;
                                       Volume_Factor : Float := 1.0;
+                                      Start_Buffer_Time : Time;
                                       ReachEndSample : out Boolean;
                                       Returned_Current_Sample_Position : out Play_Second) is
+
 
 
       Driver_Play_Frequency : constant Frequency_Type := 44_100.0;
@@ -774,7 +796,7 @@ package body Synth.Synthetizer is
       Current_Sample_Position : Play_Second :=
         VSA.Current_Sample_Position;
 
-      Play_Period : constant Play_Second :=
+      Driver_Play_Period : constant Play_Second :=
         Play_Second (1) / Play_Second (Driver_Play_Frequency );
 
       One_Sample_Frame_Period : constant Play_Second :=
@@ -794,37 +816,37 @@ package body Synth.Synthetizer is
            One_Played_Sample_Frame_Period;
       end To_Second;
 
-      function To_Pos (Pos : Play_Second) return Natural is
+      SS : constant SoundSample := VSA.Play_Sample;
+
+      Sample_Data_Seconds : constant Play_Second :=
+        To_Second (SS.Mono_Data'Length);
+
+      function To_Pos_InSample (Pos : Play_Second) return Natural is
          Pos_In_Array : constant Natural :=
            Natural (Pos / One_Played_Sample_Frame_Period);
       begin
-         return VSA.Play_Sample.Mono_Data'First + Pos_In_Array;
-      end To_Pos;
+         return SS.Mono_Data'First + Pos_In_Array;
+      end To_Pos_InSample;
 
       procedure Move_Next
-        (Pos       : in out Play_Second;
+        (Pos_In_Sample       : in out Play_Second;
          Reach_End :    out Boolean)
       is
       begin
          --  increment
 
-         Pos := Pos + Play_Period;
+         Pos_In_Sample := Pos_In_Sample + Driver_Play_Period;
 
          Reach_End := False;
 
          case VSA.Play_Sample.HasLoop is
          when True =>
-            if Pos > To_Second (VSA.Play_Sample.Loop_End) then
-               Pos := Pos - To_Second (VSA.Play_Sample.Loop_Start);
+            if Pos_In_Sample > To_Second (SS.Loop_End) then
+               Pos_In_Sample := Pos_In_Sample - To_Second (SS.Loop_Start);
             end if;
          when False =>
-            declare
-               SS : SoundSample := VSA.Play_Sample;
-               Sample_Data_Seconds : constant Play_Second :=
-                 To_Second (SS.Mono_Data'Length);
             begin
-
-               if Pos > Sample_Data_Seconds then
+               if Pos_In_Sample > Sample_Data_Seconds then
                   Reach_End := True;
                end if;
             end;
@@ -846,47 +868,84 @@ package body Synth.Synthetizer is
 
       for i in Buffer'Range loop
 
-         --  interpolate ?
          declare
-            p  : constant Natural := To_Pos (Current_Sample_Position);
-
+            IsStarted : Boolean := True;
          begin
 
-            if P > VSA.Play_Sample.Mono_Data'Last then
-               Ada.Text_IO.Put_Line(" pos : " & Natural'Image(P));
-               Ada.Text_IO.Put_Line(" index pos : " & Natural'Image(VSA.Play_Sample.Mono_Data'Last));
+
+
+            if Current_Sample_Position = 0.0 then -- sample has not started yet
+
+               declare
+                  From_Start : constant Time_Span :=
+                    Microseconds( Natural(Driver_Play_Period * Play_Second(i - Buffer'First) * Play_Second(1_000_000.0)));
+               begin
+
+                  -- check if sample has started
+                  if Start_Buffer_Time + From_Start
+                    < VSA.Start_Play_Sample then
+
+                     -- continue loop
+                     IsStarted := False;
+                  end if;
+
+               end;
 
             end if;
 
-            Pragma Assert(P >= VSA.Play_Sample.Mono_Data'First);
-            Pragma Assert(P <= VSA.Play_Sample.Mono_Data'Last);
 
-            Pragma Assert(P in VSA.Play_Sample.Mono_Data'range);
+            if IsStarted then
 
-            declare
-               V1 : constant Float := VSA.Play_Sample.Mono_Data (p);
-               R  : Boolean;
-               F : Float :=  Buffer (i) + V1 * Volume_Factor * VSA.Volume;
-            begin
+               --  interpolate ?
+               declare
+                  Pos_In_Sample  : constant Natural :=
+                    To_Pos_InSample (Current_Sample_Position);
 
-               if F > 1.0 then
-                  F := 1.0;  -- saturation
-               end if;
+               begin
 
-               if F < -1.0 then
-                  F := -1.0;  -- saturation
-               end if;
+                  if Pos_In_Sample > VSA.Play_Sample.Mono_Data'Last then
+                     --debug info,
+                     Ada.Text_IO.Put_Line(" pos : " & Natural'Image(Pos_In_Sample));
+                     Ada.Text_IO.Put_Line(" index pos : "
+                                          & Natural'Image(SS.Mono_Data'Last));
 
-               Buffer (i) := F;
+                  end if;
 
-               Move_Next (Pos => Current_Sample_Position, Reach_End => R);
-               if R then
-                  ReachEndSample := True;
-                  Returned_Current_Sample_Position := Current_Sample_Position;
-                  return;
-               end if;
-            end;
+                  Pragma Assert(Pos_In_Sample >= SS.Mono_Data'First);
+                  Pragma Assert(Pos_In_Sample <= SS.Mono_Data'Last);
+
+                  Pragma Assert(Pos_In_Sample in SS.Mono_Data'range);
+
+                  declare
+                     V1 : constant Float := SS.Mono_Data (Pos_In_Sample);
+                     R  : Boolean;
+                     F : Float :=  Buffer (i) + V1 * Volume_Factor * VSA.Volume;
+                  begin
+
+                     if F > 1.0 then
+                        F := 1.0;  -- saturation
+                     end if;
+
+                     if F < -1.0 then
+                        F := -1.0;  -- saturation
+                     end if;
+
+                     Buffer (i) := F;
+
+                     Move_Next (Pos_In_Sample => Current_Sample_Position,
+                                Reach_End => R);
+                     if R then
+                        ReachEndSample := True;
+                        Returned_Current_Sample_Position := Current_Sample_Position;
+                        return;
+                     end if;
+                  end;
+               end;
+
+            end if;
+
          end;
+
       end loop;
       ReachEndSample := False;
       Returned_Current_Sample_Position := Current_Sample_Position;

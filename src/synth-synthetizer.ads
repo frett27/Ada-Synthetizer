@@ -23,6 +23,8 @@
 
 With System;
 with Synth.Driver;
+With Ada.Real_Time;
+use Ada.Real_Time;
 
 package Synth.Synthetizer is
 
@@ -39,6 +41,7 @@ package Synth.Synthetizer is
    type Voice_Structure_Type is record
       Note_Play_Frequency          : Frequency_Type; -- the played frequency
       Play_Sample             : SoundSample; -- the sound sample to play
+      Start_Play_Sample : Time;
       Current_Sample_Position : Play_Second := 0.0; -- the position in second
       Volume       : Float := 1.0; -- volume factor
       Stopped : Boolean := False;
@@ -61,7 +64,10 @@ package Synth.Synthetizer is
    --  open the synth device
    procedure Open
      (D : Driver.Sound_Driver_Access;
-      S :    out Synthetizer_Type);
+      S :    out Synthetizer_Type;
+      Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
+      Buffers_Number : Positive := 1);
+
 
    --  close the synth
    procedure Close (S : in out Synthetizer_Type);
@@ -97,7 +103,7 @@ package Synth.Synthetizer is
 private
 
    --  max voice
-   MAX_VOICES : constant Natural := 200;
+   MAX_VOICES : constant Natural := 400;
    MAX_VOICES_INDICE : constant Voice := Voice (MAX_VOICES);
 
    --
@@ -106,6 +112,7 @@ private
    procedure Process_Buffer (VSA : Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
+                             Start_Buffer_Time : Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second);
 
@@ -163,7 +170,7 @@ private
    --  task that play all the buffers
    task type Buffer_Play_Task_Type is
 
-      pragma Priority(System.Priority'First);
+      pragma Priority(System.Priority'Last);
       --  start the play task
       entry Start (TheDriver : Driver.Sound_Driver_Access;
                    BufferRing : Buffer_Ring_Access);
@@ -179,6 +186,7 @@ private
      (Current_Sample_Position => 0.0,
       Stopped                 => True,
       Play_Sample             => Null_Sound_Sample,
+      Start_Play_Sample => Time_First,
       Note_Play_Frequency => 440.0,
       Channel => 1, Volume => 1.0
      );
@@ -235,9 +243,12 @@ private
    --  task handling the buffer_fill
 
    task type Buffer_Preparing_Task_Type is
-      pragma Priority(System.Priority'First);
+      pragma Priority(System.Priority'Last);
 
-      entry Start (BR : Buffer_Ring_Access; VSA : Voices_Access);
+      entry Start (BR : Buffer_Ring_Access;
+                   VSA : Voices_Access;
+                   Buffer_Number : Positive;
+                   Buffer_Length : Natural);
 
       entry Stop;
 
@@ -260,8 +271,6 @@ private
          Opened_Voice :    out Voice);
 
       procedure Stop (V : Voice);
-
-      function Get_All_Opened_Voices return Voice_Array;
 
       procedure Close;
 
