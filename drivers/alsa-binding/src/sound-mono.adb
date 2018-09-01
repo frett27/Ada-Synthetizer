@@ -230,15 +230,23 @@ package body Sound.Mono is
 
       use type Sound.ALSA.snd_pcm_sframes_t;
       Written_Frame_Count : Sound.ALSA.snd_pcm_sframes_t;
+      RetCode : Interfaces.C.int;
    begin
+      RetCode := snd_pcm_drain();
+      if RetCode < 0 then
+          raise Program_Error with 
+           "snd_pcm_drain failed: " & RetCode'Img;
+      end if;
+
       Written_Frame_Count := snd_pcm_writei (pcm    => Line,
                                              buffer => Item,
                                              size   => Item'Length);
-
+    
       if Written_Frame_Count < 0 then
          raise Program_Error with
            "snd_pcm_writei failed: " & Written_Frame_Count'Img;
       else
+
          Last := Item'First - 1 + Natural (Written_Frame_Count);
       end if;
    end Write;

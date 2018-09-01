@@ -226,6 +226,10 @@ package Sound.ALSA is
       dir    : access Approximation_Direction) return Interfaces.C.int;
    pragma Import (C, snd_pcm_hw_params_set_period_time_near);
 
+   function snd_pcm_drain
+     (pcm   : in    snd_pcm_t_ptr) return Interfaces.C.int;
+     pragme Import (C, snd_pcm_drain);
+
    function snd_pcm_hw_params
      (pcm    : in     snd_pcm_t_ptr;
       params : access snd_pcm_hw_params_t) return Interfaces.C.int;
