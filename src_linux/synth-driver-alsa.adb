@@ -42,6 +42,7 @@ package body Synth.Driver.Alsa is
    procedure Open (Driver : out Sound_Driver_Access) is
 
       ALSADriver : ALSA_Driver_Access := new ALSA_Driver;
+      -- Resolution  : Sound.Sample_Frequency := 44_100;
       Resolution  : Sound.Sample_Frequency := 44_100;
       Buffer_Size : Duration := 0.5;
       Period      : Duration := 0.1;
@@ -81,24 +82,25 @@ package body Synth.Driver.Alsa is
                        Item => AlsaBuffer,
                        Last => Last);
 
+	-- Ada.Text_IO.Put_Line("last :" & Integer'Image(Last));
+        --  while Last /= AlsaBuffer'Last loop
+        --    delay 0.01;
 
-         while Last /= AlsaBuffer'Last do
-            delay 0.001;
+	--	Ada.Text_IO.put_line("change");
+        --    declare
+        --       RemainingBuffer : Sound.Mono.Frame_Array(Last..AlsaBuffer'Last)
+        --         := AlsaBuffer(Last..AlsaBuffer'Last);
+        --       Last2 : Integer;
+        --    begin
 
-            declare
-               RemainingBuffer : Sound.Mono.Frame_Array(Last..AlsaBuffer'Last)
-                 := AlsaBuffer(Last..AlsaBuffer'Last);
-               Last2 : Integer;
-            begin
+         --      Sound.Mono.Write(Line => Driver.Speakers,
+           --                     Item => RemainingBuffer,
+          --                      Last => Last2);
+         --   Last := Last + Last2 - RemainingBuffer'First;
 
-               Sound.Mono.Write(Line => Driver.Speakers,
-                                Item => RemainingBuffer,
-                                Last => Last2);
-            Last := Last + Last2 - RemainingBuffer'First;
+          --  end;
 
-            end;
-
-         end loop;
+         -- end loop;
 
 
    end;

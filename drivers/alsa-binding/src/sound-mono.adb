@@ -228,9 +228,11 @@ package body Sound.Mono is
         return ALSA.snd_pcm_sframes_t;
       pragma Import (C, snd_pcm_writei);
 
-      --  function snd_pcm_drain (pcm   : in    Line_Type)
-      --    return Interfaces.C.int;
-      --  pragma Import (C, snd_pcm_drain);
+      function snd_pcm_recover (pcm   : in    Line_Type;
+                                frames : in ALSA.snd_pcm_sframes_t;
+                                i : in Interfaces.C.int)
+          return ALSA.snd_pcm_sframes_t;
+      pragma Import (C, snd_pcm_recover);
 
       use type Sound.ALSA.snd_pcm_sframes_t;
       --  use type Interfaces.C.int;
@@ -246,6 +248,11 @@ package body Sound.Mono is
       Written_Frame_Count := snd_pcm_writei (pcm    => Line,
                                              buffer => Item,
                                              size   => Item'Length);
+
+      if Written_Frame_Count < 0 then
+         Written_Frame_Count := snd_pcm_recover (Line,
+                                           Written_Frame_Count, 0);
+      end if;
 
       if Written_Frame_Count < 0 then
          raise Program_Error with
