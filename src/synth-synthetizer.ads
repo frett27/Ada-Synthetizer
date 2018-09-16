@@ -31,6 +31,9 @@ package Synth.Synthetizer is
    --  synth object, that embed the sound system connection
    type Synthetizer_Type is limited private;
 
+
+   Not_Defined_Clock : Time := Time_Last;
+
    --  The voice represent a play of a sound sample
    --  at a given frequency, it also remember the state of the play
    --  (given position), and loop possibility
@@ -42,6 +45,7 @@ package Synth.Synthetizer is
       Note_Play_Frequency          : Frequency_Type; -- the played frequency
       Play_Sample             : SoundSample; -- the sound sample to play
       Start_Play_Sample : Time;
+      Stop_Play_Sample : Time := Not_Defined_Clock;
       Current_Sample_Position : Play_Second := 0.0; -- the position in second
       Volume       : Float := 1.0; -- volume factor
       Stopped : Boolean := False;
@@ -112,6 +116,7 @@ private
    procedure Process_Buffer (VSA : Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
+                             Driver_Play_Frequency : Frequency_Type := 44_100.0;
                              Start_Buffer_Time : Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second);
@@ -186,6 +191,7 @@ private
      (Current_Sample_Position => 0.0,
       Stopped                 => True,
       Play_Sample             => Null_Sound_Sample,
+      Stop_Play_Sample => Not_Defined_Clock,
       Start_Play_Sample => Time_First,
       Note_Play_Frequency => 440.0,
       Channel => 1, Volume => 1.0
@@ -248,7 +254,8 @@ private
       entry Start (BR : Buffer_Ring_Access;
                    VSA : Voices_Access;
                    Buffer_Number : Positive;
-                   Buffer_Length : Natural);
+                   Buffer_Length : Natural;
+                   Driver_Frequency : Frequency_Type);
 
       entry Stop;
 

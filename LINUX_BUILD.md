@@ -12,3 +12,7 @@ make
 
 gprbuild synthetizer_linux.gpr
 
+or
+
+gnatmake -d -p -P synthetizer_linux.gpr
+

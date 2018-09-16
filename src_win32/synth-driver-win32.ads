@@ -40,7 +40,8 @@ package Synth.Driver.Win32 is
    -- Open --
    ----------
    --  factory
-   procedure Open (Driver : out Sound_Driver_Access);
+   procedure Open (Driver : out Sound_Driver_Access;
+                   Frequency : Frequency_Type := 44100.0);
 
    -----------
    -- Close --
@@ -55,6 +56,12 @@ package Synth.Driver.Win32 is
      (Driver : in out WIN32_Driver;
       Buffer : PCM_Frame_Array_Access);
 
+
+
+   overriding function Get_Frequency(Driver : in out WIN32_Driver)
+           return Frequency_Type;
+
+
 private
 
    type Play_Buffer_Cursor is mod 4;
@@ -67,6 +74,7 @@ private
    type WIN32_Driver is new Synth.Driver.Sound_Driver with record
       hWo : aliased HWAVEOUT;
       wfx : LPCWAVEFORMATEX;
+      Frequency : Frequency_Type;
       Buffer : Play_Buffer_Type := Play_Buffer_Type'(others => null);
       Buffer_First : Play_Buffer_Cursor := Play_Buffer_Cursor'First;
       Buffer_Last : Play_Buffer_Cursor := Play_Buffer_Cursor'First;

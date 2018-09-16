@@ -55,4 +55,13 @@ package Synth.Driver is
    procedure Open (Driver : out Sound_Driver_Access);
 
 
+   -------------------
+   -- Get_Frequency --
+   -------------------
+
+   function Get_Frequency(Driver : in out Sound_Driver)
+   return Frequency_Type is abstract;
+
+
+
 end Synth.Driver;

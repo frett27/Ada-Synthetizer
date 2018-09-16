@@ -282,21 +282,25 @@ package body Synth.Synthetizer is
 
       Time_Jitter : Time_Span;
 
+      Task_Driver_Frequency : Frequency_Type;
+
    begin
 
 
       accept Start (BR : Buffer_Ring_Access;
                     VSA : Voices_Access;
                     Buffer_Number : Positive;
-                    Buffer_Length : Natural) do
+                    Buffer_Length : Natural;
+                    Driver_Frequency : Frequency_Type) do
          Task_BR := BR;
          Task_VSA := VSA;
          Task_Buffer_Length := Buffer_Length;
          Task_Buffer_Number := Buffer_Number;
+         Task_Driver_Frequency := Driver_Frequency;
 
          Time_Jitter := Microseconds
            ( Natural( Long_Float(Task_Buffer_Length)
-             * 1_000_000.0 / 44_100.0 ) );
+             * 1_000_000.0 / Long_Float(Task_Driver_Frequency) ) );
 
          -- must be late in the pipeline,
          -- TODO: change it
@@ -337,7 +341,7 @@ package body Synth.Synthetizer is
 
                   Number_Of_Processed_Voices : Natural := 0;
 
-                  Buffer_Allocation_End : Time := Clock;
+                  Buffer_Allocation_End : constant Time := Clock;
                begin
 
                   Last_Clock := Last_Clock + Time_Jitter;
@@ -345,7 +349,7 @@ package body Synth.Synthetizer is
 
                   for I in Opened_Voice'Range loop
                      declare
-                        Start_Time : Time := Clock;
+                        Start_Time : constant Time := Clock;
                         V : constant Voice_Play_Structure := Opened_Voice (I);
                      begin
 
@@ -358,6 +362,7 @@ package body Synth.Synthetizer is
                            Process_Buffer (VSA           => V.VSA,
                                            Buffer        =>  Preparing_Buffer,
                                            Start_Buffer_Time  => Start_Buffer_Time,
+                                           Driver_Play_Frequency => Task_Driver_Frequency,
                                            ReachEndSample => ReachEndSample,
                                            Returned_Current_Sample_Position => Returned_Sample_Position);
 
@@ -508,8 +513,18 @@ package body Synth.Synthetizer is
       --------------------
 
       function Can_Be_Stopped (V : Voice) return Boolean is
+         VSA : Voice_Structure_Type := All_Voices (V);
       begin
-         return not All_Voices (V).Play_Sample.Cant_Stop;
+
+         if VSA.Play_Sample.Cant_Stop then
+            return False;
+         end if;
+
+         if VSA.Stop_Play_Sample /= Not_Defined_Clock then
+            return False;
+         end if;
+
+         return True;
       end Can_Be_Stopped;
 
 
@@ -526,22 +541,7 @@ package body Synth.Synthetizer is
             return;
          end if;
 
-         -- close the voice
-         Opened_Voice (V) := False;
-         All_Voices (V) := Null_Voice_Structure;
-
-         -- if the voice is the minimum
-         --if Natural (V) < Min_All_Opened_Voice_Indice then
-         -- take the minimum
-         --   Min_All_Opened_Voice_Indice := Natural'Succ (Min_All_Opened_Voice_Indice);
-         --end if;
-
-         --if V = Voice(Max_All_Opened_Voice_Indice) then
-         --   while Max_All_Opened_Voice_Indice > 0 and then
-         --     not Is_Voice_Opened(Voice(Max_All_Opened_Voice_Indice)) loop
-         --      Max_All_Opened_Voice_Indice := Natural'Pred(Max_All_Opened_Voice_Indice);
-         --   end loop;
-         --end if;
+         All_Voices (V).Stop_Play_Sample := Clock;
 
       end Close_Voice;
 
@@ -647,7 +647,8 @@ package body Synth.Synthetizer is
          Prepare_Task.Start (BR => BR,
                              VSA => Voices,
                              Buffer_Number => NBBuffer,
-                             Buffer_Length => Buffer_Length);
+                             Buffer_Length => Buffer_Length,
+                             Driver_Frequency => Synth.Driver.Get_Frequency(D.all));
 
          Inited := true;
       end;
@@ -713,6 +714,7 @@ package body Synth.Synthetizer is
                                                            Play_Sample             => S,
                                                            Current_Sample_Position => 0.0,
                                                            Start_Play_Sample => Clock,
+                                                           Stop_Play_Sample => Not_Defined_Clock,
                                                            Volume => Volume,
                                                            Channel => Channel,
                                                            Stopped                 => False),
@@ -761,6 +763,7 @@ package body Synth.Synthetizer is
    procedure Internal_Process_Buffer (VSA : in Voice_Structure_Type;
                                       Buffer : Frame_Array_Access;
                                       Volume_Factor : Float := 1.0;
+                                      Driver_Play_Frequency : Frequency_Type := 44_100.0;
                                       Start_Buffer_Time : Time;
                                       ReachEndSample : out Boolean;
                                       Returned_Current_Sample_Position : out Play_Second);
@@ -768,11 +771,14 @@ package body Synth.Synthetizer is
    procedure Process_Buffer (VSA : in Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
+                             Driver_Play_Frequency : Frequency_Type := 44_100.0;
                              Start_Buffer_Time : Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second) is
    begin
-      Internal_Process_Buffer (VSA, Buffer, Volume_Factor, Start_Buffer_Time, ReachEndSample,
+      Internal_Process_Buffer (VSA, Buffer, Volume_Factor,
+                               Driver_Play_Frequency,
+                               Start_Buffer_Time, ReachEndSample,
                                Returned_Current_Sample_Position);
 
    end;
@@ -785,13 +791,11 @@ package body Synth.Synthetizer is
    procedure Internal_Process_Buffer (VSA : in Voice_Structure_Type;
                                       Buffer : Frame_Array_Access;
                                       Volume_Factor : Float := 1.0;
+                                      Driver_Play_Frequency : Frequency_Type := 44_100.0;
                                       Start_Buffer_Time : Time;
                                       ReachEndSample : out Boolean;
                                       Returned_Current_Sample_Position : out Play_Second) is
 
-
-
-      Driver_Play_Frequency : constant Frequency_Type := 44_100.0;
 
       Current_Sample_Position : Play_Second :=
         VSA.Current_Sample_Position;
@@ -856,10 +860,10 @@ package body Synth.Synthetizer is
 
    begin
 
-      if VSA.Stopped then
-         ReachEndSample := True;
-         return;
-      end if;
+      --if VSA.Stopped and then VSA.Stop_Play_Sample = Not_Defined_Clock then
+      --   ReachEndSample := True;
+      --   return;
+      --end if;
 
       if VSA.Play_Sample = Null_Sound_Sample then
          Put_Line ("Null sample");
@@ -869,29 +873,34 @@ package body Synth.Synthetizer is
       for i in Buffer'Range loop
 
          declare
+             From_Start : constant Time_Span :=
+                    Microseconds( Natural(Driver_Play_Period * Play_Second(i - Buffer'First)
+                                  * Play_Second(1_000_000.0)) );
             IsStarted : Boolean := True;
+            CurrentTime : constant Time := Start_Buffer_Time + From_Start;
          begin
-
-
 
             if Current_Sample_Position = 0.0 then -- sample has not started yet
 
-               declare
-                  From_Start : constant Time_Span :=
-                    Microseconds( Natural(Driver_Play_Period * Play_Second(i - Buffer'First) * Play_Second(1_000_000.0)));
-               begin
 
                   -- check if sample has started
-                  if Start_Buffer_Time + From_Start
+                  if CurrentTime
                     < VSA.Start_Play_Sample then
 
                      -- continue loop
                      IsStarted := False;
                   end if;
 
-               end;
 
             end if;
+
+            if CurrentTime >
+              VSA.Stop_Play_Sample then
+               IsStarted := False;
+               ReachEndSample := True;
+               return;
+            end if;
+
 
 
             if IsStarted then

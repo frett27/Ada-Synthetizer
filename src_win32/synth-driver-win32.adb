@@ -81,9 +81,6 @@ package body Synth.Driver.Win32 is
       Target => Integer);
 
 
-
-
-
   procedure FreeStructure(Driver : in WIN32_Driver_Access; Buffer : in PWAVEHDR) is
 
          H : HGLOBAL;
@@ -187,12 +184,14 @@ package body Synth.Driver.Win32 is
    -- Open --
    ----------
 
-   procedure Open (Driver : out Sound_Driver_Access) is
+   procedure Open (Driver : out Sound_Driver_Access;
+                   Frequency : Frequency_Type := 44100.0) is
       result : MMRESULT;
       WIN32_Driver_Ref : WIN32_Driver_Access;
    begin
 
       WIN32_Driver_Ref := new WIN32_Driver;
+      WIN32_Driver_Ref.Frequency := Frequency;
 
       WIN32_Driver_Ref.wfx :=
         To_Access
@@ -200,16 +199,20 @@ package body Synth.Driver.Win32 is
              (uFlags  => LMEM_FIXED,
               dwBytes => WAVEFORMATEX'Size / System.Storage_Unit)));
 
+      declare
+         F : Interfaces.C.unsigned_long := Interfaces.C.unsigned_long(Frequency);
+      begin
 
 
       WIN32_Driver_Ref.wfx.all :=
-        (nSamplesPerSec  => 44100,
+        (nSamplesPerSec  => F,
          wBitsPerSample  => 16,
          nChannels       => 1,
          cbSize          => 0,
          wFormatTag      => 1,
          nBlockAlign     => 2 * 1,
-         nAvgBytesPerSec => 2 * 44100);
+         nAvgBytesPerSec => 2 * F);
+      end;
 
       --        testFormat.nBlockAlign = (ushort)(testFormat.nChannels *
       --                                          (testFormat.wBitsPerSample / 8));
@@ -389,6 +392,11 @@ package body Synth.Driver.Win32 is
 
    end Close;
 
+
+   ---------------
+   -- Semaphore --
+   ---------------
+
    protected body Semaphore is
 
       entry Passen when Current > 0 and Verlassen'Count = 0 is
@@ -407,6 +415,20 @@ package body Synth.Driver.Win32 is
       end Allocated;
 
    end Semaphore;
+
+
+   -------------------
+   -- Get_Frequency --
+   -------------------
+
+   function Get_Frequency(Driver : in out WIN32_Driver)
+                          return Frequency_Type is
+   begin
+      return Driver.Frequency;
+   end;
+
+
+
 
 
 
