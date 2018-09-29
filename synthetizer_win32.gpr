@@ -11,7 +11,9 @@ project Synthetizer_Win32 is
    end Linker;
 
    package Compiler is
-      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
+      for Default_Switches ("ada") use ("-g", "-gnato", "-gnatwa", 
+                                        "-gnata", "-gnatQ", "-gnat12", 
+                                        "-fstack-check", "-gnatyaAbBcefhiIklnprSmtux");
    end Compiler;
 
 end Synthetizer_Win32;

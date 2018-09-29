@@ -21,11 +21,10 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
 
 package Synth.Wav
-  -- with SPARK_Mode => On
+  --  with SPARK_Mode => On
 is
 
    type WAV_Write_Structure_Type is private;
@@ -42,16 +41,13 @@ is
    --    (if Sample.HasLoop then Sample.Loop_Start >= Sample.Loop_End),
    --       Depends => (Sample => (FileName));
 
+   procedure Open_For_Write (FileName : String; WAV_File : out WAV_Write_Type);
 
+   procedure Write_Data (WAV_File : WAV_Write_Type; Datas : Frame_Array_Access);
 
-   procedure Open_For_Write (FileName : String ; WAV_File : out WAV_Write_Type);
-
-   procedure Write_Data (WAV_File : in WAV_Write_Type; Datas : in Frame_Array_Access);
-
-   procedure Close_And_Finalize (WAV_File : in out WAV_Write_Type);
+   procedure Close_And_Finalize (WAV_File : in WAV_Write_Type);
 
 private
-
 
    --  FILE FORMAT SPECIFICATION
 
@@ -135,13 +131,11 @@ private
 
    ---------------------------------------------------------------------------
 
-
    type WAV_Write_Structure_Type is record
       File : access File_Type;
       FileStream : Stream_Access;
       Bytes_Written : Natural;
 
    end record;
-
 
 end Synth.Wav;

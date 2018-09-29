@@ -46,6 +46,7 @@ package Synth.Driver.Win32 is
    -----------
    -- Close --
    -----------
+
    overriding procedure Close (Driver : in out WIN32_Driver);
 
    ----------
@@ -56,11 +57,12 @@ package Synth.Driver.Win32 is
      (Driver : in out WIN32_Driver;
       Buffer : PCM_Frame_Array_Access);
 
+   -------------------
+   -- Get_Frequency --
+   -------------------
 
-
-   overriding function Get_Frequency(Driver : in out WIN32_Driver)
+   overriding function Get_Frequency (Driver : in out WIN32_Driver)
            return Frequency_Type;
-
 
 private
 
@@ -85,12 +87,12 @@ private
 
    type Sound_Call_Back_Type is access procedure (hwo : HWAVEOUT;
                                     uMsg : UINT;
-                                    dwInstance, dwParam1 , dwParam2: LPDWORD);
+                                    dwInstance, dwParam1, dwParam2 : LPDWORD);
    pragma Convention (StdCall, Sound_Call_Back_Type);
 
    procedure Sound_Driver_Call_Back (hwo : HWAVEOUT;
                                     uMsg : UINT;
-                                    dwInstance, dwParam1 , dwParam2: LPDWORD);
+                                    dwInstance, dwParam1, dwParam2 : LPDWORD);
    pragma Export (StdCall, Sound_Driver_Call_Back);
 
    --  simple semaphone for synchronous play and buffers creation
@@ -104,7 +106,5 @@ private
 
    SBuffer : Semaphore (3); -- for handling the buffers
    SBufferCursor : Semaphore (1); -- for handling the cursors
-
-
 
 end Synth.Driver.Win32;

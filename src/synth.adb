@@ -61,7 +61,8 @@ package body Synth is
    ---------------------------
 
    --  convert a midi code to frequency
-   function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type is
+   function MIDICode_To_Frequency (Midi_Code : Natural)
+                                   return Frequency_Type is
       LA_440_MIDICODE : constant Natural := 69;
       use Float_Gen;
    begin

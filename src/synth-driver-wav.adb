@@ -35,12 +35,12 @@ package body Synth.Driver.Wav is
       Frequency : Frequency_Type := 44100.0;
       FileName : String)
    is
-      S : WAV_Driver_Access := new WAV_Driver;
+      S : constant WAV_Driver_Access := new WAV_Driver;
    begin
       S.Frequency := Frequency;
-      Open_For_Write(FileName => FileName,
+      Open_For_Write (FileName => FileName,
                      WAV_File => S.WAV_File);
-      Driver := Sound_Driver_Access(S);
+      Driver := Sound_Driver_Access (S);
    end Open;
 
    -----------
@@ -49,7 +49,7 @@ package body Synth.Driver.Wav is
 
    overriding procedure Close (Driver : in out WAV_Driver) is
    begin
-      Close_And_Finalize(WAV_File => Driver.WAV_File);
+      Close_And_Finalize (WAV_File => Driver.WAV_File);
    end Close;
 
    ----------
@@ -64,11 +64,11 @@ package body Synth.Driver.Wav is
    begin
 
       for I in Buffer.all'Range loop
-         Frames(I) := Frame(Float(Buffer(I)) / Float(2**15));
+         Frames (I) := Frame (Float (Buffer (I)) / Float (2**15));
       end loop;
 
-      Write_Data(WAV_File => Driver.WAV_File,
-                 Datas    => Frames'unchecked_Access);
+      Write_Data (WAV_File => Driver.WAV_File,
+                 Datas    => Frames'Unchecked_Access);
    end Play;
 
    -------------------

@@ -21,16 +21,15 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-With System;
+with System;
 with Synth.Driver;
-With Ada.Real_Time;
+with Ada.Real_Time;
 use Ada.Real_Time;
 
 package Synth.Synthetizer is
 
    --  synth object, that embed the sound system connection
    type Synthetizer_Type is limited private;
-
 
    Not_Defined_Clock : Time := Time_Last;
 
@@ -59,11 +58,14 @@ package Synth.Synthetizer is
    type Voice_Array is array (Positive range <>) of Voice;
 
    --  voices structures, maintain the voice information
-   --  associated to voice number , if voice structure type is Null_Voice_Structure, the voice is
+   --  associated to voice number ,
+   --  if voice structure type is Null_Voice_Structure, the voice is
    --  free to reuse
-   type Voice_Structure_Array is array (Voice range <>) of aliased Voice_Structure_Type;
+   type Voice_Structure_Array is
+     array (Voice range <>) of aliased Voice_Structure_Type;
 
-   type ReadOnly_Voice_Structure_Access is access constant Voice_Structure_Type;
+   type ReadOnly_Voice_Structure_Access is
+     access constant Voice_Structure_Type;
 
    --  open the synth device
    procedure Open
@@ -71,7 +73,6 @@ package Synth.Synthetizer is
       S :    out Synthetizer_Type;
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1);
-
 
    --  close the synth
    procedure Close (S : in out Synthetizer_Type);
@@ -133,10 +134,11 @@ private
 
    type Voice_Boolean_Array is array (Voice range <>) of Boolean;
 
-   -- protected type for the buffers preparation
-   -- buffers are prepared using a Frame_Array and provided for
-   -- sound card as PCM_Frame
-   protected type Buffer_Ring (NBBuffer : Positive; Buffer_Length : Positive ) is
+   --  protected type for the buffers preparation
+   --  buffers are prepared using a Frame_Array and provided for
+   --  sound card as PCM_Frame
+   protected type Buffer_Ring (NBBuffer : Positive;
+                               Buffer_Length : Positive) is
 
       procedure Init;
 
@@ -175,7 +177,7 @@ private
    --  task that play all the buffers
    task type Buffer_Play_Task_Type is
 
-      pragma Priority(System.Priority'Last);
+      pragma Priority (System.Priority'Last);
       --  start the play task
       entry Start (TheDriver : Driver.Sound_Driver_Access;
                    BufferRing : Buffer_Ring_Access);
@@ -187,7 +189,8 @@ private
    type Buffer_Play_Task_Access is access Buffer_Play_Task_Type;
 
    --  constant null Voice Structure
-   Null_Voice_Structure : constant Voice_Structure_Type := Voice_Structure_Type'
+   Null_Voice_Structure : constant Voice_Structure_Type :=
+     Voice_Structure_Type'
      (Current_Sample_Position => 0.0,
       Stopped                 => True,
       Play_Sample             => Null_Sound_Sample,
@@ -204,7 +207,8 @@ private
       Closing : Boolean;
    end record;
 
-   type Voice_Play_Structure_Array is array (Natural range <>) of Voice_Play_Structure;
+   type Voice_Play_Structure_Array is
+     array (Natural range <>) of Voice_Play_Structure;
 
    -----------------
    -- Voices_Type --
@@ -212,7 +216,8 @@ private
 
    protected type Voices_Type is
 
-      procedure Allocate_New_Voice (Voice_Structure : Voice_Structure_Type; TheVoice : out Voice);
+      procedure Allocate_New_Voice (Voice_Structure : Voice_Structure_Type;
+                                    TheVoice : out Voice);
       function Get_Voice (V : Voice) return ReadOnly_Voice_Structure_Access;
       function Is_Voice_Opened (V : Voice) return Boolean;
       function Can_Be_Stopped (V : Voice) return Boolean;
@@ -223,7 +228,8 @@ private
                                  Current_Sample_Position : Play_Second);
 
       --  specialized play structures
-      function Get_All_Opened_Voices_Play_Structure return Voice_Play_Structure_Array;
+      function Get_All_Opened_Voices_Play_Structure
+        return Voice_Play_Structure_Array;
       procedure Update_Close_And_Positions_Status (VA : Voice_Play_Structure_Array);
 
    private
@@ -249,7 +255,7 @@ private
    --  task handling the buffer_fill
 
    task type Buffer_Preparing_Task_Type is
-      pragma Priority(System.Priority'Last);
+      pragma Priority (System.Priority'Last);
 
       entry Start (BR : Buffer_Ring_Access;
                    VSA : Voices_Access;
@@ -283,7 +289,7 @@ private
 
    private
 
-      Inited : boolean := False;
+      Inited : Boolean := False;
 
       BR : Buffer_Ring_Access; -- buffer ring
 
@@ -303,5 +309,3 @@ private
    type Synthetizer_Type is access Synthetizer_Structure_Type;
 
 end Synth.Synthetizer;
-
-

@@ -26,7 +26,7 @@ with Synth.Wav;
 package Synth.Driver.Wav is
 
    type WAV_Driver is new Sound_Driver with private;
-   
+
    type WAV_Driver_Access is access all WAV_Driver;
 
    ----------
@@ -40,6 +40,7 @@ package Synth.Driver.Wav is
    -----------
    -- Close --
    -----------
+
    overriding procedure Close (Driver : in out WAV_Driver);
 
    ----------
@@ -53,16 +54,14 @@ package Synth.Driver.Wav is
    -------------------
    -- Get_Frequency --
    -------------------
-   overriding function Get_Frequency(Driver : in out WAV_Driver)
+   overriding function Get_Frequency (Driver : in out WAV_Driver)
            return Frequency_Type;
 
-   
 private
-   
+
    type WAV_Driver is new Sound_Driver with record
       Frequency : Frequency_Type;
       WAV_File : Synth.Wav.WAV_Write_Type;
    end record;
-   
 
 end Synth.Driver.Wav;
