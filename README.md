@@ -1,6 +1,6 @@
 # AdaSynthetizer
 
-*Patrice Freydiere - Avril 2018*
+*Patrice Freydiere - September 2018*
 
 
 
