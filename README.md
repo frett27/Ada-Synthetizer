@@ -18,7 +18,7 @@ The Synthetizer takes on one side the samples, and on the other side the Notes t
 
 As this library handle a simple level of synthetizer, there are no notions of instruments. These concepts can be introduced easily in a layer based on this library.
 
-An example of a result, reading a Midi File can be listened here : 2018-04-22_example_rendering
+
 
 **Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production. But opened to any contributions, or improvements
 
@@ -26,7 +26,7 @@ An example of a result, reading a Midi File can be listened here : 2018-04-22_ex
 
 ### Current Features
 
-The API now works on Windows and Linux (Rpi). A conditional compilation, depending on the OS, compile the associated default driver. There may not have any Linux or Windows dependent code in using the library.  
+The API has been tests on Windows, Linux (x86 & ARM) . A conditional compilation, depending on the OS, compile the associated default driver.  
 
 #### Sound input
 
@@ -124,7 +124,7 @@ The synthetizer behave nicely, there are no large amount or synchro between comp
 
 ## Next actions
 
-Version 0.1:
+Version 0.1.1:
 
 - ~~Fix Memory Leak for Win32 driver~~
 - ~~Eval portaudio for output rendering (X Plateform sound toolkit)~~
