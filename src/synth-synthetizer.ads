@@ -69,13 +69,13 @@ package Synth.Synthetizer is
 
    --  open the synth device
    procedure Open
-     (D : Driver.Sound_Driver_Access;
-      S :    out Synthetizer_Type;
+     (Driver_Access : Driver.Sound_Driver_Access;
+      Synt :    out Synthetizer_Type;
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1);
 
    --  close the synth
-   procedure Close (S : in out Synthetizer_Type);
+   procedure Close (Synt : in out Synthetizer_Type);
 
    ----------
    -- Play --

@@ -28,8 +28,8 @@ package body Synth.Synthetizer is
    ----------
 
    procedure Open
-     (D : Driver.Sound_Driver_Access;
-      S :    out Synthetizer_Type;
+     (Driver_Access : Driver.Sound_Driver_Access;
+      Synt :    out Synthetizer_Type;
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1)
    is
@@ -37,8 +37,8 @@ package body Synth.Synthetizer is
 
       --  human perceived sound within 0.05 s
 
-      S := new Synthetizer_Structure_Type;
-      S.Init (D             => D,
+      Synt := new Synthetizer_Structure_Type;
+      Synt.Init (D            => Driver_Access,
               NBBuffer => Buffers_Number,
               Buffer_Length => Buffer_Size);
 
@@ -51,9 +51,9 @@ package body Synth.Synthetizer is
    -- Close --
    -----------
 
-   procedure Close (S : in out Synthetizer_Type) is
+   procedure Close (Synt : in out Synthetizer_Type) is
    begin
-      S.Close;
+      Synt.Close;
    exception
       when E : others =>
          DumpException (E);
@@ -306,7 +306,7 @@ package body Synth.Synthetizer is
              * 1_000_000.0 / Long_Float (Task_Driver_Frequency)));
 
          --  must be late in the pipeline,
-         --  TODO: change it
+         --  TODO: improve it
          Last_Clock := Clock - 10 * Task_Buffer_Number * Time_Jitter; -- attention
 
          Init_Clock := Last_Clock;
@@ -746,12 +746,12 @@ package body Synth.Synthetizer is
    function "/"(f : Play_Second; f2 : Float) return Play_Second is
    begin
       return f / Play_Second (f2);
-   end;
+   end "/";
 
    function "*"(f : Play_Second; f2 : Float) return Play_Second is
    begin
       return f * Play_Second (f2);
-   end;
+   end "*";
 
    --  forward
    procedure Internal_Process_Buffer (VSA : Voice_Structure_Type;
