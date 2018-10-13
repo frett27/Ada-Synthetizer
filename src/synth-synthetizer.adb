@@ -33,6 +33,7 @@ package body Synth.Synthetizer is
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1)
    is
+      Start_Time : Sequencer_Time;
    begin
 
       --  human perceived sound within 0.05 s
@@ -40,7 +41,8 @@ package body Synth.Synthetizer is
       Synt := new Synthetizer_Structure_Type;
       Synt.Init (D            => Driver_Access,
               NBBuffer => Buffers_Number,
-              Buffer_Length => Buffer_Size);
+                 Buffer_Length => Buffer_Size,
+                T => Start_Time);
 
    exception
       when E : others =>
@@ -245,7 +247,7 @@ package body Synth.Synthetizer is
                   Task_BR.Consume_Buffer (Buffer);
                   --           Put_Line("Play Task buffer consummed");
                   Synth.Driver.Play (Driver => Task_Driver.all,
-                                    Buffer => Buffer);
+                                     Buffer => Buffer);
                   --         Put_Line("Done");
                end if;
                delay 0.01;
@@ -294,7 +296,8 @@ package body Synth.Synthetizer is
                     VSA : Voices_Access;
                     Buffer_Number : Positive;
                     Buffer_Length : Natural;
-                    Driver_Frequency : Frequency_Type) do
+                    Driver_Frequency : Frequency_Type;
+                    Ref_Time : out Time) do
          Task_BR := BR;
          Task_VSA := VSA;
          Task_Buffer_Length := Buffer_Length;
@@ -307,9 +310,10 @@ package body Synth.Synthetizer is
 
          --  must be late in the pipeline,
          --  TODO: improve it
-         Last_Clock := Clock - 10 * Task_Buffer_Number * Time_Jitter; -- attention
+         Last_Clock := Clock - 10 * Task_Buffer_Number * Time_Jitter;
 
          Init_Clock := Last_Clock;
+         Ref_Time := Init_Clock;
       end Start;
       --  Put_Line("Preparing Task Started");
 
@@ -626,7 +630,9 @@ package body Synth.Synthetizer is
 
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
-                      Buffer_Length : Positive) is
+                      Buffer_Length : Positive;
+                      T : out Sequencer_Time) is
+         Ref_Time : Time;
       begin
          --  init the buffers
          BR := new Buffer_Ring (NBBuffer, Buffer_Length);
@@ -643,8 +649,9 @@ package body Synth.Synthetizer is
                              VSA => Voices,
                              Buffer_Number => NBBuffer,
                              Buffer_Length => Buffer_Length,
-                             Driver_Frequency => Synth.Driver.Get_Frequency (D.all));
-
+                             Driver_Frequency => Synth.Driver.Get_Frequency (D.all),
+                             Ref_Time => Ref_Time);
+         T := Sequencer_Time (Time_Span_Zero);
          Inited := True;
       end Init;
 
@@ -677,18 +684,6 @@ package body Synth.Synthetizer is
          end loop;
       end Close;
 
-      -----------------
-      -- Test_Inited --
-      -----------------
-
-      --  sanity check for opened synthetizer
-      procedure Test_Inited is
-      begin
-         if not Inited then
-            raise Synthetizer_Not_Inited;
-         end if;
-      end Test_Inited;
-
       ----------
       -- Play --
       ----------
@@ -702,7 +697,11 @@ package body Synth.Synthetizer is
       is
          Allocated_Voice : Voice;
       begin
-         Test_Inited;
+
+         if not Inited then
+            raise Synthetizer_Not_Inited;
+         end if;
+
          --  push the sample to tasks
          --  Put_Line("Allocate_New_Voice");
          Voices.Allocate_New_Voice (Voice_Structure_Type'(Note_Play_Frequency     => Frequency,

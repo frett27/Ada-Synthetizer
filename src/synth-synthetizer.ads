@@ -33,39 +33,11 @@ package Synth.Synthetizer is
 
    Not_Defined_Clock : Time := Time_Last;
 
-   --  The voice represent a play of a sound sample
-   --  at a given frequency, it also remember the state of the play
-   --  (given position), and loop possibility
-   --
-   --  the stopped mention of the voice is stopped, and can be freed
-   --  for reuse
-   --
-   type Voice_Structure_Type is record
-      Note_Play_Frequency          : Frequency_Type; -- the played frequency
-      Play_Sample             : SoundSample; -- the sound sample to play
-      Start_Play_Sample : Time;
-      Stop_Play_Sample : Time := Not_Defined_Clock;
-      Current_Sample_Position : Play_Second := 0.0; -- the position in second
-      Volume       : Float := 1.0; -- volume factor
-      Stopped : Boolean := False;
-      Channel : Positive := 1; -- used for getting associated voices
-   end record;
+   type Voice is private;
 
-   --  the voice type, index to the voice array structure
-   type Voice is new Natural;
+   type Sequencer_Time is new Time_Span;
 
-   --  array of voices
-   type Voice_Array is array (Positive range <>) of Voice;
-
-   --  voices structures, maintain the voice information
-   --  associated to voice number ,
-   --  if voice structure type is Null_Voice_Structure, the voice is
-   --  free to reuse
-   type Voice_Structure_Array is
-     array (Voice range <>) of aliased Voice_Structure_Type;
-
-   type ReadOnly_Voice_Structure_Access is
-     access constant Voice_Structure_Type;
+   No_Voice : constant Voice;
 
    --  open the synth device
    procedure Open
@@ -94,6 +66,8 @@ package Synth.Synthetizer is
       Channel : Positive := 1;
       Opened_Voice :    out Voice);
 
+
+
    ----------
    -- Stop --
    ----------
@@ -106,6 +80,44 @@ package Synth.Synthetizer is
    Synthetizer_Not_Inited : exception;
 
 private
+
+
+   --  The voice represent a play of a sound sample
+   --  at a given frequency, it also remember the state of the play
+   --  (given position), and loop possibility
+   --
+   --  the stopped mention of the voice is stopped, and can be freed
+   --  for reuse
+   --
+   type Voice_Structure_Type is record
+      Note_Play_Frequency          : Frequency_Type; -- the played frequency
+      Play_Sample             : SoundSample; -- the sound sample to play
+      Start_Play_Sample : Time;
+      Stop_Play_Sample : Time := Not_Defined_Clock;
+      Current_Sample_Position : Play_Second := 0.0; -- the position in second
+      Volume       : Float := 1.0; -- volume factor
+      Stopped : Boolean := False;
+      Channel : Positive := 1; -- used for getting associated voices
+   end record;
+
+   --  the voice type, index to the voice array structure
+   type Voice is new Natural;
+
+   No_Voice : constant Voice := 0;
+
+   --  array of voices
+   type Voice_Array is array (Positive range <>) of Voice;
+
+   --  voices structures, maintain the voice information
+   --  associated to voice number ,
+   --  if voice structure type is Null_Voice_Structure, the voice is
+   --  free to reuse
+   type Voice_Structure_Array is
+     array (Voice range <>) of aliased Voice_Structure_Type;
+
+   type ReadOnly_Voice_Structure_Access is
+     access constant Voice_Structure_Type;
+
 
    --  max voice
    MAX_VOICES : constant Natural := 400;
@@ -261,7 +273,8 @@ private
                    VSA : Voices_Access;
                    Buffer_Number : Positive;
                    Buffer_Length : Natural;
-                   Driver_Frequency : Frequency_Type);
+                   Driver_Frequency : Frequency_Type;
+                   Ref_Time : out Time);
 
       entry Stop;
 
@@ -274,7 +287,8 @@ private
 
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
-                      Buffer_Length : Positive);
+                      Buffer_Length : Positive;
+                      T : out Sequencer_Time);
 
       procedure Play
         (S            : SoundSample;
@@ -297,12 +311,13 @@ private
       D : Synth.Driver.Sound_Driver_Access;
 
       --  internal tasks
-
       Prepare_Task : Buffer_Preparing_Task_Access;
 
       Play_Task : Buffer_Play_Task_Access;
 
       Voices : Voices_Access;
+
+      Ref_Time : Time;
 
    end Synthetizer_Structure_Type;
 

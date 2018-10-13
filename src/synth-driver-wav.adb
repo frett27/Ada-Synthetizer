@@ -24,6 +24,9 @@
 with Synth.Wav;
 use Synth.Wav;
 
+with Ada.Real_Time;
+use Ada.Real_Time;
+
 package body Synth.Driver.Wav is
 
    ----------
@@ -60,6 +63,11 @@ package body Synth.Driver.Wav is
      (Driver : in out WAV_Driver;
       Buffer : PCM_Frame_Array_Access)
    is
+      EndTime : constant Time := Clock +
+        Microseconds
+             (US =>
+                    Integer (Float (1.0) / Float (Driver.Frequency)
+              * Float (Buffer.all'Length * 1_000_000)));
       Frames : aliased Frame_Array := (Buffer.all'Range => 0.0);
    begin
 
@@ -68,7 +76,8 @@ package body Synth.Driver.Wav is
       end loop;
 
       Write_Data (WAV_File => Driver.WAV_File,
-                 Datas    => Frames'Unchecked_Access);
+                  Datas    => Frames'Unchecked_Access);
+      delay until EndTime;
    end Play;
 
    -------------------
