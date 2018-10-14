@@ -20,13 +20,13 @@ As this library handle a simple level of synthetizer, there are no notions of in
 
 
 
-**Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production. But opened to any contributions, or improvements
+**Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production. But opened to any contributions, or improvements. As a early stage project, API may change.
 
 
 
 ### Current Features
 
-The API has been tests on Windows, Linux (x86 & ARM) . A conditional compilation, depending on the OS, compile the associated default driver.  
+The API has been tests on Windows (x86), Linux (x86 & ARM) . A conditional compilation, depending on the OS, compile the associated default driver.  
 
 #### Sound input
 
@@ -39,14 +39,13 @@ Implementing your own file format reading is possible in populating the **SoundS
 - Real Time Playing and Offline Playing
 - The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the **MAX_VOICES** constant, and see whether it match the requierments. (As the number of polyphonie is increased, the processing may be heavier and can lead to increase the jitter and buffer sizes).
 - Parametrized volume for each playing sound.
-- Resampling : currently Nearest neighborhood algorithm (can be improved)
-- Variable Output frequency, permit to adjust CPU consumption
+- Variable Output frequency, permit to adjust CPU consumption (default 44100)
 
 #### Current Drivers
 
-- Win32 SoundDriver
+- Win32 SoundDriver (x86), x64 not yet supported
 - Alsa SoundDriver (*nix platforms)
-- PCM 16 bit Wav Output, using a cross plateform.
+- PCM 16 bit Wav Output (all plateforms)
 
 
 Can be extended outside the library, depending on needs. Theses drivers show how to implement one.
@@ -114,7 +113,7 @@ end;
 
 ```
 
-
+[Additional technical insights can be found at this location](doc/architecture.md)
 
 ## Feedbacks
 
@@ -134,9 +133,8 @@ Version 0.1.1:
 Version 0.2: 
 
 - Interfaçing with C, Java for consuming the library
-- Improving Sound quality, add numeric filters, and additional effects
-
-- Digital Signal processing : Permit to have Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
+- x64 windows support
+- Digital Signal processing : Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
 - Lattency detection, permitting to have both online and offline playin
 
 Mid Term Version :
