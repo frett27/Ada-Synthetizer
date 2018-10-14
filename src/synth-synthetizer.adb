@@ -30,6 +30,8 @@ package body Synth.Synthetizer is
    procedure Open
      (Driver_Access : Driver.Sound_Driver_Access;
       Synt :    out Synthetizer_Type;
+      --   use 50 ms buffer by default on 44 100 Khz,
+      --   can be changed by the caller
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1)
    is
@@ -259,7 +261,7 @@ package body Synth.Synthetizer is
          end select;
       end loop;
 
-      Put_Line ("End of Playing Thread");
+      -- Put_Line ("End of Playing Thread");
 
    end Buffer_Play_Task_Type;
 
@@ -342,6 +344,8 @@ package body Synth.Synthetizer is
 
                declare
 
+                  --  Start buffer Time is the time of the
+                  --  sound processing time
                   Start_Buffer_Time : Time;
 
                   Number_Of_Processed_Voices : Natural := 0;
@@ -414,7 +418,7 @@ package body Synth.Synthetizer is
          delay 0.002;
       end loop;
 
-      Put_Line ("End of Preparing Thread");
+      -- Put_Line ("End of Preparing Thread");
    exception
       when E : others =>
          DumpException (E);

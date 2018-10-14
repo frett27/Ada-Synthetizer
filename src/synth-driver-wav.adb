@@ -77,6 +77,7 @@ package body Synth.Driver.Wav is
 
       Write_Data (WAV_File => Driver.WAV_File,
                   Datas    => Frames'Unchecked_Access);
+      -- block until end of play
       delay until EndTime;
    end Play;
 

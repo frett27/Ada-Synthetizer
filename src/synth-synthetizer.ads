@@ -39,12 +39,21 @@ package Synth.Synthetizer is
 
    No_Voice : constant Voice;
 
+   ----------
+   -- Open --
+   ----------
+
    --  open the synth device
    procedure Open
      (Driver_Access : Driver.Sound_Driver_Access;
       Synt :    out Synthetizer_Type;
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1);
+
+
+   -----------
+   -- Close --
+   -----------
 
    --  close the synth
    procedure Close (Synt : in out Synthetizer_Type);

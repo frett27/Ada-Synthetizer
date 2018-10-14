@@ -1,6 +1,6 @@
 # AdaSynthetizer
 
-*Patrice Freydiere - Avril 2018*
+*Patrice Freydiere - October 2018*
 
 
 
@@ -118,7 +118,7 @@ end;
 
 ## Feedbacks
 
-The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, be can be improved.
+The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, but can be improved.
 
 
 
@@ -130,19 +130,19 @@ Version 0.1.1:
 - ~~Eval portaudio for output rendering (X Plateform sound toolkit)~~
 - ~~Add Alsa Driver for linux plateforms~~
 - ~~Add Wav Driver for debugging purpose or to disk exports~~
-- Ahead of time playin
 
 Version 0.2: 
 
+- Interfaçing with C, Java for consuming the library
 - Improving Sound quality, add numeric filters, and additional effects
+
 - Digital Signal processing : Permit to have Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
 - Lattency detection, permitting to have both online and offline playin
 
 Mid Term Version :
 
-- Interfaçing with C, Java for consuming the library
-
-- Porting to Spark, remove the task part for embedded usage
+- Ahead of time playin
+- Porting to Spark profile, remove the task part for embedded usage
 
 
 ### Areas That can be covered next (if time permit)
