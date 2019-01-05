@@ -1,4 +1,5 @@
 with "win32ada.gpr";
+with "../ada-soundio/soundio.gpr";
 
 project Synthetizer_Win32 is
 

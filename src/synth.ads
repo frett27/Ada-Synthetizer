@@ -46,8 +46,8 @@ package Synth is
 
       Mono_Data : Frame_Array_Access;
 
-      -- if can't stop is true, the sound will be played
-      -- until the end (can't be stopped)
+      --  if can't stop is true, the sound will be played
+      --  until the end (can't be stopped)
       Cant_Stop : Boolean;
 
       case HasLoop is
