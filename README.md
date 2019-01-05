@@ -130,6 +130,13 @@ Version 0.1.1:
 - ~~Eval portaudio for output rendering (X Plateform sound toolkit)~~
 - ~~Add Alsa Driver for linux plateforms~~
 - ~~Add Wav Driver for debugging purpose or to disk exports~~
+
+Version 0.1.2:
+
+- x64 support, opening to x64 compatible library
+
+Version 0.1.5
+
 - Ahead of time playin
 
 Version 0.2: 
