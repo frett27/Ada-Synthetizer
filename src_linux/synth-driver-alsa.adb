@@ -42,7 +42,7 @@ package body Synth.Driver.Alsa is
    procedure Open (Driver : out Sound_Driver_Access) is
 
        ALSADriver : ALSA_Driver_Access := new ALSA_Driver;
-       Resolution  : Sound.Sample_Frequency := 44_100;
+       Resolution  : Sound.Sample_Frequency := 16_000; --44_100;
        Buffer_Size : Duration := 0.5;
        Period      : Duration := 0.1;
    begin
