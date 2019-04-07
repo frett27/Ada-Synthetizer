@@ -1,4 +1,4 @@
-
+with "../ada-soundio/soundio.gpr";
 with "./drivers/alsa-binding/lib_alsa_binding.gpr";
 
 project Synthetizer_Linux is
