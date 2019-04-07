@@ -1,6 +1,7 @@
 
 library project Lib_ALSA_Binding is
    for Source_Dirs use ("src/");
+
    for Library_Kind use "static";
    for Library_Name use "adaalsa";
    

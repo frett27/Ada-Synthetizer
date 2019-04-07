@@ -49,7 +49,7 @@ package Synth.Driver.Alsa is
    -------------------
    -- Get_Frequency --
    -------------------
-   overriding function Get_Frequency (Driver : in out ALSA_Driver)
+   overriding function Get_Frequency (Driver : in ALSA_Driver)
                           return Frequency_Type;
    ----------
    -- Play --

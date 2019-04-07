@@ -63,7 +63,7 @@ package body Synth.Driver.Alsa is
    -- Get_Frequency --
    -------------------
 
-   function Get_Frequency (Driver : in out ALSA_Driver)
+   function Get_Frequency (Driver : in ALSA_Driver)
                           return Frequency_Type is
    begin
       return Driver.Frequency;
