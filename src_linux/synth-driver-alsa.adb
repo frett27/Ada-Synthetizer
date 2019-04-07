@@ -23,7 +23,7 @@
 
 with Ada;
 with Ada.Real_Time; use Ada.Real_Time;
-with Ada.Text_IO; use Ada.Text_IO;
+-- with Ada.Text_IO; use Ada.Text_IO;
 
 With Sound;
 
@@ -55,8 +55,22 @@ package body Synth.Driver.Alsa is
       --  open speakers
 
       Driver := ALSADriver.all'Access;
+      ALSADriver.Frequency := Frequency_Type(Resolution);
 
    end Open;
+
+   -------------------
+   -- Get_Frequency --
+   -------------------
+
+   function Get_Frequency (Driver : in out ALSA_Driver)
+                          return Frequency_Type is
+   begin
+      return Driver.Frequency;
+   end Get_Frequency;
+
+
+
 
    ----------
    -- Play --
