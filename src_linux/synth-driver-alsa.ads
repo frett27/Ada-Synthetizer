@@ -46,6 +46,11 @@ package Synth.Driver.Alsa is
    -----------
    overriding procedure Close (Driver : in out ALSA_Driver);
 
+   -------------------
+   -- Get_Frequency --
+   -------------------
+   overriding function Get_Frequency (Driver : in out ALSA_Driver)
+                          return Frequency_Type;
    ----------
    -- Play --
    ----------
@@ -57,6 +62,7 @@ package Synth.Driver.Alsa is
 private
    type ALSA_Driver is new Synth.Driver.Sound_Driver with record
       Speakers    : Sound.Mono.Line_Type;
+      Frequency   : Frequency_Type;
 
    end record;
 
