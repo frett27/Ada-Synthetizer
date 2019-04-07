@@ -63,6 +63,7 @@ package body Synth.Driver.Wav is
      (Driver : in out WAV_Driver;
       Buffer : PCM_Frame_Array_Access)
    is
+      -- compute the end of play
       EndTime : constant Time := Clock +
         Microseconds
              (US =>
