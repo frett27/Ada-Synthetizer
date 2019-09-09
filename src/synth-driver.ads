@@ -57,7 +57,7 @@ package Synth.Driver is
    -- Get_Frequency --
    -------------------
 
-   function Get_Frequency (Driver : in Sound_Driver)
+   function Get_Frequency (Driver : Sound_Driver)
    return Frequency_Type is abstract;
 
 end Synth.Driver;

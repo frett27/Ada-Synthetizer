@@ -9,7 +9,7 @@ project Synthetizer_Linux is
    for Languages use ("Ada");
 
    package Compiler is
-      for Default_Switches ("Ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat05", "-fstack-check");
+      for Default_Switches ("Ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
    end Compiler;
 
 

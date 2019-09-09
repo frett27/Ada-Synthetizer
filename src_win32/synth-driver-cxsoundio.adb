@@ -177,7 +177,7 @@ package body Synth.Driver.CxSoundio is
    -------------------
 
    overriding function Get_Frequency
-     (Driver : in out Soundio_Driver)
+     (Driver : Soundio_Driver)
       return Frequency_Type
    is
    begin

@@ -56,7 +56,7 @@ package Synth.Driver.CxSoundio is
    -- Get_Frequency --
    -------------------
 
-   overriding function Get_Frequency (Driver : in out Soundio_Driver)
+   overriding function Get_Frequency (Driver : Soundio_Driver)
            return Frequency_Type;
 
 private
