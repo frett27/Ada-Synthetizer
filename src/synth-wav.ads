@@ -34,11 +34,18 @@ is
 
    function End_Of_Stream (Stream : WAV_Read_Stream)
                            return Boolean is abstract;
-   type WAV_Read_Stream_Access is access all WAV_Read_Stream;
+
+   type WAV_Read_Stream_Access is access all WAV_Read_Stream'Class;
+
+
+   ----------
+   -- Load --
+   ----------
 
    --  Load a Wav from a stream
 
-   procedure Load (Wav_Stream_Access : access WAV_Read_Stream; Sample : out SoundSample);
+   procedure Load (Wav_Stream_Access : WAV_Read_Stream_Access;
+                   Sample : out SoundSample);
 
    type WAV_Read_Stream_File is new WAV_Read_Stream with private;
    type WAV_Read_Stream_File_Access is access all WAV_Read_Stream_File;

@@ -51,7 +51,8 @@ package Synth.Driver is
    -- Open  --
    -----------
 
-   procedure Open (Driver : out Sound_Driver_Access);
+   procedure Open (Driver : out Sound_Driver_Access;
+                   Frequency : Frequency_Type);
 
    -------------------
    -- Get_Frequency --

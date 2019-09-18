@@ -33,6 +33,7 @@ package Synth is
    type Frame_Array_Access is access all Frame_Array;
    subtype Frequency_Type is Float range 1.0 .. 100_000.0;
 
+
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type;
 
    ---------------------------------------------------------------------------
