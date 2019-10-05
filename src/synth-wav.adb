@@ -448,7 +448,7 @@ package body Synth.Wav is
       BDatas : constant Byte_Array := Convert_Frame_Array_To_Bytes (Datas.all);
       subtype BArray is Byte_Array (BDatas'Range);
    begin
-      WAV_File.Bytes_Written := WAV_File.Bytes_Written + Datas.all'Length;
+      WAV_File.Bytes_Written := WAV_File.Bytes_Written + Datas.all'Length * 2;
 
       BArray'Write (WAV_File.FileStream, BDatas);
    end Write_Data;

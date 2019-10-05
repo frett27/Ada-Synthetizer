@@ -63,7 +63,7 @@ package body Synth.Driver.Wav is
      (Driver : in out WAV_Driver;
       Buffer : PCM_Frame_Array_Access)
    is
-      -- compute the end of play
+      --  compute the end of play
       EndTime : constant Time := Clock +
         Microseconds
              (US =>
@@ -78,7 +78,7 @@ package body Synth.Driver.Wav is
 
       Write_Data (WAV_File => Driver.WAV_File,
                   Datas    => Frames'Unchecked_Access);
-      -- block until end of play
+      --  block until end of play
       delay until EndTime;
    end Play;
 
@@ -87,7 +87,7 @@ package body Synth.Driver.Wav is
    -------------------
 
    overriding function Get_Frequency
-     (Driver : in out WAV_Driver)
+     (Driver : WAV_Driver)
       return Frequency_Type
    is
    begin

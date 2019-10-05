@@ -54,7 +54,7 @@ package Synth.Driver.Wav is
    -------------------
    -- Get_Frequency --
    -------------------
-   overriding function Get_Frequency (Driver : in out WAV_Driver)
+   overriding function Get_Frequency (Driver : WAV_Driver)
            return Frequency_Type;
 
 private

@@ -31,11 +31,16 @@ package Synth.Synthetizer is
    --  synth object, that embed the sound system connection
    type Synthetizer_Type is limited private;
 
-   Not_Defined_Clock : Time := Time_Last;
+   subtype Synthetizer_Time is Time_Span;
+
+   Not_Defined_Clock : constant Synthetizer_Time :=
+     Synthetizer_Time(Time_Span_Last);
+
+   Synthetizer_Time_First : constant Synthetizer_Time :=
+     Synthetizer_Time(Time_Span_First);
 
    type Voice is private;
 
-   type Sequencer_Time is new Time_Span;
 
    No_Voice : constant Voice;
 
@@ -101,8 +106,8 @@ private
    type Voice_Structure_Type is record
       Note_Play_Frequency          : Frequency_Type; -- the played frequency
       Play_Sample             : SoundSample; -- the sound sample to play
-      Start_Play_Sample : Time;
-      Stop_Play_Sample : Time := Not_Defined_Clock;
+      Start_Play_Sample : Synthetizer_Time;
+      Stop_Play_Sample : Synthetizer_Time := Not_Defined_Clock;
       Current_Sample_Position : Play_Second := 0.0; -- the position in second
       Volume       : Float := 1.0; -- volume factor
       Stopped : Boolean := False;
@@ -139,7 +144,7 @@ private
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
                              Driver_Play_Frequency : Frequency_Type := 44_100.0;
-                             Start_Buffer_Time : Time;
+                             Start_Buffer_Time : Synthetizer_Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second);
 
@@ -216,7 +221,7 @@ private
       Stopped                 => True,
       Play_Sample             => Null_Sound_Sample,
       Stop_Play_Sample => Not_Defined_Clock,
-      Start_Play_Sample => Time_First,
+      Start_Play_Sample => Synthetizer_Time_First,
       Note_Play_Frequency => 440.0,
       Channel => 1, Volume => 1.0
      );
@@ -276,15 +281,15 @@ private
    --  task handling the buffer_fill
 
    task type Buffer_Preparing_Task_Type is
-      pragma Priority (System.Priority'Last);
+      pragma Priority (System.Priority'First);
 
+      --  Start the prepepare of the buffer
+      --  Return the Reference time for the next buffer
       entry Start (BR : Buffer_Ring_Access;
                    VSA : Voices_Access;
                    Buffer_Number : Positive;
                    Buffer_Length : Natural;
-                   Driver_Frequency : Frequency_Type;
-                   Ref_Time : out Time);
-
+                   Driver_Frequency : Frequency_Type);
       entry Stop;
 
    end Buffer_Preparing_Task_Type;
@@ -297,8 +302,10 @@ private
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
                       Buffer_Length : Positive;
-                      T : out Sequencer_Time);
+                      T : out Time);
 
+      --  Play a sound sample, with the given frequency
+      --  Return the allocated voice
       procedure Play
         (S            : SoundSample;
          Frequency    : Float;
@@ -309,6 +316,9 @@ private
       procedure Stop (V : Voice);
 
       procedure Close;
+
+      function Get_Synthetizer_Time return Synthetizer_Time;
+
 
    private
 
@@ -326,7 +336,10 @@ private
 
       Voices : Voices_Access;
 
+      -- Reference initial Time (start of the synthetizer)
       Ref_Time : Time;
+
+      Next_Buffer_Time : Synthetizer_Time;
 
    end Synthetizer_Structure_Type;
 

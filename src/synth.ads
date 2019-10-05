@@ -22,6 +22,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Exceptions;
+with Ada.Real_Time;use Ada.Real_Time;
 
 package Synth is
 
@@ -32,6 +33,8 @@ package Synth is
    type Frame_Array is array (Natural range <>) of aliased Frame;
    type Frame_Array_Access is access all Frame_Array;
    subtype Frequency_Type is Float range 1.0 .. 100_000.0;
+
+   function Frequency_Period(Frequency: Frequency_Type) return Time_Span;
 
 
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type;
