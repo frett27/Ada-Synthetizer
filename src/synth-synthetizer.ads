@@ -23,8 +23,6 @@
 
 with System;
 with Synth.Driver;
-with Ada.Real_Time;
-use Ada.Real_Time;
 
 package Synth.Synthetizer is
 
@@ -34,13 +32,12 @@ package Synth.Synthetizer is
    subtype Synthetizer_Time is Time_Span;
 
    Not_Defined_Clock : constant Synthetizer_Time :=
-     Synthetizer_Time(Time_Span_Last);
+     Synthetizer_Time (Time_Span_Last);
 
    Synthetizer_Time_First : constant Synthetizer_Time :=
-     Synthetizer_Time(Time_Span_First);
+     Synthetizer_Time (Time_Span_First);
 
    type Voice is private;
-
 
    No_Voice : constant Voice;
 
@@ -55,7 +52,6 @@ package Synth.Synthetizer is
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1);
 
-
    -----------
    -- Close --
    -----------
@@ -69,7 +65,7 @@ package Synth.Synthetizer is
 
    --
    --  play a sound , on a typical frequency
-   --  return the associated played channel
+   --  return the associated voice
    --
 
    procedure Play
@@ -80,7 +76,19 @@ package Synth.Synthetizer is
       Channel : Positive := 1;
       Opened_Voice :    out Voice);
 
-
+   --
+   --  play a sound, giving the internal timing,
+   --  defining the time permit to create a ahead of time playing
+   --  return the associated opened voice
+   --
+   procedure Play
+     (Synt         : Synthetizer_Type;
+      S            : SoundSample;
+      Frequency    : Float;
+      Play_Time    : Synthetizer_Time;
+      Volume       : Float := 1.0;
+      Channel : Positive := 1;
+      Opened_Voice :    out Voice);
 
    ----------
    -- Stop --
@@ -91,10 +99,19 @@ package Synth.Synthetizer is
    procedure Stop (Synt         : Synthetizer_Type;
                    Opened_Voice : Voice);
 
+   procedure Stop (Synt         : Synthetizer_Type;
+                   Opened_Voice : Voice;
+                  Stop_Time     : Synthetizer_Time);
+
+
+   function Get_Opened_Voices(Synt : Synthetizer_Type) return Natural;
+
+
    Synthetizer_Not_Inited : exception;
 
-private
+   MAX_VOICES : constant Natural := 600;
 
+private
 
    --  The voice represent a play of a sound sample
    --  at a given frequency, it also remember the state of the play
@@ -132,9 +149,8 @@ private
    type ReadOnly_Voice_Structure_Access is
      access constant Voice_Structure_Type;
 
-
    --  max voice
-   MAX_VOICES : constant Natural := 400;
+
    MAX_VOICES_INDICE : constant Voice := Voice (MAX_VOICES);
 
    --
@@ -248,6 +264,7 @@ private
       function Is_Voice_Opened (V : Voice) return Boolean;
       function Can_Be_Stopped (V : Voice) return Boolean;
       procedure Close_Voice (V : Voice);
+      procedure Close_Voice (V : Voice; Stop_Time : Synthetizer_Time);
 
       function Get_All_Opened_Voices return Voice_Array;
       procedure Update_Position (V : Voice;
@@ -287,8 +304,6 @@ private
       --  Return the Reference time for the next buffer
       entry Start (BR : Buffer_Ring_Access;
                    VSA : Voices_Access;
-                   Buffer_Number : Positive;
-                   Buffer_Length : Natural;
                    Driver_Frequency : Frequency_Type);
       entry Stop;
 
@@ -313,12 +328,22 @@ private
          Channel : Natural := 1;
          Opened_Voice :    out Voice);
 
+      procedure Play
+        (S            : SoundSample;
+         Frequency    : Float;
+         Play_Time    : Synthetizer_Time;
+         Volume       : Float := 1.0;
+         Channel : Positive := 1;
+         Opened_Voice :    out Voice);
+
       procedure Stop (V : Voice);
+      procedure Stop (V : Voice;
+                      Stop_Time : Synthetizer_Time);
 
       procedure Close;
 
       function Get_Synthetizer_Time return Synthetizer_Time;
-
+      function Get_Allocated_Voices return Natural;
 
    private
 
@@ -336,7 +361,7 @@ private
 
       Voices : Voices_Access;
 
-      -- Reference initial Time (start of the synthetizer)
+      --  Reference initial Time (start of the synthetizer)
       Ref_Time : Time;
 
       Next_Buffer_Time : Synthetizer_Time;

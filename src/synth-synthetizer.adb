@@ -96,6 +96,35 @@ package body Synth.Synthetizer is
 
    end Play;
 
+   procedure Play
+     (Synt         : Synthetizer_Type;
+      S            : SoundSample;
+      Frequency    : Float;
+      Play_Time    : Synthetizer_Time;
+      Volume       : Float := 1.0;
+      Channel : Positive := 1;
+      Opened_Voice :    out Voice)  is
+      OutVoice : Voice;
+   begin
+
+      if Float (S.Note_Frequency) <= 1.0 then
+         raise Program_Error
+           with "Sound sample does not have a valid Note_Frequency";
+      end if;
+
+      Synt.Play (S       => S,
+                 Frequency    => Frequency,
+                 Channel => Channel,
+                 Volume => Volume,
+                 Play_Time => Play_Time,
+                 Opened_Voice => OutVoice);
+      Opened_Voice := OutVoice;
+   exception
+      when E : others =>
+         DumpException (E);
+
+   end Play;
+
    ----------
    -- Stop --
    ----------
@@ -108,6 +137,30 @@ package body Synth.Synthetizer is
       when E : others =>
          DumpException (E);
    end Stop;
+
+
+   ----------
+   -- Stop --
+   ----------
+
+   procedure Stop (Synt         : Synthetizer_Type;
+                   Opened_Voice : Voice;
+                   Stop_Time : Synthetizer_Time) is
+   begin
+      Synt.Stop (Opened_Voice, Stop_Time);
+   exception
+      when E : others =>
+         DumpException (E);
+   end Stop;
+
+
+   -- may be to remove
+   function Get_Opened_Voices(Synt : Synthetizer_Type) return Natural is
+   begin
+     return Synt.Get_Allocated_Voices;
+   end;
+
+
 
    -----------------
    -- Buffer_Ring --
@@ -261,7 +314,7 @@ package body Synth.Synthetizer is
          end select;
       end loop;
 
-      -- Put_Line ("End of Playing Thread");
+      --  Put_Line ("End of Playing Thread");
 
    end Buffer_Play_Task_Type;
 
@@ -272,9 +325,6 @@ package body Synth.Synthetizer is
    task body Buffer_Preparing_Task_Type is
       Task_BR : Buffer_Ring_Access;
       Task_VSA : Voices_Access;
-
-      Task_Buffer_Number : Positive;
-      Task_Buffer_Length : Natural;
 
       Terminated : Boolean := False;
 
@@ -287,8 +337,6 @@ package body Synth.Synthetizer is
       Current_Buffer_Start_Time : Synthetizer_Time :=
         To_Time_Span (Duration (0.0));
 
-      Next_Buffer_Last_Time : Synthetizer_Time;
-
       Task_Driver_Frequency : Frequency_Type;
 
       Driver_Frequency_Period : Synthetizer_Time;
@@ -297,17 +345,14 @@ package body Synth.Synthetizer is
 
       accept Start (BR : Buffer_Ring_Access;
                     VSA : Voices_Access;
-                    Buffer_Number : Positive;
-                    Buffer_Length : Natural;
+
                     Driver_Frequency : Frequency_Type) do
          Task_BR := BR;
          Task_VSA := VSA;
-         Task_Buffer_Length := Buffer_Length;
-         Task_Buffer_Number := Buffer_Number;
          Task_Driver_Frequency := Driver_Frequency;
 
          Driver_Frequency_Period :=
-           Synthetizer_Time(Frequency_Period(Task_Driver_Frequency));
+           Synthetizer_Time (Frequency_Period (Task_Driver_Frequency));
 
       end Start;
       --  Put_Line("Preparing Task Started");
@@ -327,7 +372,7 @@ package body Synth.Synthetizer is
                Preparing_Buffer : Frame_Array_Access;
                ReachEndSample : Boolean := False;
 
-               -- retrieve all opened voice
+               --  retrieve all opened voice
                Opened_Voice : Voice_Play_Structure_Array :=
                  Task_VSA.Get_All_Opened_Voices_Play_Structure;
                Returned_Sample_Position : Play_Second;
@@ -338,15 +383,13 @@ package body Synth.Synthetizer is
 
                Task_BR.Freeze_New_Buffer (Buffer => Preparing_Buffer);
 
-
-               -- compute the next buffer start time (inclusive)
+               --  compute the next buffer start time (inclusive)
                Next_Buffer_Last_Time :=
                  Current_Buffer_Start_Time +
                    Driver_Frequency_Period * (Preparing_Buffer.all'Length + 1);
                declare
 
                   Number_Of_Processed_Voices : Natural := 0;
-
 
                begin
 
@@ -549,6 +592,18 @@ package body Synth.Synthetizer is
 
       end Close_Voice;
 
+      procedure Close_Voice (V : Voice; Stop_Time : Synthetizer_Time) is
+      begin
+         pragma Assert (Opened_Voice (V));
+         if not Opened_Voice (V) then
+            --  already closed
+            return;
+         end if;
+
+         All_Voices (V).Stop_Play_Sample := Stop_Time;
+
+      end Close_Voice;
+
       ---------------------------
       -- Get_All_Opened_Voices --
       ---------------------------
@@ -651,8 +706,6 @@ package body Synth.Synthetizer is
          Prepare_Task := new Buffer_Preparing_Task_Type;
          Prepare_Task.Start (BR => BR,
                              VSA => Voices,
-                             Buffer_Number => NBBuffer,
-                             Buffer_Length => Buffer_Length,
                              Driver_Frequency => Synth.Driver.Get_Frequency (D.all));
          Next_Buffer_Time := Synthetizer_Time (Time_Span_Zero);
          T := Ref_Time; -- start of the Synthetizer clock
@@ -688,6 +741,43 @@ package body Synth.Synthetizer is
          end loop;
       end Close;
 
+      -------------------
+      -- Internal_Play --
+      -------------------
+
+      procedure Internal_Play
+        (S            : SoundSample;
+         Frequency    : Float;
+         Volume       : Float := 1.0;
+         Channel : Natural := 1;
+         Play_Time : Synthetizer_Time;
+         Opened_Voice :    out Voice)
+      is
+         Allocated_Voice : Voice;
+
+      begin
+         if not Inited then
+            raise Synthetizer_Not_Inited;
+         end if;
+
+         --  compute the clock
+         --  push the sample to tasks
+         --  Put_Line("Allocate_New_Voice");
+         Voices.Allocate_New_Voice (Voice_Structure_Type'(Note_Play_Frequency     => Frequency,
+                                                          Play_Sample             => S,
+                                                          Current_Sample_Position => 0.0,
+                                                          Start_Play_Sample => Play_Time,
+                                                          Stop_Play_Sample => Not_Defined_Clock,
+                                                          Volume => Volume,
+                                                          Channel => Channel,
+                                                          Stopped                 => False),
+                                    TheVoice => Allocated_Voice);
+
+         --  Put_Line("Allocated_Voice :"  & Voice'Image(Allocated_Voice));
+         Opened_Voice := Allocated_Voice;
+
+      end Internal_Play;
+
       ----------
       -- Play --
       ----------
@@ -699,9 +789,9 @@ package body Synth.Synthetizer is
          Channel : Natural := 1;
          Opened_Voice :    out Voice)
       is
-         Allocated_Voice : Voice;
-         Start_Play_Clock : Time := Clock;
-         Span_Time_From_Ref : Synthetizer_Time := Start_Play_Clock - Ref_Time;
+         Start_Play_Clock : constant Time := Clock;
+         Span_Time_From_Ref : constant Synthetizer_Time :=
+           Start_Play_Clock - Ref_Time;
 
       begin
 
@@ -709,21 +799,37 @@ package body Synth.Synthetizer is
             raise Synthetizer_Not_Inited;
          end if;
 
-         -- compute the clock
-         --  push the sample to tasks
-         --  Put_Line("Allocate_New_Voice");
-         Voices.Allocate_New_Voice (Voice_Structure_Type'(Note_Play_Frequency     => Frequency,
-                                                          Play_Sample             => S,
-                                                          Current_Sample_Position => 0.0,
-                                                          Start_Play_Sample => Span_Time_From_Ref,
-                                                          Stop_Play_Sample => Not_Defined_Clock,
-                                                          Volume => Volume,
-                                                          Channel => Channel,
-                                                          Stopped                 => False),
-                                    TheVoice => Allocated_Voice);
+         Internal_Play (S            => S,
+                      Frequency    => Frequency,
+                      Volume       => Volume,
+                      Channel      => Channel,
+                      Play_Time    => Span_Time_From_Ref,
+                      Opened_Voice => Opened_Voice);
+      end Play;
 
-         --  Put_Line("Allocated_Voice :"  & Voice'Image(Allocated_Voice));
-         Opened_Voice := Allocated_Voice;
+      ----------
+      -- Play --
+      ----------
+
+      procedure Play
+        (S            : SoundSample;
+         Frequency    : Float;
+         Play_Time    : Synthetizer_Time;
+         Volume       : Float := 1.0;
+         Channel : Positive := 1;
+         Opened_Voice :    out Voice) is
+      begin
+
+         if not Inited then
+            raise Synthetizer_Not_Inited;
+         end if;
+
+         Internal_Play (S            => S,
+                       Frequency    => Frequency,
+                       Volume       => Volume,
+                       Channel      => Channel,
+                       Play_Time    => Play_Time,
+                       Opened_Voice => Opened_Voice);
       end Play;
 
       ----------
@@ -732,6 +838,9 @@ package body Synth.Synthetizer is
 
       procedure Stop (V : Voice) is
       begin
+         if not Inited then
+            raise Synthetizer_Not_Inited;
+         end if;
 
          if not Voices.Can_Be_Stopped (V)
            and then (not Voices.Get_Voice (V).Play_Sample.HasLoop)
@@ -744,6 +853,28 @@ package body Synth.Synthetizer is
          end if;
       end Stop;
 
+      ----------
+      -- Stop --
+      ----------
+
+      procedure Stop (V : Voice; Stop_Time : Synthetizer_Time) is
+      begin
+         if not Inited then
+            raise Synthetizer_Not_Inited;
+         end if;
+
+         if not Voices.Can_Be_Stopped (V)
+           and then (not Voices.Get_Voice (V).Play_Sample.HasLoop)
+         then
+            return; -- wait for the end of sound
+         end if;
+
+         if Voices.Is_Voice_Opened (V) then
+            Voices.Close_Voice (V, Stop_Time);
+         end if;
+
+      end Stop;
+
       ---------------------------
       --  Get_Synthetizer_Time --
       ---------------------------
@@ -751,9 +882,21 @@ package body Synth.Synthetizer is
       function Get_Synthetizer_Time return Synthetizer_Time is
          Current_Clock : constant Time := Clock;
       begin
-         return Synthetizer_Time(Current_Clock - Ref_Time);
+         return Synthetizer_Time (Current_Clock - Ref_Time);
       end Get_Synthetizer_Time;
 
+      function Get_Allocated_Voices return Natural is
+         VPSA : Voice_Play_Structure_Array := Voices.Get_All_Opened_Voices_Play_Structure;
+         N : Natural := 0;
+      begin
+         for I in VPSA'Range loop
+            if not VPSA(i).Closing then
+               N := Natural'Succ(N);
+                   end if;
+         end loop;
+
+         return N;
+      end Get_Allocated_Voices;
 
    end Synthetizer_Structure_Type;
 
@@ -885,7 +1028,7 @@ package body Synth.Synthetizer is
 
          declare
             From_Start : constant Synthetizer_Time :=
-              Synthetizer_Time(
+              Synthetizer_Time (
                                Microseconds (Natural (Driver_Play_Period * Play_Second (i - Buffer'First)
                                  * Play_Second (1_000_000.0))));
             IsStarted : Boolean := True;
