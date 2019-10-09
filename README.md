@@ -4,7 +4,7 @@
 
 
 
-This **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity. This library has been setted up to be able to handle Highly Polyphonic rendering. 
+This **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity, fluidsynth. This library has been setted up to be able to handle Highly Polyphonic rendering. 
 
 [Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Nota : The record made is not as good as the real time rendering)
 
@@ -39,12 +39,13 @@ Implementing your own file format reading is possible in populating the **SoundS
 - Real Time Playing and Offline Playing
 - The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the **MAX_VOICES** constant, and see whether it match the requierments. (As the number of polyphonie is increased, the processing may be heavier and can lead to increase the jitter and buffer sizes).
 - Parametrized volume for each playing sound.
-- Variable Output frequency, permit to adjust CPU consumption (default 44100)
+- Variable Output frequency, permit to adjust CPU consumption (default 44 100 Khz)
 
 #### Current Drivers
 
-- Win32 SoundDriver (x86), x64 not yet supported
+- Win32 SoundDriver (x86), x64 supported using soundio
 - Alsa SoundDriver (*nix platforms)
+- soundio Library (for supporting 64 bits sound rendering on windows, and open the use for MacOs X)
 - PCM 16 bit Wav Output (all plateforms)
 
 
@@ -54,7 +55,7 @@ Can be extended outside the library, depending on needs. Theses drivers show how
 
 ## Using the Synthetizer by example : the code
 
-Below, an example of the use of the synthetizer in 5 mins:
+Below, an example of the 5 mins use of the synthetizer :
 
 
 
@@ -132,22 +133,20 @@ Version 0.1.1:
 
 Version 0.1.2:
 
-- x64 support, opening to x64 compatible library
+- ~~x64 support, opening to x64 compatible library~~
 
 Version 0.1.5
 
-- Ahead of time playin
+- ~~Ahead of time playin~~
 
 Version 0.2: 
 
 - Interfaçing with C, Java for consuming the library
-- x64 windows support
 - Digital Signal processing : Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
 - Lattency detection, permitting to have both online and offline playin
 
 Mid Term Version :
 
-- Ahead of time playin
 - Porting to Spark profile, remove the task part for embedded usage
 
 

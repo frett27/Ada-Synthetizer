@@ -1,6 +1,6 @@
 # Synthetizer architecture - Implementation notes
 
-***Patrice Freydiere - Octobre 2018***
+***Patrice Freydiere - Octobre 2019***
 
 Synthetizer merge sounds wavforms, using some transformations, playing some tune using different instruments or sound. The raw transformation is the resampling, permitting playing the instrument sound at different notes. This synthetizer mainly use a wavtable oscillator, and designed for sequence or midi near realtime playing.
 
