@@ -1,6 +1,6 @@
 # AdaSynthetizer
 
-*Patrice Freydiere - October 2018*
+*Patrice Freydiere - October 2019*
 
 
 
@@ -143,7 +143,6 @@ Version 0.2:
 
 - Interfaçing with C, Java for consuming the library
 - Digital Signal processing : Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
-- Lattency detection, permitting to have both online and offline playin
 
 Mid Term Version :
 
