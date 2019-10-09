@@ -6,21 +6,25 @@
 
 This **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity, fluidsynth. This library has been setted up to be able to handle Highly Polyphonic rendering. 
 
+The Synthetizer takes on one side the samples, and on the other side the Notes to play. Each Wav can be reused for multiple play. 
+
+
+
+![](C:/Users/use/workspaceGNAT/Ada-Synthetizer/doc/Synthetizer.png)
+
+
+
 [Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Nota : The record made is not as good as the real time rendering)
 
 [An other example Here, using highly polyphonic use and ahead of time play'in.(since v0.1.5)](http://www.barrel-organ-discovery.org/work/2019-10_dacquin.wav)
 
 
 
-The Synthetizer takes on one side the samples, and on the other side the Notes to play. Each Wav can be reused for multiple play. 
+As this library handle a simple level of synthetizer, there are no notions of instruments or sound bank yet. These concepts can be introduced easily on top of this library.
 
+**Disclamer on possible API changes** : This library is a maturing sound engine and planned for organ and musicbox software. It is on the right path of production use. This project is opened to any contributions, or pull requests improvements. 
 
-
-![](doc/Synthetizer.png)
-
-As this library handle a simple level of synthetizer, there are no notions of instruments. These concepts can be introduced easily in a layer based on this library.
-
-**Disclamer on API changes** : This library is a maturing sound engine for using on organ and musicbox software, it is on the path of production usage. But opened to any contributions, or improvements. As a early stage project, API may change. An Ada Midi Player has been implemented on top of this Synthetizer, using soundbanks. 
+As an "in progress" project, API may change. An Ada Midi Player has been implemented on top of this Synthetizer, using soundbanks and givin a lot of fun.
 
 
 
@@ -50,6 +54,12 @@ Implementing your own file format reading is possible in populating the **SoundS
 
 
 Can be extended outside the library, depending on needs. Theses drivers show how to implement one.
+
+### Supported Plateforms
+
+The Synthetizer has been tested on x64, x32 desktop computers.
+
+It also works well on ARM based processor, 
 
 
 
@@ -127,18 +137,18 @@ The synthetizer behave nicely, there are no large amount or synchro between comp
 
 ## Next actions
 
-Version 0.1.1:
+Version 0.1.1 - **DONE**
 
 - ~~Fix Memory Leak for Win32 driver~~
 - ~~Eval portaudio for output rendering (X Plateform sound toolkit)~~
 - ~~Add Alsa Driver for linux plateforms~~
 - ~~Add Wav Driver for debugging purpose or to disk exports~~
 
-Version 0.1.2:
+Version 0.1.2 - **DONE**
 
 - ~~x64 support, opening to x64 compatible library~~
 
-Version 0.1.5
+Version 0.1.5 - **DONE**
 
 - ~~Ahead of time playin~~
 
@@ -147,7 +157,7 @@ Version 0.2:
 - Interfaçing with C, Java for consuming the library
 - Digital Signal processing : Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
 
-Mid Term Version :
+Mid Term Version, may be a rewrite targeting smaller footprint architectures:
 
 - Porting to Spark profile, remove the task part for embedded usage
 
