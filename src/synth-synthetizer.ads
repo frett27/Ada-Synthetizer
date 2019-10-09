@@ -26,8 +26,6 @@ with Synth.Driver;
 
 package Synth.Synthetizer is
 
-   --  synth object, that embed the sound system connection
-   type Synthetizer_Type is limited private;
 
    subtype Synthetizer_Time is Time_Span;
 
@@ -41,6 +39,20 @@ package Synth.Synthetizer is
 
    No_Voice : constant Voice;
 
+   --  synth object, that embed the sound system connection
+   type Synthetizer_Type is limited private;
+
+
+   --  synth audit interface
+   type Synthetizer_Audit is interface;
+   type Synthetizer_Audit_Access is access all Synthetizer_Audit'Class;
+
+   procedure Ready_To_Prepare(Synth_Audit : in out Synthetizer_Audit;
+                              Current_Buffer_Time,
+                              Next_Buffer_Time : Synthetizer_Time) is abstract;
+
+
+
    ----------
    -- Open --
    ----------
@@ -50,7 +62,9 @@ package Synth.Synthetizer is
      (Driver_Access : Driver.Sound_Driver_Access;
       Synt :    out Synthetizer_Type;
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
-      Buffers_Number : Positive := 1);
+      Buffers_Number : Positive := 1;
+     Audit: Synthetizer_Audit_Access := null);
+
 
    -----------
    -- Close --
@@ -101,7 +115,7 @@ package Synth.Synthetizer is
 
    procedure Stop (Synt         : Synthetizer_Type;
                    Opened_Voice : Voice;
-                  Stop_Time     : Synthetizer_Time);
+                   Stop_Time     : Synthetizer_Time);
 
 
    function Get_Opened_Voices(Synt : Synthetizer_Type) return Natural;
@@ -303,8 +317,9 @@ private
       --  Start the prepepare of the buffer
       --  Return the Reference time for the next buffer
       entry Start (BR : Buffer_Ring_Access;
-                   VSA : Voices_Access;
-                   Driver_Frequency : Frequency_Type);
+                    VSA : Voices_Access;
+                    Driver_Frequency : Frequency_Type;
+                    Audit_Interface_Access : Synthetizer_Audit_Access := null);
       entry Stop;
 
    end Buffer_Preparing_Task_Type;
@@ -317,6 +332,7 @@ private
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
                       Buffer_Length : Positive;
+                      Audit: Synthetizer_Audit_Access;
                       T : out Time);
 
       --  Play a sound sample, with the given frequency

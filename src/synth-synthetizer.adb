@@ -27,13 +27,13 @@ package body Synth.Synthetizer is
    -- Open --
    ----------
 
+   --  open the synth device
    procedure Open
      (Driver_Access : Driver.Sound_Driver_Access;
       Synt :    out Synthetizer_Type;
-      --   use 50 ms buffer by default on 44 100 Khz,
-      --   can be changed by the caller
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
-      Buffers_Number : Positive := 1)
+      Buffers_Number : Positive := 1;
+      Audit: Synthetizer_Audit_Access := null)
    is
       Start_Time : Time;
    begin
@@ -44,7 +44,8 @@ package body Synth.Synthetizer is
       Synt.Init (D            => Driver_Access,
                  NBBuffer => Buffers_Number,
                  Buffer_Length => Buffer_Size,
-                 T => Start_Time);
+                 T => Start_Time,
+                 Audit => Audit);
 
    exception
       when E : others =>
@@ -318,6 +319,9 @@ package body Synth.Synthetizer is
 
    end Buffer_Play_Task_Type;
 
+   type Commit_Events_For_Buffer_Access is access
+     procedure (Current_Buffer_Time, Next_Buffer_Time : Synthetizer_Time);
+
    --------------------------------
    -- Buffer_Preparing_Task_Type --
    --------------------------------
@@ -341,18 +345,23 @@ package body Synth.Synthetizer is
 
       Driver_Frequency_Period : Synthetizer_Time;
 
+      Task_Audit_Interface_Access : Synthetizer_Audit_Access;
+
    begin
 
       accept Start (BR : Buffer_Ring_Access;
                     VSA : Voices_Access;
+                    Driver_Frequency : Frequency_Type;
+                    Audit_Interface_Access : Synthetizer_Audit_Access := null) do
 
-                    Driver_Frequency : Frequency_Type) do
          Task_BR := BR;
          Task_VSA := VSA;
          Task_Driver_Frequency := Driver_Frequency;
 
          Driver_Frequency_Period :=
            Synthetizer_Time (Frequency_Period (Task_Driver_Frequency));
+
+         Task_Audit_Interface_Access := Audit_Interface_Access;
 
       end Start;
       --  Put_Line("Preparing Task Started");
@@ -368,18 +377,18 @@ package body Synth.Synthetizer is
 
             --  take buffer, process the voices
             --
+
             declare
                Preparing_Buffer : Frame_Array_Access;
                ReachEndSample : Boolean := False;
 
-               --  retrieve all opened voice
-               Opened_Voice : Voice_Play_Structure_Array :=
-                 Task_VSA.Get_All_Opened_Voices_Play_Structure;
+
                Returned_Sample_Position : Play_Second;
 
                Next_Buffer_Last_Time : Synthetizer_Time;
 
             begin
+
 
                Task_BR.Freeze_New_Buffer (Buffer => Preparing_Buffer);
 
@@ -387,8 +396,17 @@ package body Synth.Synthetizer is
                Next_Buffer_Last_Time :=
                  Current_Buffer_Start_Time +
                    Driver_Frequency_Period * (Preparing_Buffer.all'Length + 1);
-               declare
 
+               -- call back, to populate the new buffer, commit all events before
+
+               if Task_Audit_Interface_Access /= null then
+                  Ready_To_Prepare(Task_Audit_Interface_Access.all, Current_Buffer_Start_Time, Next_Buffer_Last_Time);
+               end if;
+
+               declare
+                  --  retrieve all opened voice
+                  Opened_Voice : Voice_Play_Structure_Array :=
+                    Task_VSA.Get_All_Opened_Voices_Play_Structure;
                   Number_Of_Processed_Voices : Natural := 0;
 
                begin
@@ -443,13 +461,14 @@ package body Synth.Synthetizer is
                      Reporting_Max_Elapse_Time := To_Time_Span (Duration (0.0));
                   end if;
 
+                   Task_VSA.Update_Close_And_Positions_Status (Opened_Voice);
                end;
 
                Current_Buffer_Start_Time :=
                  Next_Buffer_Last_Time;
 
                Task_BR.UnFreeze_New_Buffer (Buffer => Preparing_Buffer);
-               Task_VSA.Update_Close_And_Positions_Status (Opened_Voice);
+
 
             end;
 
@@ -689,6 +708,7 @@ package body Synth.Synthetizer is
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
                       Buffer_Length : Positive;
+                      Audit: Synthetizer_Audit_Access;
                       T : out Time) is
       begin
 
@@ -706,7 +726,8 @@ package body Synth.Synthetizer is
          Prepare_Task := new Buffer_Preparing_Task_Type;
          Prepare_Task.Start (BR => BR,
                              VSA => Voices,
-                             Driver_Frequency => Synth.Driver.Get_Frequency (D.all));
+                             Driver_Frequency => Synth.Driver.Get_Frequency (D.all),
+                             Audit_Interface_Access =>  Audit);
          Next_Buffer_Time := Synthetizer_Time (Time_Span_Zero);
          T := Ref_Time; -- start of the Synthetizer clock
          Inited := True;
@@ -890,9 +911,9 @@ package body Synth.Synthetizer is
          N : Natural := 0;
       begin
          for I in VPSA'Range loop
-            if not VPSA(i).Closing then
-               N := Natural'Succ(N);
-                   end if;
+            if not VPSA (I).Closing then
+               N := Natural'Succ (N);
+            end if;
          end loop;
 
          return N;
