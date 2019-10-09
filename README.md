@@ -8,6 +8,8 @@ This **library** provides a **synthetizer** for making music from samples (.wav 
 
 [Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Nota : The record made is not as good as the real time rendering)
 
+[An other example Here, using highly polyphonic use and ahead of time play'in.(since v0.1.5)](http://www.barrel-organ-discovery.org/work/2019-10_dacquin.wav)
+
 
 
 The Synthetizer takes on one side the samples, and on the other side the Notes to play. Each Wav can be reused for multiple play. 
@@ -18,9 +20,7 @@ The Synthetizer takes on one side the samples, and on the other side the Notes t
 
 As this library handle a simple level of synthetizer, there are no notions of instruments. These concepts can be introduced easily in a layer based on this library.
 
-
-
-**Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production. But opened to any contributions, or improvements. As a early stage project, API may change.
+**Disclamer on API changes** : This library is a maturing sound engine for using on organ and musicbox software, it is on the path of production usage. But opened to any contributions, or improvements. As a early stage project, API may change. An Ada Midi Player has been implemented on top of this Synthetizer, using soundbanks. 
 
 
 
@@ -55,12 +55,11 @@ Can be extended outside the library, depending on needs. Theses drivers show how
 
 ## Using the Synthetizer by example : the code
 
-Below, an example of the 5 mins use of the synthetizer :
+Below, an example of the 5 mins , RealTime use of the synthetizer :
 
 
 
 ```pascal
- 
 with Synth.Driver;
 with Synth.Wav;
 
@@ -114,7 +113,11 @@ end;
 
 ```
 
+More information about the API and internals can be found in the link below, especially for version v0.1.5, where a ahead of time complementary API is provided.
+
 [Additional technical insights can be found at this location](doc/architecture.md)
+
+
 
 ## Feedbacks
 
