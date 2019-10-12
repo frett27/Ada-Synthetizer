@@ -1,32 +1,36 @@
 # AdaSynthetizer
 
-*Patrice Freydiere - September 2018*
+*Patrice Freydiere - October 2019*
 
 
 
-This **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity. This library has been setted up to be able to handle Highly Polyphonic rendering. 
-
-[Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Nota : The record made is not as good as the real time rendering)
-
-
+This **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity, fluidsynth. This library has been setted up to be able to handle Highly Polyphonic rendering. 
 
 The Synthetizer takes on one side the samples, and on the other side the Notes to play. Each Wav can be reused for multiple play. 
 
 
 
-![](doc/Synthetizer.png)
-
-As this library handle a simple level of synthetizer, there are no notions of instruments. These concepts can be introduced easily in a layer based on this library.
+![](C:/Users/use/workspaceGNAT/Ada-Synthetizer/doc/Synthetizer.png)
 
 
 
-**Disclamer** : This library is still in the early stage of a sound engine for using on organ software, this is not yet ready for production. But opened to any contributions, or improvements
+[Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Nota : The record made is not as good as the real time rendering)
+
+[An other example Here, using highly polyphonic use and ahead of time play'in.(since v0.1.5)](http://www.barrel-organ-discovery.org/work/2019-10_dacquin.wav)
+
+
+
+As this library handle a simple level of synthetizer, there are no notions of instruments or sound bank yet. These concepts can be introduced easily on top of this library.
+
+**Disclamer on possible API changes** : This library is a maturing sound engine and planned for organ and musicbox software. It is on the right path of production use. This project is opened to any contributions, or pull requests improvements. 
+
+As an "in progress" project, API may change. An Ada Midi Player has been implemented on top of this Synthetizer, using soundbanks and givin a lot of fun.
 
 
 
 ### Current Features
 
-The API has been tests on Windows, Linux (x86 & ARM) . A conditional compilation, depending on the OS, compile the associated default driver.  
+The API has been tests on Windows (x86), Linux (x86 & ARM) . A conditional compilation, depending on the OS, compile the associated default driver.  
 
 #### Sound input
 
@@ -39,28 +43,33 @@ Implementing your own file format reading is possible in populating the **SoundS
 - Real Time Playing and Offline Playing
 - The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the **MAX_VOICES** constant, and see whether it match the requierments. (As the number of polyphonie is increased, the processing may be heavier and can lead to increase the jitter and buffer sizes).
 - Parametrized volume for each playing sound.
-- Resampling : currently Nearest neighborhood algorithm (can be improved)
-- Variable Output frequency, permit to adjust CPU consumption
+- Variable Output frequency, permit to adjust CPU consumption (default 44 100 Khz)
 
 #### Current Drivers
 
-- Win32 SoundDriver
+- Win32 SoundDriver (x86), x64 supported using soundio
 - Alsa SoundDriver (*nix platforms)
-- PCM 16 bit Wav Output, using a cross plateform.
+- soundio Library (for supporting 64 bits sound rendering on windows, and open the use for MacOs X)
+- PCM 16 bit Wav Output (all plateforms)
 
 
 Can be extended outside the library, depending on needs. Theses drivers show how to implement one.
+
+### Supported Plateforms
+
+The Synthetizer has been tested on x64, x32 desktop computers.
+
+It also works well on ARM based processor, 
 
 
 
 ## Using the Synthetizer by example : the code
 
-Below, an example of the use of the synthetizer in 5 mins:
+Below, an example of the 5 mins , RealTime use of the synthetizer :
 
 
 
 ```pascal
- 
 with Synth.Driver;
 with Synth.Wav;
 
@@ -114,35 +123,43 @@ end;
 
 ```
 
+More information about the API and internals can be found in the link below, especially for version v0.1.5, where a ahead of time complementary API is provided.
+
+[Additional technical insights can be found at this location](doc/architecture.md)
+
 
 
 ## Feedbacks
 
-The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, be can be improved.
+The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, but can be improved.
 
 
 
 ## Next actions
 
-Version 0.1.1:
+Version 0.1.1 - **DONE**
 
 - ~~Fix Memory Leak for Win32 driver~~
 - ~~Eval portaudio for output rendering (X Plateform sound toolkit)~~
 - ~~Add Alsa Driver for linux plateforms~~
 - ~~Add Wav Driver for debugging purpose or to disk exports~~
-- Ahead of time playin
+
+Version 0.1.2 - **DONE**
+
+- ~~x64 support, opening to x64 compatible library~~
+
+Version 0.1.5 - **DONE**
+
+- ~~Ahead of time playin~~
 
 Version 0.2: 
 
-- Improving Sound quality, add numeric filters, and additional effects
-- Digital Signal processing : Permit to have Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
-- Lattency detection, permitting to have both online and offline playin
-
-Mid Term Version :
-
 - Interfaçing with C, Java for consuming the library
+- Digital Signal processing : Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
 
-- Porting to Spark, remove the task part for embedded usage
+Mid Term Version, may be a rewrite targeting smaller footprint architectures:
+
+- Porting to Spark profile, remove the task part for embedded usage
 
 
 ### Areas That can be covered next (if time permit)

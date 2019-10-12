@@ -23,7 +23,7 @@
 
 with Ada;
 with Ada.Real_Time; use Ada.Real_Time;
-with Ada.Text_IO; use Ada.Text_IO;
+-- with Ada.Text_IO; use Ada.Text_IO;
 
 With Sound;
 
@@ -42,7 +42,7 @@ package body Synth.Driver.Alsa is
    procedure Open (Driver : out Sound_Driver_Access) is
 
        ALSADriver : ALSA_Driver_Access := new ALSA_Driver;
-       Resolution  : Sound.Sample_Frequency := 44_100;
+       Resolution  : Sound.Sample_Frequency := 16_000; --44_100;
        Buffer_Size : Duration := 0.5;
        Period      : Duration := 0.1;
    begin
@@ -55,8 +55,22 @@ package body Synth.Driver.Alsa is
       --  open speakers
 
       Driver := ALSADriver.all'Access;
+      ALSADriver.Frequency := Frequency_Type(Resolution);
 
    end Open;
+
+   -------------------
+   -- Get_Frequency --
+   -------------------
+
+   function Get_Frequency (Driver : in ALSA_Driver)
+                          return Frequency_Type is
+   begin
+      return Driver.Frequency;
+   end Get_Frequency;
+
+
+
 
    ----------
    -- Play --

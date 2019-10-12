@@ -1,0 +1,6 @@
+[submodule "drivers/ada-synth-lib"]
+	path = drivers/ada-synth-lib
+	url = https://github.com/raph-amiard/ada-synth-lib
+[submodule "drivers/ada-soundio"]
+	path = drivers/ada-soundio
+	url = https://github.com/raph-amiard/ada-soundio

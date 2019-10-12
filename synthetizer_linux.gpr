@@ -1,5 +1,4 @@
-
-with "./drivers/alsa-binding/lib_alsa_binding.gpr";
+with "./drivers/alsa-binding/alsa_binding.gpr";
 
 project Synthetizer_Linux is
 
@@ -9,13 +8,10 @@ project Synthetizer_Linux is
 
    for Languages use ("Ada");
 
-   package Linker is
-       for Linker_Options use ("-lasound");
-   end Linker;
-
    package Compiler is
       for Default_Switches ("Ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
    end Compiler;
+
 
 end Synthetizer_Linux;
 

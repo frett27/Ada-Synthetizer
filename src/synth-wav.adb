@@ -23,10 +23,32 @@
 
 package body Synth.Wav is
 
+   function End_Of_Stream (Stream : WAV_Read_Stream_File) return Boolean is
+   begin
+      return End_Of_File (Stream.File);
+   end End_Of_Stream;
+
+   procedure Read
+     (Stream : in out WAV_Read_Stream_File;
+      Item   : out Stream_Element_Array;
+      Last   : out Stream_Element_Offset) is
+   begin
+      Ada.Streams.Stream_IO.Read (File => Stream.File,
+                                  Item => Item,
+                                  Last => Last);
+   end Read;
+
+   procedure Write
+     (Stream : in out WAV_Read_Stream_File;
+      Item   : Stream_Element_Array) is
+   begin
+      Ada.Streams.Stream_IO.Write (Stream.File, Item);
+   end Write;
+
    function "and"(Left, Right : Integer) return Integer is
       type Unsigned_Integer is mod 2**Integer'Size;
    begin
-    return Integer (Unsigned_Integer (Left) and Unsigned_Integer (Right));
+      return Integer (Unsigned_Integer (Left) and Unsigned_Integer (Right));
    end "and";
 
    ----------------
@@ -61,9 +83,9 @@ package body Synth.Wav is
    function To_DWord (I : Natural) return DWord is
    begin
       return DWord'(A => Byte (I and Natural (16#FF#)),
-                     B => Byte (I / 2**8 and 16#FF#),
-                     C => Byte (I / 2**16 and 16#FF#),
-                     D => Byte (I / 2**24 and 16#FF#));
+                    B => Byte (I / 2**8 and 16#FF#),
+                    C => Byte (I / 2**16 and 16#FF#),
+                    D => Byte (I / 2**24 and 16#FF#));
 
    end To_DWord;
 
@@ -82,14 +104,14 @@ package body Synth.Wav is
    ---------------------------------------------------------------------------
 
    BAD_FORMAT : exception;
+   BAD_FORMAT_UNKNOWN_HEADER_BLOCK : exception;
 
    ---------------------------
    -- Read_Data_From_Header --
    ---------------------------
 
    function Read_Data_From_Header
-     (File         : File_Type;
-      File_Stream  : Stream_Access;
+     (Wav_Stream_Access  : WAV_Read_Stream_Access;
       Header_Block : Wav_Block) return Wav_Block
    is
       Bytes_To_Read : constant Natural :=
@@ -98,9 +120,9 @@ package body Synth.Wav is
       BA    : Byte_Array (1 .. Bytes_To_Read) := (others => 0);
    begin
       --  read the data block
-      --  ada.text_io.put_line(" bytes to read " & Natural'image(bytes_to_read));
-      while Bytes_To_Read > 0 and then not End_Of_File (File) loop
-         Byte'Read (File_Stream, BA (Index));
+      while Bytes_To_Read > 0 and then
+        not End_Of_Stream (Wav_Stream_Access.all) loop
+         Byte'Read (Wav_Stream_Access, BA (Index));
          Index := Positive'Succ (Index);
       end loop;
 
@@ -150,9 +172,9 @@ package body Synth.Wav is
    ----------------------------------
 
    function Convert_Frame_Array_To_Bytes (F : Frame_Array)
-                                         return Byte_Array
+                                          return Byte_Array
    is
-       Bytes : Byte_Array (1 .. F'Length * 2);
+      Bytes : Byte_Array (1 .. F'Length * 2);
    begin
       for i in F'First .. F'Last loop
          declare
@@ -183,9 +205,25 @@ package body Synth.Wav is
 
    procedure Load (FileName : String; Sample : out SoundSample)
    is
+      Wav_Stream      : aliased WAV_Read_Stream_File;
+   begin
+      Ada.Streams.Stream_IO.Open (
+                                  Wav_Stream.File,
+                                  In_File,
+                                  FileName);
 
-      File             : File_Type;
-      File_Stream      : Stream_Access;
+      Load (Wav_Stream'Unchecked_Access, Sample);
+      Close (Wav_Stream.File);
+   end Load;
+
+   ----------
+   -- Load --
+   ----------
+
+   procedure Load (Wav_Stream_Access : WAV_Read_Stream_Access;
+                   Sample : out SoundSample)
+   is
+
       Block_Type_Value : DWord;
 
       Frequence : Frequency_Type;
@@ -237,13 +275,11 @@ package body Synth.Wav is
       end Parse;
 
    begin
-      Open (File, In_File, FileName);
-      File_Stream := Stream (File);
 
-      while not End_Of_File (File) loop
+      while not End_Of_Stream (Wav_Stream_Access.all) loop
 
          --  Read the block type
-         DWord'Read (File_Stream, Block_Type_Value);
+         DWord'Read (Wav_Stream_Access, Block_Type_Value);
 
          declare
             BT : Block_Type;
@@ -256,7 +292,11 @@ package body Synth.Wav is
             elsif Block_Type_Value = "fmt " then
                BT := FMT;
             else
-               raise BAD_FORMAT;
+               raise BAD_FORMAT_UNKNOWN_HEADER_BLOCK
+                 with Byte'Image (Block_Type_Value.A) & " - " &
+                 Byte'Image (Block_Type_Value.B) & " - " &
+                 Byte'Image (Block_Type_Value.C) & " - " &
+                 Byte'Image (Block_Type_Value.D) & " - ";
             end if;
 
             declare
@@ -264,13 +304,13 @@ package body Synth.Wav is
                B : TheBlock;
             begin
 
-               TheBlock'Read (File_Stream, B);  -- read the block
+               TheBlock'Read (Wav_Stream_Access, B);  -- read the block
 
                if BT = DATA_HEADER then
                   --  in case we have a data_header
                   --  we convert it in data block
                   --  with samples
-                  Parse (Read_Data_From_Header (File, File_Stream, B));
+                  Parse (Read_Data_From_Header (Wav_Stream_Access, B));
                else
                   Parse (B);
                end if;
@@ -286,7 +326,6 @@ package body Synth.Wav is
       Sample.Frequency := Frequence;
       Sample.Mono_Data := Samples;
 
-      Close (File);
    end Load;
 
    procedure Write (W : Wav_Block; File_Stream : Stream_Access) is
@@ -316,8 +355,8 @@ package body Synth.Wav is
             raise Program_Error with "Invalid block";
 
          when DATA =>
-               Magic'Write (File_Stream, "data");
-               DWord'Write (File_Stream, W.Size);
+            Magic'Write (File_Stream, "data");
+            DWord'Write (File_Stream, W.Size);
             declare
                subtype BArray is Byte_Array (W.Samples'Range);
                BA : constant BArray := W.Samples;
@@ -330,7 +369,7 @@ package body Synth.Wav is
    end Write;
 
    procedure WriteHeaders (WAV_File : WAV_Write_Type;
-                          MainChunkSize : Natural) is
+                           MainChunkSize : Natural) is
       File_Stream : constant Stream_Access := WAV_File.FileStream;
    begin
 
@@ -339,22 +378,22 @@ package body Synth.Wav is
 
       declare
          BlockHeader : Wav_Block (Type_Block => HEADER,
-                                 DataSize => 0);
+                                  DataSize => 0);
          BlockFmt : constant Wav_Block := (Type_Block => FMT,
-                                  Size => To_DWord (16),
-                                  DataSize => 0,
-                                  AudioFormat    => To_Word (1),
-                                  ChannelsNb     => To_Word (1),
-                                  Frequency      =>
-                                    To_DWord (Natural (44100.0)),
-                                  BytePerSec     => To_DWord (Natural (44100.0) * 2),
-                                  BytePerBloc    => To_Word (1),
-                                  BitsPerSamples => To_Word (16)
-                                 );
+                                           Size => To_DWord (16),
+                                           DataSize => 0,
+                                           AudioFormat    => To_Word (1),
+                                           ChannelsNb     => To_Word (1),
+                                           Frequency      =>
+                                             To_DWord (Natural (44_100.0)),
+                                           BytePerSec     => To_DWord (Natural (44_100.0) * 2),
+                                           BytePerBloc    => To_Word (1),
+                                           BitsPerSamples => To_Word (16)
+                                          );
          BlockData : constant Wav_Block := (Type_Block => DATA,
-                                   Size => To_DWord (WAV_File.Bytes_Written),
-                                   DataSize => 0,
-                                   Samples => Byte_Array'(0 .. -1 => 0));
+                                            Size => To_DWord (WAV_File.Bytes_Written),
+                                            DataSize => 0,
+                                            Samples => Byte_Array'(0 .. -1 => 0));
       begin
          BlockHeader.Size := To_DWord (MainChunkSize);
          --  Write Header
@@ -364,7 +403,6 @@ package body Synth.Wav is
          --  Write Data Chunk
          Write (BlockData, File_Stream);
       end;
-
    end WriteHeaders;
 
    procedure Open_For_Write (FileName : String;
@@ -386,30 +424,31 @@ package body Synth.Wav is
       WAV_File := TMP_WAV_File;
 
       WriteHeaders (WAV_File => WAV_File,
-                  MainChunkSize => 0); -- will be rewritten at close
+                    MainChunkSize => 0); -- will be rewritten at close
 
    end Open_For_Write;
 
-   procedure Close_And_Finalize (WAV_File : in WAV_Write_Type) is
+   procedure Close_And_Finalize (WAV_File : WAV_Write_Type) is
       C : constant Count := Size (WAV_File.File.all);
       File_Stream : Stream_Access;
       pragma Unreferenced (File_Stream);
    begin
 
       Reset (File => WAV_File.File.all,
-            Mode => Out_File);
+             Mode => Out_File);
       --  rewind
       File_Stream := Stream (WAV_File.File.all);
-      WriteHeaders (WAV_File, Integer(C) - 8);
+      WriteHeaders (WAV_File, Integer (C) - 8);
       Close (WAV_File.File.all);
       --  rewind
    end Close_And_Finalize;
 
-   procedure Write_Data (WAV_File : WAV_Write_Type; Datas : Frame_Array_Access) is
-         BDatas : constant Byte_Array := Convert_Frame_Array_To_Bytes (Datas.all);
+   procedure Write_Data (WAV_File : WAV_Write_Type;
+                         Datas : Frame_Array_Access) is
+      BDatas : constant Byte_Array := Convert_Frame_Array_To_Bytes (Datas.all);
       subtype BArray is Byte_Array (BDatas'Range);
    begin
-      WAV_File.Bytes_Written := WAV_File.Bytes_Written + Datas.all'Length;
+      WAV_File.Bytes_Written := WAV_File.Bytes_Written + Datas.all'Length * 2;
 
       BArray'Write (WAV_File.FileStream, BDatas);
    end Write_Data;

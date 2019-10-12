@@ -22,13 +22,46 @@
 ------------------------------------------------------------------------------
 
 with Ada.Streams.Stream_IO; use Ada.Streams.Stream_IO;
+with Ada.Streams; use Ada.Streams;
 
 package Synth.Wav
   --  with SPARK_Mode => On
 is
 
-   type WAV_Write_Structure_Type is private;
-   type WAV_Write_Type is access all WAV_Write_Structure_Type;
+
+   type WAV_Read_Stream is abstract new Ada.Streams.Root_Stream_Type with
+     null record;
+
+   function End_Of_Stream (Stream : WAV_Read_Stream)
+                           return Boolean is abstract;
+
+   type WAV_Read_Stream_Access is access all WAV_Read_Stream'Class;
+
+
+   ----------
+   -- Load --
+   ----------
+
+   --  Load a Wav from a stream
+
+   procedure Load (Wav_Stream_Access : WAV_Read_Stream_Access;
+                   Sample : out SoundSample);
+
+   type WAV_Read_Stream_File is new WAV_Read_Stream with private;
+   type WAV_Read_Stream_File_Access is access all WAV_Read_Stream_File;
+
+   function End_Of_Stream (Stream : WAV_Read_Stream_File) return Boolean;
+
+   --  Read data from the stream.
+   procedure Read
+     (Stream : in out WAV_Read_Stream_File;
+      Item   : out Stream_Element_Array;
+      Last   : out Stream_Element_Offset);
+
+   procedure Write
+     (Stream : in out WAV_Read_Stream_File;
+      Item   : Stream_Element_Array);
+
 
    ----------
    -- Load --
@@ -41,11 +74,15 @@ is
    --    (if Sample.HasLoop then Sample.Loop_Start >= Sample.Loop_End),
    --       Depends => (Sample => (FileName));
 
+
+   type WAV_Write_Structure_Type is private;
+   type WAV_Write_Type is access all WAV_Write_Structure_Type;
+
    procedure Open_For_Write (FileName : String; WAV_File : out WAV_Write_Type);
 
    procedure Write_Data (WAV_File : WAV_Write_Type; Datas : Frame_Array_Access);
 
-   procedure Close_And_Finalize (WAV_File : in WAV_Write_Type);
+   procedure Close_And_Finalize (WAV_File : WAV_Write_Type);
 
 private
 
@@ -137,5 +174,13 @@ private
       Bytes_Written : Natural;
 
    end record;
+
+   type WAV_Read_Stream_File is new WAV_Read_Stream with
+      record
+         File: File_Type;
+      end record;
+
+
+
 
 end Synth.Wav;

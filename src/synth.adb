@@ -70,6 +70,16 @@ package body Synth is
         * Frequency_Type'(440.0);
    end MIDICode_To_Frequency;
 
+   ----------------------
+   -- Frequency_Period --
+   ----------------------
+
+   function Frequency_Period (Frequency : Frequency_Type) return Time_Span is
+      Micro : constant Integer := Integer ( 1_000_000.0 / Frequency);
+   begin
+      return Microseconds (Micro);
+   end Frequency_Period;
+
    --------------------
    -- Dump Exception --
    --------------------

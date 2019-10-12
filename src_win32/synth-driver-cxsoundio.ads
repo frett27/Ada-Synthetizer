@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
---                              Synthetizer                                 --
+--                             Ada Synthetizer                              --
 --                                                                          --
---                         Copyright (C) 2015-2018                          --
+--                         Copyright (C) 2018-2019                          --
 --                                                                          --
 --  Authors: Patrice Freydiere                                              --
 --                                                                          --
@@ -20,52 +20,76 @@
 --  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.          --
 --                                                                          --
 ------------------------------------------------------------------------------
+pragma Ada_2012;
 
-with Ada.Unchecked_Conversion;
-with System;
-With Sound.Mono;
+with Interfaces.C; use Interfaces.C;
+with Soundio;
 
-------------------------
--- Synth.Driver.Win32 --
-------------------------
+package Synth.Driver.CxSoundio is
 
-package Synth.Driver.Alsa is
+   type Soundio_Driver is new Sound_Driver with private;
 
-   type ALSA_Driver is new Sound_Driver with private;
-
-   type ALSA_Driver_Access is access all ALSA_Driver;
+   type Soundio_Driver_Access is access all Soundio_Driver;
 
    ----------
    -- Open --
    ----------
    --  factory
-   procedure Open (Driver : out Sound_Driver_Access);
+   procedure Open (Driver : out Sound_Driver_Access;
+                   Frequency : Frequency_Type := 44100.0);
 
    -----------
    -- Close --
    -----------
-   overriding procedure Close (Driver : in out ALSA_Driver);
 
-   -------------------
-   -- Get_Frequency --
-   -------------------
-   overriding function Get_Frequency (Driver : in ALSA_Driver)
-                          return Frequency_Type;
+   overriding procedure Close (Driver : in out Soundio_Driver);
+
    ----------
    -- Play --
    ----------
 
    overriding procedure Play
-     (Driver : in out ALSA_Driver;
+     (Driver : in out Soundio_Driver;
       Buffer : PCM_Frame_Array_Access);
 
-private
-   type ALSA_Driver is new Synth.Driver.Sound_Driver with record
-      Speakers    : Sound.Mono.Line_Type;
-      Frequency   : Frequency_Type;
+   -------------------
+   -- Get_Frequency --
+   -------------------
 
+   overriding function Get_Frequency (Driver : Soundio_Driver)
+           return Frequency_Type;
+
+private
+
+   type Soundio_Driver is new Synth.Driver.Sound_Driver with record
+
+      IO : access Soundio.SoundIo;
+      Device : access Soundio.SoundIo_Device;
+      Out_Stream : access Soundio.SoundIo_Out_Stream;
+
+      Frequency : Frequency_Type;
+
+      CurrentPlayedBuffer : PCM_Frame_Array_Access := null;
+      CurrentIndex : Natural := 0;
+
+      IsPlaying : Boolean := False;
    end record;
 
+   --  simple semaphone for synchronous play and buffers creation
+   protected type Semaphore (N : Positive) is
+      entry Passen;
+      entry Verlassen;
+      function Allocated return Natural;
+   private
+      Current : Natural := N;
+   end Semaphore;
 
+   SBuffer : Semaphore (1); -- for handling the buffers
 
-end Synth.Driver.Alsa;
+    procedure Write_Device_Callback
+     (Out_Stream       : access Soundio.SoundIo_Out_Stream;
+      Frame_Count_Min  : int;
+      Frame_Count_Max  : int);
+   pragma Convention (C, Write_Device_Callback);
+
+end Synth.Driver.CxSoundio;

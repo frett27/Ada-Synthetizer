@@ -21,13 +21,17 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Synth.Driver.Win32;
+with Synth.Driver.CxSoundio;
 
 package body Synth.Driver is
 
-   procedure Open (Driver : out Sound_Driver_Access) is
+
+      procedure Open (Driver : out Sound_Driver_Access;
+                   Frequency : Frequency_Type) is
    begin
-      Synth.Driver.Win32.Open (Driver => Driver);
+      Synth.Driver.CxSoundio
+        .Open (Driver => Driver,
+              Frequency => Frequency);
    end Open;
 
 end Synth.Driver;

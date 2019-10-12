@@ -23,15 +23,109 @@
 
 with System;
 with Synth.Driver;
-with Ada.Real_Time;
-use Ada.Real_Time;
 
 package Synth.Synthetizer is
+
+
+   subtype Synthetizer_Time is Time_Span;
+
+   Not_Defined_Clock : constant Synthetizer_Time :=
+     Synthetizer_Time (Time_Span_Last);
+
+   Synthetizer_Time_First : constant Synthetizer_Time :=
+     Synthetizer_Time (Time_Span_First);
+
+   type Voice is private;
+
+   No_Voice : constant Voice;
 
    --  synth object, that embed the sound system connection
    type Synthetizer_Type is limited private;
 
-   Not_Defined_Clock : Time := Time_Last;
+
+   --  synth audit interface
+   type Synthetizer_Audit is interface;
+   type Synthetizer_Audit_Access is access all Synthetizer_Audit'Class;
+
+   procedure Ready_To_Prepare(Synth_Audit : in out Synthetizer_Audit;
+                              Current_Buffer_Time,
+                              Next_Buffer_Time : Synthetizer_Time) is abstract;
+
+
+
+   ----------
+   -- Open --
+   ----------
+
+   --  open the synth device
+   procedure Open
+     (Driver_Access : Driver.Sound_Driver_Access;
+      Synt :    out Synthetizer_Type;
+      Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
+      Buffers_Number : Positive := 1;
+     Audit: Synthetizer_Audit_Access := null);
+
+
+   -----------
+   -- Close --
+   -----------
+
+   --  close the synth
+   procedure Close (Synt : in out Synthetizer_Type);
+
+   ----------
+   -- Play --
+   ----------
+
+   --
+   --  play a sound , on a typical frequency
+   --  return the associated voice
+   --
+
+   procedure Play
+     (Synt         : Synthetizer_Type;
+      S            : SoundSample;
+      Frequency    : Float;
+      Volume       : Float := 1.0;
+      Channel : Positive := 1;
+      Opened_Voice :    out Voice);
+
+   --
+   --  play a sound, giving the internal timing,
+   --  defining the time permit to create a ahead of time playing
+   --  return the associated opened voice
+   --
+   procedure Play
+     (Synt         : Synthetizer_Type;
+      S            : SoundSample;
+      Frequency    : Float;
+      Play_Time    : Synthetizer_Time;
+      Volume       : Float := 1.0;
+      Channel : Positive := 1;
+      Opened_Voice :    out Voice);
+
+   ----------
+   -- Stop --
+   ----------
+
+   --  stop the voice (or the sound associated to it)
+
+   procedure Stop (Synt         : Synthetizer_Type;
+                   Opened_Voice : Voice);
+
+   procedure Stop (Synt         : Synthetizer_Type;
+                   Opened_Voice : Voice;
+                   Stop_Time     : Synthetizer_Time);
+
+
+   function Get_Opened_Voices(Synt : Synthetizer_Type) return Natural;
+
+
+   Synthetizer_Not_Inited : exception;
+
+   MAX_VOICES : constant Natural := 600;
+
+private
 
    --  The voice represent a play of a sound sample
    --  at a given frequency, it also remember the state of the play
@@ -43,8 +137,8 @@ package Synth.Synthetizer is
    type Voice_Structure_Type is record
       Note_Play_Frequency          : Frequency_Type; -- the played frequency
       Play_Sample             : SoundSample; -- the sound sample to play
-      Start_Play_Sample : Time;
-      Stop_Play_Sample : Time := Not_Defined_Clock;
+      Start_Play_Sample : Synthetizer_Time;
+      Stop_Play_Sample : Synthetizer_Time := Not_Defined_Clock;
       Current_Sample_Position : Play_Second := 0.0; -- the position in second
       Volume       : Float := 1.0; -- volume factor
       Stopped : Boolean := False;
@@ -53,6 +147,8 @@ package Synth.Synthetizer is
 
    --  the voice type, index to the voice array structure
    type Voice is new Natural;
+
+   No_Voice : constant Voice := 0;
 
    --  array of voices
    type Voice_Array is array (Positive range <>) of Voice;
@@ -67,48 +163,8 @@ package Synth.Synthetizer is
    type ReadOnly_Voice_Structure_Access is
      access constant Voice_Structure_Type;
 
-   --  open the synth device
-   procedure Open
-     (Driver_Access : Driver.Sound_Driver_Access;
-      Synt :    out Synthetizer_Type;
-      Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
-      Buffers_Number : Positive := 1);
-
-   --  close the synth
-   procedure Close (Synt : in out Synthetizer_Type);
-
-   ----------
-   -- Play --
-   ----------
-
-   --
-   --  play a sound , on a typical frequency
-   --  return the associated played channel
-   --
-
-   procedure Play
-     (Synt         : Synthetizer_Type;
-      S            : SoundSample;
-      Frequency    : Float;
-      Volume       : Float := 1.0;
-      Channel : Positive := 1;
-      Opened_Voice :    out Voice);
-
-   ----------
-   -- Stop --
-   ----------
-
-   --  stop the voice (or the sound associated to it)
-
-   procedure Stop (Synt         : Synthetizer_Type;
-                   Opened_Voice : Voice);
-
-   Synthetizer_Not_Inited : exception;
-
-private
-
    --  max voice
-   MAX_VOICES : constant Natural := 400;
+
    MAX_VOICES_INDICE : constant Voice := Voice (MAX_VOICES);
 
    --
@@ -118,7 +174,7 @@ private
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
                              Driver_Play_Frequency : Frequency_Type := 44_100.0;
-                             Start_Buffer_Time : Time;
+                             Start_Buffer_Time : Synthetizer_Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second);
 
@@ -195,7 +251,7 @@ private
       Stopped                 => True,
       Play_Sample             => Null_Sound_Sample,
       Stop_Play_Sample => Not_Defined_Clock,
-      Start_Play_Sample => Time_First,
+      Start_Play_Sample => Synthetizer_Time_First,
       Note_Play_Frequency => 440.0,
       Channel => 1, Volume => 1.0
      );
@@ -222,6 +278,7 @@ private
       function Is_Voice_Opened (V : Voice) return Boolean;
       function Can_Be_Stopped (V : Voice) return Boolean;
       procedure Close_Voice (V : Voice);
+      procedure Close_Voice (V : Voice; Stop_Time : Synthetizer_Time);
 
       function Get_All_Opened_Voices return Voice_Array;
       procedure Update_Position (V : Voice;
@@ -255,14 +312,14 @@ private
    --  task handling the buffer_fill
 
    task type Buffer_Preparing_Task_Type is
-      pragma Priority (System.Priority'Last);
+      pragma Priority (System.Priority'First);
 
+      --  Start the prepepare of the buffer
+      --  Return the Reference time for the next buffer
       entry Start (BR : Buffer_Ring_Access;
-                   VSA : Voices_Access;
-                   Buffer_Number : Positive;
-                   Buffer_Length : Natural;
-                   Driver_Frequency : Frequency_Type);
-
+                    VSA : Voices_Access;
+                    Driver_Frequency : Frequency_Type;
+                    Audit_Interface_Access : Synthetizer_Audit_Access := null);
       entry Stop;
 
    end Buffer_Preparing_Task_Type;
@@ -274,8 +331,12 @@ private
 
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
-                      Buffer_Length : Positive);
+                      Buffer_Length : Positive;
+                      Audit: Synthetizer_Audit_Access;
+                      T : out Time);
 
+      --  Play a sound sample, with the given frequency
+      --  Return the allocated voice
       procedure Play
         (S            : SoundSample;
          Frequency    : Float;
@@ -283,9 +344,22 @@ private
          Channel : Natural := 1;
          Opened_Voice :    out Voice);
 
+      procedure Play
+        (S            : SoundSample;
+         Frequency    : Float;
+         Play_Time    : Synthetizer_Time;
+         Volume       : Float := 1.0;
+         Channel : Positive := 1;
+         Opened_Voice :    out Voice);
+
       procedure Stop (V : Voice);
+      procedure Stop (V : Voice;
+                      Stop_Time : Synthetizer_Time);
 
       procedure Close;
+
+      function Get_Synthetizer_Time return Synthetizer_Time;
+      function Get_Allocated_Voices return Natural;
 
    private
 
@@ -297,12 +371,16 @@ private
       D : Synth.Driver.Sound_Driver_Access;
 
       --  internal tasks
-
       Prepare_Task : Buffer_Preparing_Task_Access;
 
       Play_Task : Buffer_Play_Task_Access;
 
       Voices : Voices_Access;
+
+      --  Reference initial Time (start of the synthetizer)
+      Ref_Time : Time;
+
+      Next_Buffer_Time : Synthetizer_Time;
 
    end Synthetizer_Structure_Type;
 
