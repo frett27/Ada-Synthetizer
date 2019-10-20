@@ -28,7 +28,6 @@ package Synth.Wav
   --  with SPARK_Mode => On
 is
 
-
    type WAV_Read_Stream is abstract new Ada.Streams.Root_Stream_Type with
      null record;
 
@@ -36,7 +35,6 @@ is
                            return Boolean is abstract;
 
    type WAV_Read_Stream_Access is access all WAV_Read_Stream'Class;
-
 
    ----------
    -- Load --
@@ -62,7 +60,6 @@ is
      (Stream : in out WAV_Read_Stream_File;
       Item   : Stream_Element_Array);
 
-
    ----------
    -- Load --
    ----------
@@ -73,7 +70,6 @@ is
    --    (Sample.Mono_Data /= null) and (Sample.Frequency >= 1.0) and
    --    (if Sample.HasLoop then Sample.Loop_Start >= Sample.Loop_End),
    --       Depends => (Sample => (FileName));
-
 
    type WAV_Write_Structure_Type is private;
    type WAV_Write_Type is access all WAV_Write_Structure_Type;
@@ -177,10 +173,7 @@ private
 
    type WAV_Read_Stream_File is new WAV_Read_Stream with
       record
-         File: File_Type;
+         File : File_Type;
       end record;
-
-
-
 
 end Synth.Wav;

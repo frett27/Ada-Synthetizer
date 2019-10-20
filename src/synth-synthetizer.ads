@@ -26,7 +26,6 @@ with Synth.Driver;
 
 package Synth.Synthetizer is
 
-
    subtype Synthetizer_Time is Time_Span;
 
    Not_Defined_Clock : constant Synthetizer_Time :=
@@ -42,16 +41,13 @@ package Synth.Synthetizer is
    --  synth object, that embed the sound system connection
    type Synthetizer_Type is limited private;
 
-
    --  synth audit interface
    type Synthetizer_Audit is interface;
    type Synthetizer_Audit_Access is access all Synthetizer_Audit'Class;
 
-   procedure Ready_To_Prepare(Synth_Audit : in out Synthetizer_Audit;
+   procedure Ready_To_Prepare (Synth_Audit : in out Synthetizer_Audit;
                               Current_Buffer_Time,
                               Next_Buffer_Time : Synthetizer_Time) is abstract;
-
-
 
    ----------
    -- Open --
@@ -63,8 +59,7 @@ package Synth.Synthetizer is
       Synt :    out Synthetizer_Type;
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1;
-     Audit: Synthetizer_Audit_Access := null);
-
+     Audit : Synthetizer_Audit_Access := null);
 
    -----------
    -- Close --
@@ -117,9 +112,7 @@ package Synth.Synthetizer is
                    Opened_Voice : Voice;
                    Stop_Time     : Synthetizer_Time);
 
-
-   function Get_Opened_Voices(Synt : Synthetizer_Type) return Natural;
-
+   function Get_Opened_Voices (Synt : Synthetizer_Type) return Natural;
 
    Synthetizer_Not_Inited : exception;
 
@@ -303,7 +296,8 @@ private
 
       --  list all opened voice indices,
       --  for a given voice say the voice is opened or not
-      Opened_Voice : Voice_Boolean_Array (1 .. MAX_VOICES_INDICE) := (others => False);
+      Opened_Voice : Voice_Boolean_Array (1 .. MAX_VOICES_INDICE) :=
+        (others => False);
 
    end Voices_Type;
 
@@ -332,7 +326,7 @@ private
       procedure Init (D : Synth.Driver.Sound_Driver_Access;
                       NBBuffer : Positive;
                       Buffer_Length : Positive;
-                      Audit: Synthetizer_Audit_Access;
+                      Audit : Synthetizer_Audit_Access;
                       T : out Time);
 
       --  Play a sound sample, with the given frequency

@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
---                            Ada Synthetizer                                 --
+--                            Ada Synthetizer                               --
 --                                                                          --
 --                         Copyright (C) 2018-2019                          --
 --                                                                          --
@@ -20,7 +20,6 @@
 --  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.          --
 --                                                                          --
 ------------------------------------------------------------------------------
-
 
 with Soundio; use Soundio;
 with System;
@@ -68,7 +67,6 @@ package body Synth.Driver.CxSoundio is
 
       if Frame_Count = 0 then
                Driver.CurrentPlayedBuffer := null;
-
          SBuffer.Verlassen;
          return;
       end if;

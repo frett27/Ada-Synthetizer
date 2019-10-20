@@ -386,14 +386,17 @@ package body Synth.Wav is
                                            ChannelsNb     => To_Word (1),
                                            Frequency      =>
                                              To_DWord (Natural (44_100.0)),
-                                           BytePerSec     => To_DWord (Natural (44_100.0) * 2),
+                                           BytePerSec     => To_DWord (
+                                             Natural (44_100.0) * 2),
                                            BytePerBloc    => To_Word (1),
                                            BitsPerSamples => To_Word (16)
                                           );
          BlockData : constant Wav_Block := (Type_Block => DATA,
-                                            Size => To_DWord (WAV_File.Bytes_Written),
+                                            Size =>
+                                              To_DWord (WAV_File.Bytes_Written),
                                             DataSize => 0,
-                                            Samples => Byte_Array'(0 .. -1 => 0));
+                                            Samples =>
+                                              Byte_Array'(0 .. -1 => 0));
       begin
          BlockHeader.Size := To_DWord (MainChunkSize);
          --  Write Header
