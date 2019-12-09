@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project>
+    <vfs_file />
+    <file_marker column=" 1" line=" 23" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\drivers\alsa-binding\lib_alsa_binding.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\synthetizer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 63" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-driver.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 31" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src_win32\synth-driver.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 44" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src_win32\synth-driver-win32.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 23" line=" 322" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src_win32\synth-driver-win32.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 16" line=" 49" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 19" line=" 268" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 23" line=" 322" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src_win32\synth-driver-win32.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 281" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 245" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 281" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 19" line=" 244" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 98" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 98" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 101" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 275" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 735" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 6" line=" 11" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\drivers\alsa-binding\src\test_alsa_binding.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 2" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\drivers\alsa-binding\lib_alsa_binding.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 49" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 2" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\drivers\alsa-binding\lib_alsa_binding.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\main.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Midi-Player\src\midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-driver.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 36" line=" 65" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 28" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src_win32\synth-driver.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-driver.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 58" line=" 67" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-driver-wav.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 66" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-driver-wav.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-synthetizer.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 404" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-wav.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 33" line=" 48" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-wav.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 62" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src_win32\synth-driver-win32.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 78" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src_win32\synth-driver-win32.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 101" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests_win32\synth-driver-tests.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 53" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\test_play.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 57" line=" 11" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\test_synthetizer_windows.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\test_synthetizer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 46" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\synth-driver-wav-tests.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 23" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\synth-driver-wav-tests.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\synth-synthetizer-tests.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 227" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\synth-synthetizer-tests.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\synth-tests_suite.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\synth-tests_suite.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Test-Synthetizer\tests\synth-wav-tests.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\synthetizer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 26" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-driver-wav.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>C:\Users\use\workspaceGNAT\Ada-Synthetizer\src\synth-driver-wav.ads</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>

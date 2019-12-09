@@ -1,0 +1,336 @@
+V "GNAT Lib v2018"
+A -gnatA
+A -g
+A -gnato
+A -gnatwa
+A -gnata
+A -gnatQ
+A -gnat12
+A -fstack-check=specific
+A -gnatya
+A -gnatyA
+A -gnatyb
+A -gnatyB
+A -gnatyc
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyI
+A -gnatyk
+A -gnatyl
+A -gnatyn
+A -gnatyp
+A -gnatyr
+A -gnatyS
+A -gnatym
+A -gnatyt
+A -gnatyu
+A -gnatyx
+A -mtune=generic
+A -march=x86-64
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_ANONYMOUS_ALLOCATORS
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_STREAMS
+RV NO_UNCHECKED_ACCESS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U synth.wav%b		synth-wav.adb		caab2609 OO PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W synth%s		synth.adb		synth.ali
+Z system%s		system.ads		system.ali
+Z system.concat_8%s	s-conca8.adb		s-conca8.ali
+Z system.exception_table%s  s-exctab.adb	s-exctab.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+
+U synth.wav%s		synth-wav.ads		0e04016d EE OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.streams%s		a-stream.adb		a-stream.ali
+W ada.streams.stream_io%s  a-ststio.adb		a-ststio.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W synth%s		synth.adb		synth.ali
+Z system%s		system.ads		system.ali
+Z system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+
+D ada.ads		20180524051736 76789da1 ada%s
+D a-except.ads		20180524051736 291912d5 ada.exceptions%s
+D a-finali.ads		20180524051738 bf4f806b ada.finalization%s
+D a-ioexce.ads		20180524051736 e4a01f64 ada.io_exceptions%s
+D a-reatim.ads		20180524051738 0240fc73 ada.real_time%s
+D a-stream.ads		20180524051736 119b8fb3 ada.streams%s
+D a-ststio.ads		20180524051736 a75f3183 ada.streams.stream_io%s
+D a-tags.ads		20180524051738 491b781d ada.tags%s
+D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20180524051736 5ab55268 interfaces%s
+D i-c.ads		20180524051736 5421119b interfaces.c%s
+D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
+D i-cstrea.ads		20180524051736 e53d8b8e interfaces.c_streams%s
+D synth.ads		20191207182936 a8a70baa synth%s
+D synth-wav.ads		20191207180934 1067b4f7 synth.wav%s
+D synth-wav.adb		20191019132816 dacc92fe synth.wav%b
+D system.ads		20180524051738 32a08138 system%s
+D s-atacco.ads		20180524051738 4c36d12f system.address_to_access_conversions%s
+D s-conca8.ads		20180524051736 e3074dd7 system.concat_8%s
+D s-crtl.ads		20180524051736 0ebbdb71 system.crtl%s
+D s-exctab.ads		20180524051738 54135002 system.exception_table%s
+D s-ficobl.ads		20180524051738 078245e4 system.file_control_block%s
+D s-finmas.ads		20180524051738 7811a767 system.finalization_masters%s
+D s-finroo.ads		20180524051738 4ff27390 system.finalization_root%s
+D s-imgint.ads		20180524051736 02dbe0c2 system.img_int%s
+D s-memory.ads		20180524051736 597d6634 system.memory%s
+D s-multip.ads		20180524051736 38ac9f73 system.multiprocessors%s
+D s-osinte.ads		20180524051738 2e5b26a9 system.os_interface%s
+D s-parame.ads		20180524051738 48ec542b system.parameters%s
+D s-pooglo.ads		20180524051736 ede33ef8 system.pool_global%s
+D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20180524051736 a7318a92 system.soft_links%s
+D s-stache.ads		20180524051738 a37c21ec system.stack_checking%s
+D s-stausa.ads		20180524051736 017a0a05 system.stack_usage%s
+D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
+D s-stalib.adb		20180524051736 f2fe2716 system.standard_library%b
+D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20180524051736 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20180524051736 b16154c2 system.storage_pools%s
+D s-stratt.ads		20180524051736 aedef97e system.stream_attributes%s
+D s-tasinf.ads		20180524051738 601f6b72 system.task_info%s
+D s-taspri.ads		20180524051738 6c1d93d4 system.task_primitives%s
+D s-taprop.ads		20180524051738 1dd2e1b6 system.task_primitives.operations%s
+D s-taskin.ads		20180524051738 1d8c1ccb system.tasking%s
+D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20180524051736 34867c83 system.unsigned_types%s
+D s-win32.ads		20180524051736 b7f96285 system.win32%s
+X 1 ada.ads
+16K9*Ada 20e8 15|24r6 24r33 25r6 25r23 31r41 16|36r7 45r7 210r7
+X 6 a-stream.ads
+36K13*Streams 87e16 15|24r10 24r37 25w10 25r27 31r45 16|36r11 45r11 210r11
+39H9*Root_Stream_Type 70e64 15|31r53
+42M9*Stream_Element
+44I9*Stream_Element_Offset<long_long_integer> 15|57r20 16|34r20
+54A9*Stream_Element_Array(42M9)<44I9> 15|56r20 61r16 16|33r20 43r16
+57x14*Read
+63x14*Write
+X 7 a-ststio.ads
+39K21*Stream_IO 223e26 15|24w18 24r45 16|36r19 45r19 210r19
+42P9*Stream_Access(6|39R9) 15|173r20 16|331r50 373r30 415r21 436r21
+44P9*File_Type 15|172r21 180r17 16|414r30 414r47
+46n23*In_File{46E9} 16|212r35
+46n32*Out_File{46E9} 16|441r22
+57I9*Count<6|44I9> 16|435r20
+67U14*Create 16|420s7
+68p7 File{44P9} 16|420r15
+70a7 Name{string} 16|421r15
+73U14*Open 16|210s29
+79U14*Close 16|216s7 445s7
+81U14*Reset 16|440s7
+81p22 File{44P9} 16|440r14
+81e47 Mode{46E9} 16|441r14
+89V13*End_Of_File{boolean} 16|28s14
+91V13*Stream{42P9} 16|424s22 443s22
+103U14*Read 16|36s29
+104p7 File{44P9} 16|36r35
+105a7 Item{6|54A9} 16|37r35
+106i7 Last{6|44I9} 16|38r35
+113U14*Write 16|45s29
+124V13*Size{57I9} 16|435s29
+X 14 synth.ads
+27K9*Synth 91e10 15|27r9 183r5 16|24r14 459r5
+31F12*Frame{float} 16|155r17
+33A9*Frame_Array(31F12)<integer> 16|144r31 146r17 174r47 266r48 269r34
+34P9*Frame_Array_Access(33A9) 15|83r61 16|230r19 450r34
+35F12*Frequency_Type{float} 16|229r19 254r29
+45R9*SoundSample 65e14 15|46r33 68r52 16|206r52 224r33
+47f7*Frequency{35F12} 16|326m14
+51p7*Mono_Data{34P9} 16|327m14
+X 15 synth-wav.ads
+27K15*Wav 14|27k9 15|97E9 183l11 183e14 16|24b20 459l11 459t14
+31H9*WAV_Read_Stream<6|39R9> 6|57p14 63p14 15|32e17 34p13 34r37 37r46 48r37
+. 178r37
+34y13*End_Of_Stream{boolean} 34>28 16|124R13 279R17
+34r28 Stream{31R9}
+37P9*WAV_Read_Stream_Access(31R9) 45r40 16|114r28 223r40
+45U14*Load 45>20 46<20 16|215s7 223b14 329l8 329t12
+45p20 Wav_Stream_Access{37P9} 16|223b20 279r32 282r22 307r31 313r49
+46r20 Sample{14|45R9} 16|224b20 326m7 327m7
+48R9*WAV_Read_Stream_File<31R9> 49r51 51P13 51r37 54P14 55r23 59P14 60r23
+. 178c9 181e17 16|26r37 32r23 42r23 208r33
+49P9*WAV_Read_Stream_File_Access(48R9)
+51V13*End_Of_Stream{boolean}<34p13> 51>28 16|26b13 29l8 29t21
+51r28 Stream{48R9} 16|26b28 28r27
+54U14*Read<6|57p14> 55=7 56<7 57<7 16|31b14 39l8 39t12
+55r7 Stream{48R9} 16|32b7 36r43
+56a7 Item{6|54A9} 16|33b7 37m43
+57i7 Last{6|44I9} 16|34b7 38m43
+59U14*Write<6|63p14> 60=7 61>7 16|41b14 46l8 46t13
+60r7 Stream{48R9} 16|42b7 45r36
+61a7 Item{6|54A9} 16|43b7 45r49
+68U14*Load 68>20 68<39 16|206b14 217l8 217t12
+68a20 FileName{string} 16|206b20 213r35
+68r39 Sample{14|45R9} 16|206b39 215m42
+78R9*WAV_Write_Structure_Type 79r38 171c9 176e14 16|413r53
+79P9*WAV_Write_Type(78R9) 81r64 83r37 85r45 16|371r39 412r45 413r31 434r45
+. 449r37
+81U14*Open_For_Write 81>30 81<49 16|411b14 432l8 432t22
+81a30 FileName{string} 16|411b30 421r23
+81p49 WAV_File{79P9} 16|412b30 427m7 429r33
+83U14*Write_Data 83>26 83>53 16|449b14 457l8 457t18
+83p26 WAV_File{79P9} 16|449b26 454r7 454r33 456r21
+83p53 Datas{14|34P9} 16|450b26 451r69 454r58
+85U14*Close_And_Finalize 85>34 16|434b14 447l8 447t26
+85p34 WAV_File{79P9} 16|434b34 435r35 440r22 443r30 444r21 445r14
+97I9 Byte<short_integer> 98r8 100r52 103r11 104r11 110r11 111r11 112r11 113r11
+. 16|65r25 66r25 85r26 86r26 87r26 88r26 125r10 151r31 152r31 183r20 192r18
+. 193r18 296r23 297r18 298r18 299r18
+100A9 Byte_Array(97I9)<integer> 164r23 16|120r15 144r12 175r50 177r15 361r34
+. 399r47 451r25 452r25
+102R9 Word 105e14 107r8 155r30 156r30 159r30 160r30 16|58r29 63r42 65r14
+. 346r13 347r13 350r13 351r13
+103i7*A{97I9} 16|60r25 65m20
+104i7*B{97I9} 16|60r41 66m20
+109R9 DWord 114e14 116r8 150r14 153r28 157r30 158r30 16|75r29 83r43 85r14
+. 96r22 227r26 282r10 338r13 344r13 348r13 349r13 359r13
+110i7*A{97I9} 16|77r25 85m21 98r39 296r52
+111i7*B{97I9} 16|78r20 86m21 99r43 297r47
+112i7*C{97I9} 16|79r20 87m21 100r43 298r47
+113i7*D{97I9} 16|80r20 88m21 101r43 299r47
+147E9 Block_Type 147e55 149r33 16|285r18
+147n24 HEADER{147E9} 152r15 16|239r18 291r22 334r15 380r49
+147n32 FMT{147E9} 154r15 16|241r18 293r22 342r15 382r58
+147n37 DATA_HEADER{147E9} 161r15 16|256r18 289r22 309r24 353r15
+147n50 DATA{147E9} 163r15 16|131r24 258r18 357r15 394r59
+149R9 Wav_Block 149d20 149d45 167e14 16|115r22 115r40 130r14 236r28 303r36
+. 331r25 380r24 382r30 394r31
+149e20*Type_Block{147E9} 151r12 16|131m10 238r17 333r14 382m44 394m45
+149i45*DataSize{integer} 164r40 16|132m10 384m44 397m45
+150r7*Size{109R9} 16|118r43 132r49 133m10 133r37 338r41 344r41 359r41 383m44
+. 395m45 401m22
+153r13*FileFormatID{109R9}
+155r13*AudioFormat{102R9} 16|242r33 346r40 385m44
+156r13*ChannelsNb{102R9} 16|246r33 347r40 386m44
+157r13*Frequency{109R9} 16|254r59 348r41 387m44
+158r13*BytePerSec{109R9} 16|349r41 389m44
+159r13*BytePerBloc{102R9} 16|350r40 391m44
+160r13*BitsPerSamples{102R9} 16|250r33 351r40 392m44
+164a13*Samples{100A9} 16|134m10 267r53 361r48 362r42 398m45
+172p7*File(7|44P9) 16|418m20 435r44 440r31 443r39 445r23
+173p7*FileStream{7|42P9} 16|373r56 426m20 456r30
+174i7*Bytes_Written{natural} 16|396r66 422m20 454m16 454r42
+180p10 File{7|44P9} 16|28r34 36r50 45r43 211m46 216m25
+X 16 synth-wav.adb
+48V14 "and"{integer} 48b14 48>19 48>25 52l9 52t13 65s33 66s40 85s34 86s41
+. 87s42 88s42
+48i19 Left{integer} 51r41
+48i25 Right{integer} 51r69
+49M12 Unsigned_Integer 51r23 51r51
+58V13 To_Integer{integer} 58b13 58>25 61l8 61t18 242s19 246s19 250s19
+58r25 W{15|102R9} 60r23 60r39
+63V13 To_Word{15|102R9} 63b13 63>22 67l8 67t15 385s62 386s62 391s62 392s62
+63i22 I{natural} 65r31 66r31
+75V13 To_Integer{integer} 75b13 75>25 81l8 81t18 118s18 132s24 254s45
+75r25 W{15|109R9} 77r23 78r18 79r18 80r18
+83V13 To_DWord{15|109R9} 83b13 83>23 90l8 90t16 383s52 388s46 389s62 396s47
+. 401s30
+83i23 I{natural} 85r32 86r32 87r32 88r32
+94A9 Magic<string>(character)<integer> 96r33 336r13 340r13 343r13 358r13
+96V14 "="{boolean} 96b14 96>18 96>29 102l9 102t11 288s33 290s36 292s36
+96r18 D{15|109R9} 98r37 99r41 100r41 101r41
+96a29 S{94A9} 98r14 99r18 100r18 101r18
+106X4 BAD_FORMAT 257r22 262r25
+107X4 BAD_FORMAT_UNKNOWN_HEADER_BLOCK 295r22
+113V13 Read_Data_From_Header{15|149R9} 113b13 114>7 115>7 135l8 135t29 313s26
+114p7 Wav_Stream_Access{15|37P9} 124r28 125r21
+115r7 Header_Block{15|149R9} 118r30 132r36 133r24
+117i7 Bytes_To_Read{natural} 120r32 123r13
+119i7 Index{positive} 125r44 126m10 126r34
+120a7 BA{15|100A9} 125m40 125r40 134r24
+143V13 Convert_Bytes_To_Frame_Array{14|33A9} 143b13 144>7 168l8 168t36 267s21
+144a7 BA{15|100A9} 146r35 149r21 151r39 151r43 152r39 152r43
+146a7 Samples{14|33A9} 163m13 167r14
+149i11 i{integer} 151r54 152r54 163r26
+151i13 first{15|97I9} 154r29
+152i13 second{15|97I9} 154r52
+153i13 l{long_integer} 157r16 158m16 158r21 161r25
+155f13 f{14|31F12} 161m13 163r32
+174V13 Convert_Frame_Array_To_Bytes{15|100A9} 174b13 174>43 200l8 200t36
+. 451s39
+174a43 F{14|33A9} 177r32 179r16 179r27 181r43 194r25 195r25
+177a7 Bytes{15|100A9} 194m13 195m13 199r14
+179i11 i{integer} 181r46 194r21 195r21
+181f13 fl{float} 182r47
+182i13 l{long_integer} 186r16 189m16 189r31 192r24 193r24
+183i13 A{15|97I9} 193m13 194r48
+183i16 B{15|97I9} 192m13 195r51
+208r7 Wav_Stream{15|48R9} 211m35 211r35 215m13 215r13 216m14 216r14
+227r7 Block_Type_Value{15|109R9} 282m41 282r41 288r16 290r19 292r19 296r35
+. 297r30 298r30 299r30
+229f7 Frequence{14|35F12} 254m16 326r27
+230p7 Samples{14|34P9} 260r19 269m19 270r19 327r27
+232X7 MUST_BE_PCM_FORMAT 243r25
+233X7 ONLY_MONO_SUPPORTED 247r25
+234X7 SAMPLING_16BITS_ONLY_ACCEPTED 251r25
+236U17 Parse 236b17 236>24 275l11 275t16 313s19 315s19
+236r24 B{15|149R9} 238r15 242r31 246r31 250r31 254r57 267r51
+266a19 Converted_Samples{14|33A9} 269r52 270r34
+285e13 BT{15|147E9} 289m16 291m16 293m16 303r47 309r19
+303R24 TheBlock{15|149R9} 304r20 307r16
+304r16 B{303R24} 307m50 307r50 313r68 315r26
+331U14 Write 331b14 331>21 331>36 369l8 369t13 403s10 405s10 407s10
+331r21 W{15|149R9} 333r12 338r39 344r39 346r38 347r38 348r39 349r39 350r38
+. 351r38 359r39 361r46 362r40
+331p36 File_Stream{7|42P9} 336r26 338r26 340r26 343r26 344r26 346r25 347r25
+. 348r26 349r26 350r25 351r25 358r26 359r26 364r30
+361A24 BArray{15|100A9}<integer> 362r30 364r16
+362a16 BA{361A24} 364r43
+371U14 WriteHeaders 371b14 371>28 372>28 409l8 409t20 429s7 444s7
+371p28 WAV_File{15|79P9} 373r47 396r57 429r21
+372i28 MainChunkSize{natural} 401r40 430r21
+373p7 File_Stream{7|42P9} 403r30 405r27 407r28
+380r10 BlockHeader{15|149R9} 401m10 403r17
+382r10 BlockFmt{15|149R9} 405r17
+394r10 BlockData{15|149R9} 407r17
+413p7 TMP_WAV_File{15|79P9} 418r7 422r7 426r7 427r19
+414p7 File(7|44P9) 418r28 420r23 424r30
+415p7 File_Stream{7|42P9} 424m7 426r34
+435i7 C{7|57I9} 444r40
+436p7 File_Stream{7|42P9} 437r28 443m7
+451a7 BDatas{15|100A9} 452r37 456r42
+452A15 BArray{15|100A9}<integer> 456r7
+X 17 system.ads
+67M9*Address
+X 26 s-memory.ads
+53V13*Alloc{17|67M9} 103i<c,__gnat_malloc>22
+68U14*Free 104i<c,__gnat_free>22
+76V13*Realloc{17|67M9} 105i<c,__gnat_realloc>22
+X 34 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+X 36 s-stalib.adb
+93U14 Break_Start 94i<c,__gnat_break_start>22
+

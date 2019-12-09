@@ -1,0 +1,268 @@
+What is Zip-Ada ?
+=================
+
+Zip-Ada is a library for dealing with the Zip compressed archive
+file format. It supplies:
+
+ - compression with the following sub-formats ("methods"):
+     Store, Reduce, Shrink (LZW), Deflate and LZMA
+ - decompression for the following sub-formats ("methods"):
+     Store, Reduce, Shrink (LZW), Implode, Deflate, Deflate64, BZip2 and LZMA
+ - encryption and decryption (portable Zip 2.0 encryption scheme)
+ - unconditional portability - within limits of compiler's provided
+     integer types and target architecture capacity; see below a list
+     of in-use platforms
+ - input archive to decompress can be any kind of indexed data stream
+ - output archive to build can be any kind of indexed data stream
+ - input data to compress can be any kind of data stream
+ - output data to extract can be any kind of data stream
+ - types Zip_info and Zip_Create_info are provided to handle archives quickly and easily 
+ - cross format compatibility with the most various tools and file formats
+     based on the Zip format: 7-zip, Info-Zip's Zip, WinZip, PKZip, Java's JARs,
+     OpenDocument files, MS Office 2007+, Nokia themes, Google Chrome extensions,
+     E-Pub documents and many others
+ - task safety: this library can be used ad libitum in parallel processing
+ - endian-neutral I/O
+
+The full source is in Ada: pure Ada 2005, not even a single dependency
+to a compiler, a CPU architecture, an OS or an external package or library.
+The price for the *unconditional* portability of Zip-Ada hold in these details:
+  - archive creation: attributes (read-only, system etc.) are not stored
+  - archive extraction: time stamps and attributes of decompressed files
+      are not restored as original
+That's it!
+
+Note however that some compilers may not provide the necessary 64 bit
+integer types for compiling Zip-Ada. Still, a list of more than 25
+successfully tested OS-CPU-Compiler combinations can be found below
+under "note on portability".
+
+For details about the code's history, read the doc/za_history.txt file.
+
+License / Warning / Legal stuff
+===============================
+
+There is NO WARRANTY in the Zip-Ada software.
+Zip-Ada is licensed under the MIT License.
+You find the full license and copyright notice in zip.ads.
+
+Contents
+========
+
+* The subdirectory "zip_lib" contains the full source of the Zip-Ada library.
+  All you need is there.
+  These library sources are in Ada 2005, so any Ada 2005 and above compiler
+  will like them, provided it supports integer types up to 64 bit.
+  I suggest to simply copy this Zip_Lib folder as a sub-folder of your
+  project's sources.
+  The library's "front-end" packages are:
+    - Zip for some definitions (e.g. the Zip_Info type)
+    - Zip.Create for building Zip archives
+    - UnZip for extracting files from archives
+    - UnZip.Streams for extracting archive entries to streams
+  The best to understand how it works is to look at the demos and tools below,
+  to begin with, Demo_Zip and Demo_UnZip.
+  The back-end child packages of Zip and UnZip are set as private.
+  You don't need to (and cannot) refer to them, even to care of them...
+  At the very back-end, some components can be used outside of the Zip context:
+    - LZ77: a standalone generic streaming LZ77 encoder
+    - LZMA[.*]: standalone generic streaming ZMA encoder and decoder
+
+* In the "demo" subdirectory, you have the following command-line demo
+  procedures for testing Zip-Ada:
+
+  - Demo_Zip.adb         : tiny demo for Zip.Create
+  - Demo_UnZip.adb       : tiny demo for UnZip and UnZip.Streams
+  - Demo_csv_into_zip.adb: demo showing how to produce many files directly
+                             into a Zip file, with only 1 temp file
+
+* In the "tools" subdirectory, you have the following command-line tools
+  using the Zip-Ada library:
+  - ZipAda.adb           : minimal standalone zipping tool
+  - UnZipAda.adb         : minimal standalone unzipping tool
+  - Comp_Zip.adb         : tool for comparing two Zip archives
+  - Find_Zip.adb         : tool for searching a string across an archive (contents + names)
+  - ReZip.adb            : tool for recompressing Zip archives and make them smaller
+  
+*  In the "test" subdirectory, there is, among others:
+  - ZipTest.adb              : test for Zip archive creation with various stream types
+  - Zip_with_many_files.adb  : test archive with a large number of entries - and test limits
+  - Zip_with_big_files.adb   : test archive with large entries - and test limits
+
+*  In the "trained" subdirectory, there is trained compression package with examples.
+     Trained compression consists in training both sides (encoder, decoder) with
+     a data, known in advance to both, which is similar to the data to be compressed,
+     transmitted and decompressed. Sometimes the compression ratio is improved significantly
+
+*  In the "doc" subdirectory you'll find documentation, and research data in za_work.xls .
+
+*  In the "extras" subdirectory, there is
+  - bunzip               : a standalone decompressor for BZip2 files (.bz2)
+  - lzma_dec             : a standalone decompressor for LZMA files (.lzma)
+  - lzma_enc             : a standalone compressor for LZMA files (.lzma)
+
+  These demos can be built as main programs. 
+  Some are using Ada 2005's Ada.Directories for directory creation (UnZipAda)
+  or reading time stamps (ZipAda).
+
+  UnZipAda uses a procedure from an extension to Ada.Directories for setting
+  time stamps of extracted files.
+  This extension in its turn uses a system-specific call.
+  You can replace the call to Set_Modification_Time by null
+  and remove the line with Ada_Directories_Extensions to get a totally portable
+  tool using only Zip-Ada and Ada standard libraries.
+
+* To build the tools, demos and tests, simply "gprbuild" or "adabuild" them.
+  You can also start "make_za.cmd" for minimal effort with GNAT on Windows.
+
+  There are also the following project files for building the tools, demos and tests
+  with various systems:
+  - ZipAda.gpr for GNAT's gprbuild or the GNAT Programming Studio (tools and demos only)
+  - ZipAda_Test.gpr for GNAT's gprbuild or the GNAT Programming Studio (tests only)
+  - ZipAda_ObjectAda.prj for ObjectAda 10.0 and later (tools and demos only)
+  - ZipAda_Test_ObjectAda.prj for ObjectAda 10.0 and later (tests only)
+
+* The file extensions of source files are GNAT-ish:
+  .ads is specification; .adb is body.
+  Rename the files if necessary.
+
+* You may wish to force text-mode and lower case names (Unix)
+  by using unzip's "-aa" and "-L" options: "unzip -aa -L zipada*.zip".
+
+* The Zip format specification is as always in a file called appnote.txt.
+  You find a copy within the Zip-Ada pack ("doc" directory) but might
+  find a fresher version here:
+  http://www.pkware.com/business_and_developers/developer/appnote/
+
+* A version of the LZMA specification is to be found in the "doc" directory.
+
+Other infos are in zip.ads and unzip.ads, specifications of Zip and UnZip
+packages.
+
+Latest changes
+==============
+The list of changes is available in doc/za_history.txt .
+
+Thanks to...
+============
+
+The ITEC team (NXP Semiconductors), for extending the medium for
+   zip archives from file only to streams of any sort (v.26)
+
+Nicolas Brunot, Stratégies, for constructive discussions and 
+   in-depth profiling of the library (and compilers' run-time
+   libraries as well!) 
+
+Jérôme Haguet, Stratégies, for nice discussions and contributions:
+   the major performance boost in v.35 and later,
+   UnZip.File_System_Routines.Compose_File_Name,
+   Unicode (UTF-8) support and other things
+
+Arnaud Lefebvre, Stratégies
+
+Tucker Taft (himself!), SofCheck, for providing fixes (v.24) and
+   an impressive targets in-use list
+
+Pascal Pignard, for testing the UnZipAda.adb tool under Mac OS X
+   and PowerPC processors
+
+Manuel Op de Coul, Huygens-Fokker Foundation
+   http://www.huygens-fokker.org/scala/
+
+Stephan Busch (Squeeze Chart - http://www.squeezechart.com/),
+   for encouragements and remarks on special LZMA / PPMd settings for
+   specific data types (applied so far: see function Guess_type_from_name
+   in package Zip.Compress)
+
+Lionel Matias, for performing extensive fuzzing attacks with "american fuzzy lop"
+   on the archive reading / decoding / decompression side, in order to find
+   vulnerabilities - and correct them (v.53)
+
+Open bugs (as of v.53)
+======================
+
+  - PKWARE's pkunzip and ZIP Reader rejects some Zip-Ada's Reduce_* archives,
+      but unzip <=5.12 and WinZip accept them all
+  - Info-Zip's Zip: since data are stored without prior knowledge of size,
+      data is stored with a data descriptor after each entry.
+      For the "Store" method (no compression), this is problematic
+      (no End-of-Stream marker) the size would be needed from the central
+      directory for instance. Other tools like PKZIP and 7-Zip are OK.
+  - UnZip.Decompress rejects many "enhanced deflate" (=deflate64)
+        files made by WinZip (sometimes CRC errors, or:
+    unzip-decompress.adb:1711 Huffman tree errors: huft_incomplete
+    unzip-decompress.adb:1542 Inflate_Stored block length check fails
+    unzip-decompress.adb:1469 Inflate_codes E = invalid
+    unzip-decompress.adb:1809 Inflate_Block block type 3
+    )...
+    but accepts all archives with the same contents and compression
+    method from 7-Zip (7z -mm=deflate64)! Since 7-Zip compresses a lot
+    better also with that "enhanced deflate" format, a workaround is
+    just to use 7-Zip and not WinZip...
+    
+To do
+=====
+
+Topics are in file doc/za_todo.txt
+
+Note on portability
+===================
+
+Portability is unconditional and unrestricted: no need of preprocessing,
+conditional compilation, magic folders...
+If you still have doubts, here is a list of OS/CPU/Compiler
+combinations where Zip-Ada has been reported to be in use:
+
+OS                          CPU                 Compiler
+----------------------------------------------------------------------------
+
+OpenVMS                     Itanium (64 bit)    GNU - GNAT
+AIX                         Power7 (64 bit)
+MS Windows 95,98;
+           NT,2K,XP,7,8,10  Intel x86 (32 bit)
+MS Windows x64              Intel x64 (64 bit)
+Linux                       Intel x86 (32 bit)
+Linux on Sony PS3           Cell (64 bit)
+Linux on Raspberry Pi       ARM
+Mac OS X                    PowerPC (64 bit)
+Mac OS X                    Intel x64 (64 bit)
+Solaris                     SPARC (32 or 64 bit)
+Solaris                     Intel x64 (64 bit)
+MS-DOS, DR-DOS (Novell)     Intel x86 (16/32 bit)
+OpenBSD                     (one of several)
+FreeBSD                     Intel x86 (32 bit)
+FreeBSD                     Intel x64 (64 bit)
+Android 2.3+                ARM
+
+MS Windows NT+              Intel x64 (64 bit)  PTC - ObjectAda64
+
+MS Windows NT+              Intel x86 (32 bit)  SofCheck - AdaMagic
+MS Windows NT+              Intel x64 (64 bit)
+Linux                       Intel x86 (32 bit)
+Mac OS X                    PowerPC (64 bit)
+Mac OS X                    Intel x64 (64 bit)
+Solaris                     SPARC (32 or 64 bit)
+Solaris                     Intel x64 (64 bit)
+----------------------------------------------------------------------------
+
+Note on encryption
+==================
+
+1) Passwords should be "strong" to avoid attacks by software that are trying
+   many password combinations.
+2) A software using Zip-Ada could concatenate a complicated or pseudo-random
+   string to a human-entered password, in order to have stronger passwords.
+3) Ideally the same password should not be used twice: a Zip archive can
+   have a different password for each entry.
+4) Data that don't need to by encrypted should not be encrypted.
+5) The portable Zip 2.0 encryption scheme is vulnerable to attacks of type
+   "known plaintext". See for instance the PKCrack software which relies on
+   a pair of compressed data: one encrypted, one not.
+   Using randomized headers on data to be zipped should prevent the obtention
+   of the "plaintext" compressed data (see extras/lz_scramble.ad*).
+   Even if password or keys are cracked, point 3) may prevent the decryption
+   of other data.
+
+Enjoy!
+
+Gautier de Montmollin

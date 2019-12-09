@@ -1,0 +1,14 @@
+synth-driver-soundio.ads:4:06: warning: unit "Soundio" is not referenced
+synth-driver-soundio.ads:5:01: (style) multiple blank lines
+synth-driver-soundio.ads:8:01: (style) multiple blank lines
+synth-driver-soundio.ads:9:01: (style) trailing spaces not permitted
+synth-driver-soundio.ads:45:28: (style) trailing spaces not permitted
+synth-driver-soundio.ads:49:01: (style) trailing spaces not permitted
+synth-driver-soundio.ads:50:26: "SoundIo" not declared in "Soundio"
+synth-driver-soundio.ads:51:30: "SoundIo_Device" not declared in "Soundio"
+synth-driver-soundio.ads:52:34: "SoundIo_Out_Stream" not declared in "Soundio"
+synth-driver-soundio.ads:53:01: (style) trailing spaces not permitted
+synth-driver-soundio.ads:60:01: (style) multiple blank lines
+synth-driver-soundio.ads:73:01: (style) multiple blank lines
+synth-driver-soundio.ads:76:33: "SoundIo_Out_Stream" is undefined
+synth-driver-soundio.ads:80:01: (style) trailing spaces not permitted

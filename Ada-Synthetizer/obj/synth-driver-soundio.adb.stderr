@@ -1,0 +1,31 @@
+synth-driver-soundio.adb:1:01: (style) multiple blank lines
+synth-driver-soundio.adb:13:10: (style) space required
+synth-driver-soundio.adb:14:27: (style) space required
+synth-driver-soundio.adb:20:21: (style) space required
+synth-driver-soundio.adb:30:39: subprogram "Write_Device_Callback" has wrong convention
+synth-driver-soundio.adb:30:39: does not match access to subprogram declared at soundio.ads:311
+synth-driver-soundio.adb:30:80: (style) this line is too long
+synth-driver-soundio.adb:34:10: procedure cannot return value (use function)
+synth-driver-soundio.adb:38:01: (style) multiple blank lines
+synth-driver-soundio.adb:48:01: (style) multiple blank lines
+synth-driver-soundio.adb:57:36: warning: Close unimplemented
+synth-driver-soundio.adb:71:36: warning: Play unimplemented
+synth-driver-soundio.adb:85:36: warning: Get_Frequency unimplemented
+synth-driver-soundio.adb:85:80: (style) this line is too long
+synth-driver-soundio.adb:102:39: warning: Passen unimplemented
+synth-driver-soundio.adb:113:39: warning: Verlassen unimplemented
+synth-driver-soundio.adb:113:80: (style) this line is too long
+synth-driver-soundio.adb:124:39: warning: Allocated unimplemented
+synth-driver-soundio.adb:124:80: (style) this line is too long
+synth-driver-soundio.ads:3:01: (style) multiple blank lines
+synth-driver-soundio.ads:6:01: (style) multiple blank lines
+synth-driver-soundio.ads:7:01: (style) trailing spaces not permitted
+synth-driver-soundio.ads:43:28: (style) trailing spaces not permitted
+synth-driver-soundio.ads:47:01: (style) trailing spaces not permitted
+synth-driver-soundio.ads:48:24: (style) bad casing of "Soundio" declared at line 5
+synth-driver-soundio.ads:48:26: "SoundIo" not declared in "Soundio"
+synth-driver-soundio.ads:51:01: (style) trailing spaces not permitted
+synth-driver-soundio.ads:58:01: (style) multiple blank lines
+synth-driver-soundio.ads:71:01: (style) multiple blank lines
+synth-driver-soundio.ads:77:01: (style) trailing spaces not permitted
+synth-driver-soundio.ads:78:01: (style) trailing spaces not permitted

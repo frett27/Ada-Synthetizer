@@ -1,0 +1,26 @@
+#! /bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ ! -d "libsoundio-install" ]; then
+    mkdir -p libsoundio/install
+    cd libsoundio
+    git clone https://github.com/raph-amiard/libsoundio clone
+    cd clone
+    mkdir build
+    cd build
+    cmake ../
+    make
+    cp *.so* *.a ../../install
+else
+    cd libsoundio/clone/build
+    cmake ../
+    make
+    cp *.so* *.a ../../install
+fi
+
+echo "$DIR"
+cd $DIR
+source env.sh
+gprbuild -p -P soundio.gpr
+gprbuild -p -P example/example_soundio.gpr

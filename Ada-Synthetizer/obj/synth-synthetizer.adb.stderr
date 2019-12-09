@@ -1,0 +1,61 @@
+synth-synthetizer.adb:161:01: (style) multiple blank lines
+synth-synthetizer.adb:170:80: (style) this line is too long
+synth-synthetizer.adb:173:80: (style) this line is too long
+synth-synthetizer.adb:174:01: (style) multiple blank lines
+synth-synthetizer.adb:362:80: (style) this line is too long
+synth-synthetizer.adb:405:80: (style) this line is too long
+synth-synthetizer.adb:421:80: (style) this line is too long
+synth-synthetizer.adb:432:80: (style) this line is too long
+synth-synthetizer.adb:437:80: (style) this line is too long
+synth-synthetizer.adb:439:31: (style) space required
+synth-synthetizer.adb:442:80: (style) this line is too long
+synth-synthetizer.adb:443:80: (style) this line is too long
+synth-synthetizer.adb:445:80: (style) this line is too long
+synth-synthetizer.adb:447:80: (style) this line is too long
+synth-synthetizer.adb:448:80: (style) this line is too long
+synth-synthetizer.adb:450:80: (style) this line is too long
+synth-synthetizer.adb:451:80: (style) this line is too long
+synth-synthetizer.adb:455:80: (style) this line is too long
+synth-synthetizer.adb:456:80: (style) this line is too long
+synth-synthetizer.adb:457:80: (style) this line is too long
+synth-synthetizer.adb:470:80: (style) this line is too long
+synth-synthetizer.adb:474:80: (style) this line is too long
+synth-synthetizer.adb:483:80: (style) this line is too long
+synth-synthetizer.adb:517:80: (style) this line is too long
+synth-synthetizer.adb:644:80: (style) this line is too long
+synth-synthetizer.adb:646:80: (style) this line is too long
+synth-synthetizer.adb:659:80: (style) this line is too long
+synth-synthetizer.adb:668:80: (style) this line is too long
+synth-synthetizer.adb:672:80: (style) this line is too long
+synth-synthetizer.adb:692:80: (style) this line is too long
+synth-synthetizer.adb:702:80: (style) this line is too long
+synth-synthetizer.adb:735:19: warning: potentially blocking operation in protected operation
+synth-synthetizer.adb:739:22: warning: potentially blocking operation in protected operation
+synth-synthetizer.adb:741:80: (style) this line is too long
+synth-synthetizer.adb:754:19: warning: potentially blocking operation in protected operation
+synth-synthetizer.adb:761:18: warning: potentially blocking operation in protected operation
+synth-synthetizer.adb:765:22: warning: potentially blocking operation in protected operation
+synth-synthetizer.adb:772:18: warning: potentially blocking operation in protected operation
+synth-synthetizer.adb:799:80: (style) this line is too long
+synth-synthetizer.adb:800:80: (style) this line is too long
+synth-synthetizer.adb:801:80: (style) this line is too long
+synth-synthetizer.adb:802:80: (style) this line is too long
+synth-synthetizer.adb:803:80: (style) this line is too long
+synth-synthetizer.adb:806:80: (style) this line is too long
+synth-synthetizer.adb:955:80: (style) this line is too long
+synth-synthetizer.adb:958:80: (style) this line is too long
+synth-synthetizer.adb:963:80: (style) this line is too long
+synth-synthetizer.adb:966:80: (style) this line is too long
+synth-synthetizer.adb:982:80: (style) this line is too long
+synth-synthetizer.adb:985:80: (style) this line is too long
+synth-synthetizer.adb:1066:80: (style) this line is too long
+synth-synthetizer.adb:1069:80: (style) this line is too long
+synth-synthetizer.adb:1082:59: (style) misplaced "then"
+synth-synthetizer.adb:1098:80: (style) this line is too long
+synth-synthetizer.adb:1100:80: (style) this line is too long
+synth-synthetizer.adb:1112:80: (style) this line is too long
+synth-synthetizer.adb:1129:80: (style) this line is too long
+synth-synthetizer.ads:52:07: (style) space required
+synth-synthetizer.ads:55:80: (style) this line is too long
+synth-synthetizer.ads:167:01: (style) multiple blank lines
+synth-synthetizer.ads:278:80: (style) this line is too long

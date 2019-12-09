@@ -1,0 +1,577 @@
+V "GNAT Lib v2018"
+A -gnatA
+A -g
+A -gnato
+A -gnatwa
+A -gnata
+A -gnatQ
+A -gnat12
+A -fstack-check=specific
+A -gnatya
+A -gnatyA
+A -gnatyb
+A -gnatyB
+A -gnatyc
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyI
+A -gnatyk
+A -gnatyl
+A -gnatyn
+A -gnatyp
+A -gnatyr
+A -gnatyS
+A -gnatym
+A -gnatyt
+A -gnatyu
+A -gnatyx
+A -mtune=generic
+A -march=x86-64
+P ZX
+
+RN
+RV SIMPLE_BARRIERS
+RV NO_ALLOCATORS
+RV NO_DELAY
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FIXED_POINT
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_LOCAL_PROTECTED_OBJECTS
+RV NO_NESTED_FINALIZATION
+RV NO_PROTECTED_TYPE_ALLOCATORS
+RV NO_PROTECTED_TYPES
+RV NO_RELATIVE_DELAY
+RV NO_SECONDARY_STACK
+RV NO_SELECT_STATEMENTS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_TASK_ALLOCATORS
+RV NO_TASKING
+RV NO_UNCHECKED_ACCESS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+RV MAX_PROTECTED_ENTRIES=3
+RV MAX_SELECT_ALTERNATIVES=1
+RV MAX_TASK_ENTRIES=2
+RV MAX_TASKS=1+
+RV MAX_ENTRY_QUEUE_LENGTH=1+
+
+U synth.synthetizer%b	synth-synthetizer.adb	9ddd42dc OO PK
+W ada%s			ada.ads			ada.ali
+Z ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W synth%s		synth.adb		synth.ali
+Z system%s		system.ads		system.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.img_lld%s	s-imglld.adb		s-imglld.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+Z system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+Z system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+Z system.tasking%s	s-taskin.adb		s-taskin.ali
+Z system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+Z system.tasking.protected_objects.entries%s  s-tpoben.adb  s-tpoben.ali
+Z system.tasking.protected_objects.operations%s  s-tpobop.adb  s-tpobop.ali
+Z system.tasking.rendezvous%s  s-tasren.adb	s-tasren.ali
+Z system.tasking.stages%s  s-tassta.adb		s-tassta.ali
+
+U synth.synthetizer%s	synth-synthetizer.ads	58a7471b EE OO PF PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.real_time%s	a-reatim.adb		a-reatim.ali
+Z ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W synth%s		synth.adb		synth.ali
+W synth.driver%s	synth-driver.adb	synth-driver.ali
+W system%s		system.ads		system.ali
+Z system.exception_table%s  s-exctab.adb	s-exctab.ali
+Z system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+Z system.parameters%s	s-parame.adb		s-parame.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+Z system.task_info%s	s-tasinf.adb		s-tasinf.ali
+Z system.tasking%s	s-taskin.adb		s-taskin.ali
+Z system.tasking.protected_objects%s  s-taprob.adb  s-taprob.ali
+Z system.tasking.protected_objects.entries%s  s-tpoben.adb  s-tpoben.ali
+Z system.tasking.stages%s  s-tassta.adb		s-tassta.ali
+
+D ada.ads		20180524051736 76789da1 ada%s
+D a-calend.ads		20180524051738 372815c8 ada.calendar%s
+D a-caldel.ads		20180524051736 9f20b83d ada.calendar.delays%s
+D a-except.ads		20180524051736 291912d5 ada.exceptions%s
+D a-finali.ads		20180524051738 bf4f806b ada.finalization%s
+D a-ioexce.ads		20180524051736 e4a01f64 ada.io_exceptions%s
+D a-reatim.ads		20180524051738 0240fc73 ada.real_time%s
+D a-stream.ads		20180524051736 119b8fb3 ada.streams%s
+D a-tags.ads		20180524051738 491b781d ada.tags%s
+D a-textio.ads		20180524051738 881db35a ada.text_io%s
+D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20180524051736 5ab55268 interfaces%s
+D i-c.ads		20180524051736 5421119b interfaces.c%s
+D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
+D i-cstrea.ads		20180524051736 e53d8b8e interfaces.c_streams%s
+D synth.ads		20191207182936 a8a70baa synth%s
+D synth-driver.ads	20191012065612 d9d9377e synth.driver%s
+D synth-synthetizer.ads	20191207183628 1b79faf7 synth.synthetizer%s
+D synth-synthetizer.adb	20191207183732 0eb90b71 synth.synthetizer%b
+D system.ads		20180524051738 32a08138 system%s
+D s-atacco.ads		20180524051738 4c36d12f system.address_to_access_conversions%s
+D s-assert.ads		20180524051738 cd8d2c94 system.assertions%s
+D s-conca2.ads		20180524051736 02a0d7d0 system.concat_2%s
+D s-conca4.ads		20180524051738 7e642b20 system.concat_4%s
+D s-crtl.ads		20180524051736 0ebbdb71 system.crtl%s
+D s-exctab.ads		20180524051738 54135002 system.exception_table%s
+D s-ficobl.ads		20180524051738 078245e4 system.file_control_block%s
+D s-finmas.ads		20180524051738 7811a767 system.finalization_masters%s
+D s-finroo.ads		20180524051738 4ff27390 system.finalization_root%s
+D s-imgint.ads		20180524051736 02dbe0c2 system.img_int%s
+D s-imglld.ads		20180524051738 f3220969 system.img_lld%s
+D s-memory.ads		20180524051736 597d6634 system.memory%s
+D s-multip.ads		20180524051736 38ac9f73 system.multiprocessors%s
+D s-osinte.ads		20180524051738 2e5b26a9 system.os_interface%s
+D s-parame.ads		20180524051738 48ec542b system.parameters%s
+D s-pooglo.ads		20180524051736 ede33ef8 system.pool_global%s
+D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20180524051736 a7318a92 system.soft_links%s
+D s-stache.ads		20180524051738 a37c21ec system.stack_checking%s
+D s-stausa.ads		20180524051736 017a0a05 system.stack_usage%s
+D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
+D s-stalib.adb		20180524051736 f2fe2716 system.standard_library%b
+D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20180524051736 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20180524051736 b16154c2 system.storage_pools%s
+D s-stposu.ads		20180524051736 97a6219c system.storage_pools.subpools%s
+D s-tasinf.ads		20180524051738 601f6b72 system.task_info%s
+D s-taspri.ads		20180524051738 6c1d93d4 system.task_primitives%s
+D s-taprop.ads		20180524051738 1dd2e1b6 system.task_primitives.operations%s
+D s-taskin.ads		20180524051738 1d8c1ccb system.tasking%s
+D s-taprob.ads		20180524051738 acd6094d system.tasking.protected_objects%s
+D s-tpoben.ads		20180524051738 60ad3dae system.tasking.protected_objects.entries%s
+D s-tpobop.ads		20180524051738 5f548bb3 system.tasking.protected_objects.operations%s
+D s-tasren.ads		20180524051738 a67a9949 system.tasking.rendezvous%s
+D s-tassta.ads		20180524051738 cca55c94 system.tasking.stages%s
+D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20180524051736 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20180524051738 1b7d22d2 system.wch_con%s
+D s-win32.ads		20180524051736 b7f96285 system.win32%s
+X 1 ada.ads
+16K9*Ada 20e8 19|23r6 23r23 469r22 1098r22 1099r22
+X 7 a-reatim.ads
+49O9*Time<duration> 18|325r31 372r18 19|38r20 428r57 724r31 825r38 916r35
+54O9*Time_Span<duration> 18|29r32 19|342r31 343r35
+55o4*Time_Span_First{54O9} 18|35r24
+56o4*Time_Span_Last{54O9} 18|32r24
+57o4*Time_Span_Zero{54O9} 19|743r48
+61V13*Clock{49O9} 19|428s65 455s53 727s22 825s46 916s43
+71V14*"-"{54O9} 19|455s59 827s29 918s49
+83V14*"+"{54O9} 19|402s44 1069s74
+89V14*"*"{54O9} 19|403s44
+101V14*"<"{boolean} 19|1075r31 1082r45
+105V14*">"{boolean} 19|456r53
+110V13*To_Duration{duration} 19|470s62
+112V13*To_Time_Span{54O9} 19|343s48 349s9 474s51
+117V13*Microseconds{54O9} 19|1066s32
+X 10 a-textio.ads
+49K13*Text_IO 471e16 19|23w10 23r27 469r26 1098r26 1099r26
+263U14*Put_Line 19|469s34 1056s10 1098s34 1099s34
+X 16 synth.ads
+27K9*Synth 91e10 18|25r6 27r9 321r27 360r11 380r5 19|24r14 315r19 720r27
+. 741r50 1145r5
+31F12*Frame{float}
+33A9*Frame_Array(31F12)<integer> 19|192r35
+34P9*Frame_Array_Access(33A9) 18|171r12 191r45 193r43 19|168r39 228r45 261r43
+. 389r35 953r48 961r39 980r48
+35F12*Frequency_Type{float} 18|136r38 310r40 19|170r54 351r31 361r40 955r63
+. 963r54 982r63
+37V13*Frequency_Period{7|54O9} 19|369s30
+45R9*SoundSample 65e14 18|87r22 100r22 137r33 330r25 337r25 19|74r22 102r22
+. 782r25 819r25 848r25 1010r21
+45b22*HasLoop{boolean} 19|879r59 900r59 1033r31
+47f7*Frequency{35F12} 19|996r30
+49f7*Note_Frequency{35F12} 19|83r19 111r19 1001r27
+51p7*Mono_Data{34P9} 19|1006r58 1013r23 1019r20 1096r54 1100r64 1104r54 1105r54
+. 1107r54 1110r48
+55b7*Cant_Stop{boolean} 19|598r29
+59i13*Loop_Start{natural} 19|1036r66
+60i13*Loop_End{natural} 19|1035r49
+67r4*Null_Sound_Sample{45R9} 18|240r34 19|1055r28
+75I9*PCM_Frame<short_integer>
+81A9*PCM_Frame_Array(75I9)<integer> 19|190r35
+82P9*PCM_Frame_Array_Access(81A9) 18|170r12 189r42 19|207r42 309r25 759r25
+. 770r25
+84V13*To_Frame_Array{81A9} 19|276s43
+87F12*Play_Second{long_float} 18|140r33 250r25 273r60 19|173r69 392r43 659r71
+. 941r21 941r53 943r18 946r21 946r53 948r18 958r78 966r69 985r78 987r33 990r37
+. 991r9 991r27 993r42 994r9 995r10 999r49 1004r55 1006r17 1012r38 1015r39
+. 1023r39 1066r76 1067r36
+89U14*DumpException 19|52s10 64s10 96s10 125s10 139s10 153s10 322s19 495s10
+X 17 synth-driver.ads
+30K15*Driver 64e17 18|25w12 63r23 226r32 321r33 360r17 19|32r23 290r21 294r33
+. 315r25 720r33 741r56
+34P9*Sound_Driver_Access(32R9) 18|63r30 226r39 321r40 360r24 19|32r30 290r28
+. 294r40 720r40
+40x14*Play 19|315R32
+41r7 Driver{32R9} 19|315r38
+42p7 Buffer{16|82P9} 19|316r38
+61y13*Get_Frequency{16|35F12} 19|741R63
+X 18 synth-synthetizer.ads
+27K15*Synthetizer 16|27k9 18|135E9 380l11 380e22 19|24b20 1145l11 1145t22
+29O12*Synthetizer_Time{7|54O9} 31r33 32r6 34r38 35r6 55r51 102r22 118r36
+. 138r27 139r26 269r53 339r25 346r35 350r44 374r26 19|104r22 148r32 171r50
+. 348r35 353r33 369r12 394r40 626r53 743r30 786r22 826r40 850r25 893r46 915r44
+. 918r17 956r59 964r50 983r59 1064r35 1065r15 1069r36
+31o4*Not_Defined_Clock{29O12} 139r46 241r27 19|602r37 803r79 1081r41
+34o4*Synthetizer_Time_First{29O12} 242r28 19|622r45
+37I9*Voice<integer> 39r24 91r29 105r29 114r35 117r35 147c9 149r24 152r53
+. 159r13 166r33 166r42 179r39 248r11 264r52 265r31 266r37 267r36 268r34 269r34
+. 272r38 290r34 334r32 342r32 344r27 345r27 19|78r29 80r18 107r29 108r18
+. 134r35 147r35 511r52 512r14 513r26 522r32 554r18 573r31 585r37 594r36 614r34
+. 626r34 647r30 649r25 659r38 673r30 676r39 676r48 696r36 787r32 789r28 823r32
+. 853r32 872r27 893r27
+39i4*No_Voice{37I9} 149c4
+42P9*Synthetizer_Type 43r42 64r21 74r35 86r22 99r22 113r35 116r35 120r39
+. 378c9 19|33r21 59r35 73r22 101r22 133r35 146r35 157r39
+43P9*Synthetizer_Access(42P9)
+49h9*Synthetizer_Audit 50r48 53p14 53r53
+50P9*Synthetizer_Audit_Access(49R9) 67r15 311r46 324r31 19|36r15 355r37 362r46
+. 723r31
+53x14*Ready_To_Prepare 53=32 54>32 55>32 19|409R19
+53r32 Synth_Audit{49R9}
+54o32 Current_Buffer_Time{29O12}
+55o32 Next_Buffer_Time{29O12}
+62U14*Open 63>7 64<7 65>7 66>7 67>7 19|31b14 53l8 53t12
+63p7 Driver_Access{17|34P9} 19|32b7 44r34
+64p7 Synt{42P9} 19|33b7 43m7 44r7
+65i7 Buffer_Size{natural} 19|34b7 46r35
+66i7 Buffers_Number{positive} 19|35b7 45r30
+67p7 Audit{50P9} 19|36b7 48r27
+74U14*Close 74=21 19|59b14 66l8 66t13
+74p21 Synt{42P9} 19|59b21 61r7
+85U14*Play 86>7 87>7 88>7 89>7 90>7 91<7 19|72b14 98l8 98t12
+86p7 Synt{42P9} 19|73b7 88r7
+87r7 S{16|45R9} 19|74b7 83r17 88r34
+88f7 Frequency{float} 19|75b7 89r34
+89f7 Volume{float} 19|76b7 91r28
+90i7 Channel{positive} 19|77b7 90r29
+91i7 Opened_Voice{37I9} 19|78b7 93m7
+98U14*Play 99>7 100>7 101>7 102>7 103>7 104>7 105<7 19|100b14 127l8 127t12
+99p7 Synt{42P9} 19|101b7 116r7
+100r7 S{16|45R9} 19|102b7 111r17 116r29
+101f7 Frequency{float} 19|103b7 117r34
+102o7 Play_Time{29O12} 19|104b7 120r31
+103f7 Volume{float} 19|105b7 119r28
+104i7 Channel{positive} 19|106b7 118r29
+105i7 Opened_Voice{37I9} 19|107b7 122m7
+113U14*Stop 113>20 114>20 19|133b14 140l8 140t12
+113p20 Synt{42P9} 19|133b20 136r7
+114i20 Opened_Voice{37I9} 19|134b20 136r18
+116U14*Stop 116>20 117>20 118>20 19|146b14 154l8 154t12
+116p20 Synt{42P9} 19|146b20 150r7
+117i20 Opened_Voice{37I9} 19|147b20 150r18
+118o20 Stop_Time{29O12} 19|148b20 150r32
+120V13*Get_Opened_Voices{natural} 120>32 19|157b13 160l8 160t25
+120p32 Synt{42P9} 19|157b32 159r13
+122X4*Synthetizer_Not_Inited 19|793r19 832r19 857r19 875r19 896r19
+124i4*MAX_VOICES{natural} 166r49 288r48 19|549r43
+135R9 Voice_Structure_Type 144e14 159r40 162r22 236r36 237r6 249r13 263r55
+. 19|167r36 510r55 595r25 799r37 952r45 960r36 979r45
+136f7*Note_Play_Frequency{16|35F12} 243m7 19|799m59 1002r17
+137r7*Play_Sample{16|45R9} 240m7 19|598r17 800m59 879r47 900r47 996r18 1001r15
+. 1006r46 1010r40 1033r19 1055r14 1096r42
+138o7*Start_Play_Sample{29O12} 242m7 19|802m59 1075r37
+139o7*Stop_Play_Sample{29O12} 241m7 19|602r17 622m25 634m25 803m59 1081r21
+. 1082r28
+140f7*Current_Sample_Position{16|87F12} 238m7 19|661m25 702m38 801m59 988r13
+141f7*Volume{float} 244m21 19|804m59 1112r74
+142b7*Stopped{boolean} 239m7 19|435r45 700m41 806m59
+143i7*Channel{positive} 244m7 19|805m59
+152A9 Voice_Array(37I9)<integer> 271r45 19|642r45 644r14
+158A9 Voice_Structure_Array(135R9)<37I9> 283r28
+161P9 ReadOnly_Voice_Structure_Access(135R9) 265r45 19|573r45
+166i4 MAX_VOICES_INDICE{37I9} 283r56 294r48
+169R9 Buffer_Type 172e14 175r53
+170p7*BP{16|82P9} 19|190m25 191r25 191r48 211r46 276r33
+171p7*BF{16|34P9} 19|192m25 193r25 193r48 248r43 265r28
+175A9 Buffers_Type(169R9)<integer> 200r17
+177A9 Boolean_Array(boolean)<integer> 203r31 214r28
+179A9 Voice_Boolean_Array(boolean)<37I9> 294r22
+184W19 Buffer_Ring 184d32 185d32 200E7 217l8 217e19 219r42 19|180b19 282l8
+. 282t19 729r20
+184i32 NBBuffer{positive} 200r36 203r51 207r33 214r48 19|218r50 232r43 238r47
+185i32 Buffer_Length{positive} 19|190r57 192r53
+187U17 Init 19|186b17 196l11 196t15 730s13
+189Y13 Consume_Buffer 189<29 19|207b13 222l11 222t25 313s27 761s19 772s19
+189p29 Buffer{16|82P9} 19|211m10
+191Y13 Freeze_New_Buffer 191<32 19|228b13 255l11 255t28 398s33
+191p32 Buffer{16|34P9} 19|248m10 253r10 398r52
+193Y13 UnFreeze_New_Buffer 193>34 19|261b13 280l11 280t30 483s33
+193p34 Buffer{16|34P9} 19|265r33 276r59 483r54
+195V16 Available_Buffer_For_Consume{boolean} 19|198b16 201l11 201t39 311s27
+. 757s19 768s19
+200a7 Buffers{175A9} 19|189r19 190r13 191r13 191r36 192r13 193r13 193r36
+. 211r20 216r41 218r62 220r44 238r59 248r20 264r19 265r16 276r10
+203a7 Available_For_Consume{177A9} 19|200r17 208r14 213r10 237r20 246r34
+. 278r10
+207i7 Free_Buffers{natural} 19|215r10 215r26 216r25 229r14 250r10 250r26
+210i7 Current_Consume{natural} 19|200r40 208r37 211r29 213r33 218r10 218r30
+. 220r25 231r36
+214a7 Outed_Frame_Buffer{177A9} 19|236r16 245r25 249r10 277r10
+219P9 Buffer_Ring_Access(184W19) 227r33 308r25 357r12 19|289r17 295r34 337r26
+. 359r26
+222T14 Buffer_Play_Task_Type 231l8 231e29 233r43 19|288b14 330l8 330t29 734r27
+226Y13 Start 226>20 227>20 19|294b14 298l11 298t16 735s20
+226p20 TheDriver{17|34P9} 19|297r25 735r27
+227p20 BufferRing{219P9} 19|296r21 736r27
+229Y13 Stop 19|303b20 305l17 305t21 754s20
+233P9 Buffer_Play_Task_Access(222T14) 366r19
+236r4 Null_Voice_Structure{135R9} 285r12 19|434r36
+247R9 Voice_Play_Structure 252e14 255r34 19|429r38 678r28
+248i7*V{37I9} 19|678m50 696r47
+249r7*VSA{135R9} 19|434r30 435r41 440r63 679m50
+250f7*UpdatedPosition{16|87F12} 19|451m45 680m50 702r67
+251b7*Closing{boolean} 19|453m48 681m50 698r21 927r29
+254A9 Voice_Play_Structure_Array(247R9)<integer> 277r16 278r57 19|418r34
+. 668r60 670r14 692r57 922r26
+261W19 Voices_Type 283E7 297l8 297e19 299r33 19|503b19 708l8 708t19 732r24
+263U17 Allocate_New_Voice 263>37 264<37 19|510b17 566l11 566t29 799s17
+263r37 Voice_Structure{135R9} 19|510b37 530r41 557r31
+264i37 TheVoice{37I9} 19|511b37 529m16 530r28 558m13 807r37
+265V16 Get_Voice{161P9} 265>27 19|573b16 578l11 578t20 879s33 900s33
+265i27 V{37I9} 19|573b27 577r30
+266V16 Is_Voice_Opened{boolean} 266>33 19|585b16 588l11 588t26 884s20 905s20
+266i33 V{37I9} 19|585b33 587r31
+267V16 Can_Be_Stopped{boolean} 267>32 19|594b16 607l11 607t25 878s24 899s24
+267i32 V{37I9} 19|594b32 595r61
+268U17 Close_Voice 268>30 19|614b17 624l11 624t22 885s20
+268i30 V{37I9} 19|614b30 616r39 617r31 622r22
+269U17 Close_Voice 269>30 269>41 19|626b17 636l11 636t22 906s20
+269i30 V{37I9} 19|626b30 628r39 629r31 634r22
+269o41 Stop_Time{29O12} 19|626b41 634r45
+271V16 Get_All_Opened_Voices{152A9} 19|642b16 653l11 653t32
+272U17 Update_Position 272>34 273>34 19|659b17 662l11 662t26
+272i34 V{37I9} 19|659b34 661r22
+273f34 Current_Sample_Position{16|87F12} 19|659b45 661r52
+276V16 Get_All_Opened_Voices_Play_Structure{254A9} 19|419s30 668b16 686l11
+. 686t47 923s19
+278U17 Update_Close_And_Positions_Status 278>52 19|477s29 692b17 706l11 706t44
+278a52 VA{254A9} 19|692b52 694r19
+283a7 All_Voices{158A9} 19|523r33 530r16 557r13 577r18 595r49 622r10 634r10
+. 661r10 679r58 700r19 702r16
+288i7 Max_All_Opened_Voice_Indice{natural} 19|518r24 522r39 535r45 536r19
+. 549r13 551r13 552r29 554r25 644r58 646r51 670r47 672r51
+289i7 Min_All_Opened_Voice_Indice{natural} 19|532r45 533r19 644r27 646r20
+. 672r20
+290i7 Search_Open_Voice_Indice{37I9} 19|513r35 539r16 559r13
+294a7 Opened_Voice{179A9} 19|526r20 528r16 556r13 587r17 616r25 617r17 628r25
+. 629r17 647r16 673r16 699r19
+299P9 Voices_Access(261W19) 309r27 369r16 19|338r18 360r27
+303T14 Buffer_Preparing_Task_Type 314l8 314e34 316r52 19|336b14 497l8 497t34
+. 738r30
+308Y13 Start 308>20 309>21 310>21 311>21 19|359b14 373l11 373t16 739s23
+308p20 BR{219P9} 19|364r30 739r30
+309p21 VSA{299P9} 19|365r22 740r30
+310f21 Driver_Frequency{16|35F12} 19|366r35 741r30
+311p21 Audit_Interface_Access{50P9} 19|371r41 742r30
+312Y13 Stop 19|379b20 381l17 381t21 765s23
+316P9 Buffer_Preparing_Task_Access(303T14) 363r22
+319W19 Synthetizer_Structure_Type 355E7 376l8 376e34 378r36 19|43r19 714b19
+. 935l8 935t34
+321U17 Init 321>23 322>23 323>23 324>23 325<23 19|44s12 720b17 746l11 746t15
+321p23 D{17|34P9} 19|44r18 720b23 735r41 741r78
+322i23 NBBuffer{positive} 19|45r18 721b23 729r33
+323i23 Buffer_Length{positive} 19|46r18 722b23 729r43
+324p23 Audit{50P9} 19|48r18 723b23 742r57
+325o23 T{7|49O9} 19|47r18 724b23 744m10
+329U17 Play 330>10 331>10 332>10 333>10 334<10 19|88s12 818b17 841l11 841t15
+330r10 S{16|45R9} 19|88r18 819b10 835r41
+331f10 Frequency{float} 19|89r18 820b10 836r39
+332f10 Volume{float} 19|91r18 821b10 837r39
+333i10 Channel{natural} 19|90r18 822b10 838r39
+334i10 Opened_Voice{37I9} 19|92r18 823b10 840m39
+336U17 Play 337>10 338>10 339>10 340>10 341>10 342<10 19|116s12 847b17 866l11
+. 866t15
+337r10 S{16|45R9} 19|116r18 848b10 860r41
+338f10 Frequency{float} 19|117r18 849b10 861r40
+339o10 Play_Time{29O12} 19|120r18 850b10 864r40
+340f10 Volume{float} 19|119r18 851b10 862r40
+341i10 Channel{positive} 19|118r18 852b10 863r40
+342i10 Opened_Voice{37I9} 19|121r18 853b10 865m40
+344U17 Stop 344>23 19|136s12 872b17 887l11 887t15
+344i23 V{37I9} 19|872b23 878r40 879r44 884r37 885r33
+345U17 Stop 345>23 346>23 19|150s12 893b17 909l11 909t15
+345i23 V{37I9} 19|893b23 899r40 900r44 905r37 906r33
+346o23 Stop_Time{29O12} 19|893b34 906r36
+348U17 Close 19|61s12 752b17 775l11 775t16
+350V16 Get_Synthetizer_Time{29O12} 19|915b16 919l11 919t31
+351V16 Get_Allocated_Voices{natural} 19|159s18 921b16 933l11 933t31
+355b7 Inited{boolean} 19|745r10 792r17 831r17 856r17 874r17 895r17
+357p7 BR{219P9} 19|729r10 730r10 736r41 739r36 757r16 761r16 768r16 772r16
+360p7 D{17|34P9}
+363p7 Prepare_Task{316P9} 19|738r10 739r10 765r10
+366p7 Play_Task{233P9} 19|734r10 735r10 754r10
+369p7 Voices{299P9} 19|732r10 740r37 799r10 878r17 879r26 884r13 885r13 899r17
+. 900r26 905r13 906r13 923r12
+372o7 Ref_Time{7|49O9} 19|727r10 744r15 827r31 918r51
+374o7 Next_Buffer_Time{29O12} 19|743r10
+X 19 synth-synthetizer.adb
+38o7 Start_Time{7|49O9} 47m23
+51r12 E{4|63R9} 52r25
+63r12 E{4|63R9} 64r25
+80i7 OutVoice{18|37I9} 92m34 93r23
+95r12 E{4|63R9} 96r25
+108i7 OutVoice{18|37I9} 121m34 122r23
+124r12 E{4|63R9} 125r25
+138r12 E{4|63R9} 139r25
+152r12 E{4|63R9} 153r25
+167U14 Process_Buffer 167>30 168>30 169>30 170>30 171>30 172<30 173<30 440s28
+. 960b14 973l8 973t22
+167r30 VSA{18|135R9} 440r44 960b30 968r32
+168p30 Buffer{16|34P9} 441r44 961b30 968r37
+169f30 Volume_Factor{float} 962b30 968r45
+170f30 Driver_Play_Frequency{16|35F12} 443r44 963b30 969r32
+171o30 Start_Buffer_Time{18|29O12} 442r44 964b30 970r32
+172b30 ReachEndSample{boolean} 444r44 965b30 970m51
+173f30 Returned_Current_Sample_Position{16|87F12} 445r44 966b30 971m32
+189i14 i{integer} 190r22 191r22 191r45 192r22 193r22 193r45
+207p29 Buffer{16|82P9}
+228p32 Buffer{16|34P9}
+231i10 Search_Index{natural} 236r36 237r43 238m13 238r30 245r45 246r57 248r29
+. 249r30
+232i10 Sanity_Check_Indice{natural} 239m13 239r50 240r16
+261p34 Buffer{16|34P9}
+262i10 Search_Index{natural} 266m16 271r13 276r19 277r30 278r33
+264i14 i{integer} 265r25 266r32
+289p7 Task_BR{18|219P9} 296m10 311r19 313r19
+290p7 Task_Driver{17|34P9} 297m10 315r48
+291b7 Terminated{boolean} 301r17 304m16
+294p21 TheDriver{17|34P9}
+295p21 BufferRing{18|219P9}
+309p16 Buffer{16|82P9} 313m43 313r43 316r48
+321r21 E{4|63R9} 322r34
+337p7 Task_Buffer_Ring{18|219P9} 364m10 398r16 483r16
+338p7 Task_VSA{18|299P9} 365m10 419r21 477r20
+340b7 Terminated{boolean} 376r17 380m16
+342o7 Reporting_Elapse_Time{7|54O9} 455m28 456r31 457r60
+343o7 Reporting_Max_Elapse_Time{7|54O9} 456r55 457m31 470r75 474m22
+345i7 Counter{integer} 466m19 466r44 467r23 473m22
+346i7 Processed_Voices{natural} 464m19 472r61
+348o7 Current_Buffer_Start_Time{18|29O12} 402r18 411r37 442r66 480m16
+351f7 Task_Driver_Frequency{16|35F12} 366m10 369r48 443r69
+353o7 Driver_Frequency_Period{18|29O12} 368m10 403r20
+355p7 Task_Audit_Interface_Access{18|50P9} 371m10 407r19 409r37
+359p21 BR{18|219P9}
+360p21 VSA{18|299P9}
+361f21 Driver_Frequency{16|35F12}
+362p21 Audit_Interface_Access{18|50P9}
+389p16 Preparing_Buffer{16|34P9} 398m62 398r62 403r47 441r62 483r64
+390b16 ReachEndSample{boolean} 444m62 452r31
+392f16 Returned_Sample_Position{16|87F12} 445m80 451r64
+394o16 Next_Buffer_Last_Time{18|29O12} 401m16 413r37 481r18
+418a19 Opened_Voice{18|254A9} 426r28 429r62 451r28 453r31 477r64
+422i19 Number_Of_Processed_Voices{natural} 437m28 437r72 464r39
+426i23 I{integer} 429r76 451r42 453r45
+428o25 Reporting_Start_Time{7|49O9} 455r61
+429r25 V{18|247R9} 434r28 435r39 440r61
+494r12 E{4|63R9} 495r25
+512i10 V{18|37I9} 554m13 556r27 557r25 558r25
+513i10 Search_Indice{18|37I9} 522r16 523m16 526r34 528r30 529r28 532r28 533r59
+. 535r28 536r59 539r44 544m13 544r30
+518i14 I{integer}
+595r10 VSA{18|135R9} 598r13 602r13
+643i10 I{natural} 648m16 648r35 649r19 649r32 652r25
+644a10 V{18|152A9} 649m16 652r17
+646i14 It{integer} 647r37
+669i10 I{natural} 674m16 674r35 678r22 685r25
+670a10 V{18|254A9} 678m19 685r17
+672i14 It{integer} 673r37 676r55
+676i19 TheVoice{18|37I9} 678r55 679r70
+694r14 V=694:19{18|247R9} 696r45 698r19 702r65
+696i16 TheVoice{18|37I9} 699r33 700r31 702r28
+759p16 Buffer{16|82P9} 761m35 761r35
+770p16 Buffer{16|82P9} 772m35 772r35
+781U17 Internal_Play 781b17 812l11 812t24 835s10 860s10
+789i10 Allocated_Voice{18|37I9} 807m49 810r26
+825o10 Start_Play_Clock{7|49O9} 827r12
+826o10 Span_Time_From_Ref{18|29O12} 839r39
+916o10 Current_Clock{7|49O9} 918r35
+922a10 VPSA{18|254A9} 926r19 927r20
+924i10 N{natural} 928m16 928r35 932r17
+926i14 I{integer} 927r26
+941V14 "/"{16|87F12} 941b14 941>17 941>34 944l9 944t11 996s40 1001s42
+941f17 f{16|87F12} 943r14
+941f34 f2{float} 943r31
+946V14 "*"{16|87F12} 946b14 946>17 946>34 949l9 949t11 995s46 1000s33
+946f17 f{16|87F12} 948r14
+946f34 f2{float} 948r31
+952U14 Internal_Process_Buffer 952>39 953>39 954>39 955>39 956>39 957<39
+. 958<39 968s7 979b14 1143l8 1143t31
+952r39 VSA{18|135R9} 979b39 988r9 996r14 1001r11 1002r13 1006r42 1010r36
+. 1033r15 1055r10 1075r33 1081r17 1082r24 1096r38 1112r70
+953p39 Buffer{16|34P9} 980b39 1061r16 1066r93 1112r36 1123r22
+954f39 Volume_Factor{float} 981b39 1112r54
+955f39 Driver_Play_Frequency{16|35F12} 982b39 991r40 995r23 997r16
+956o39 Start_Buffer_Time{18|29O12} 983b39 1069r56
+957b39 ReachEndSample{boolean} 984b39 1057m10 1084m16 1128m25 1140m7
+958f39 Returned_Current_Sample_Position{16|87F12} 985b39 1129m25 1141m7
+987f7 Current_Sample_Position{16|87F12} 1072r16 1093r38 1125m50 1125r50 1129r61
+. 1141r43
+990f7 Driver_Play_Period{16|87F12} 1029r43 1066r55
+993f7 One_Sample_Frame_Period{16|87F12} 1000r9
+999f7 One_Played_Sample_Frame_Period{16|87F12} 1007r12 1017r27
+1004V16 To_Second{16|87F12} 1004b16 1004>27 1008l11 1008t20 1013s9 1035s35
+. 1036s52
+1004i27 Frame_Pos{natural} 1006r30
+1010r7 SS{16|45R9} 1013r20 1019r17 1035r46 1036r63 1100r61 1104r51 1105r51
+. 1107r51 1110r45
+1012f7 Sample_Data_Seconds{16|87F12} 1040r38
+1015V16 To_Pos_InSample{natural} 1015b16 1015>33 1020l11 1020t26 1093s21
+1015f33 Pos{16|87F12} 1017r21
+1016i10 Pos_In_Array{natural} 1019r38
+1022U17 Move_Next 1022b17 1023=10 1024<10 1046l11 1046t20 1125s22
+1023f10 Pos_In_Sample{16|87F12} 1029m10 1029r27 1035r19 1036m19 1036r36 1040r22
+. 1125r33
+1024b10 Reach_End{boolean} 1031m10 1041m22 1126r33
+1061i11 i{integer} 1066r89 1112r44 1123r30
+1064o13 From_Start{18|29O12} 1069r76
+1068b13 IsStarted{boolean} 1077m19 1083m16 1088r16
+1069o13 CurrentTime{18|29O12} 1075r19 1082r47
+1092i19 Pos_In_Sample{natural} 1096r22 1098r71 1104r34 1105r34 1107r34 1110r59
+1110f22 V1{float} 1112r49
+1111b22 R{boolean} 1126m46 1127r25
+1112f22 F{float} 1115r25 1116m25 1119r25 1120m25 1123r36
+X 20 system.ads
+37K9*System 18|24w6 224r24 304r24 20|200e11
+67M9*Address
+100I12*Any_Priority{integer}
+101I12*Priority{100I12} 18|224r31 304r31
+X 32 s-memory.ads
+53V13*Alloc{20|67M9} 103i<c,__gnat_malloc>22
+68U14*Free 104i<c,__gnat_free>22
+76V13*Realloc{20|67M9} 105i<c,__gnat_realloc>22
+X 40 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+X 42 s-stalib.adb
+93U14 Break_Start 94i<c,__gnat_break_start>22
+

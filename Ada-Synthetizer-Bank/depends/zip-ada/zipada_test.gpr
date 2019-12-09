@@ -1,0 +1,40 @@
+project ZipAda_Test extends "ZipAda" is  --  Check zipada.gpr for details
+
+   for Source_Dirs use ("test");
+
+   for Main use (
+     "fuzzip.adb",
+     "lz77_stats.adb",     --  Gather some statistics about LZ77 DLE codes and output it in a matrix form
+     "random_data.adb",    --  Produces n bytes of pseudo-random data
+     "several_sizes.adb",  --  Truncates a file into partial copies of several sizes
+     "test_chunk.adb", 
+     "test_extract.adb", 
+     "test_lz_scramble",                 --  Test LZ_Scramble
+     "test_llhc",                        --  Test for Length_limited_Huffman_code_lengths
+     "test_lz77.adb",                    --  Test the LZ77 package
+     "test_non_zip.adb",                 --  Test compression raw schemes without Zip archive format
+     "test_zip_create_info_timing.adb",  --  Timing for entries management during Zip creation
+     "test_zip_info_timing.adb",         --  Timing of loading of Zip archive's directory
+     "test_zip_info_traverse.adb",       --  Check duplicate-tolerant traversal
+     "test_stream_performance.adb",
+     "test_unz_streams.adb",
+     "ziptest.adb", 
+     "zip_with_many_files.adb",
+     "zip_with_big_files.adb"
+   );
+
+   case Build_Mode is
+      when "Debug" | "Check_95" =>  for Object_Dir use "obj_dbg/test";
+      when "Fast" =>                for Object_Dir use "obj_opt/test";
+      when "Small" =>               for Object_Dir use "obj_small/test";
+      when "Profiling" =>           for Object_Dir use "obj_pro/test";
+   end case;
+   
+   for Exec_Dir use ".";
+   
+   --  package Builder  renames ZipAda.Builder;
+   --  package Compiler renames ZipAda.Compiler;
+   --  package Binder   renames ZipAda.Binder;
+   --  package Linker   renames ZipAda.Linker;
+   
+end ZipAda_Test;

@@ -1,0 +1,32 @@
+-- with "win32ada.gpr";
+with "./drivers/ada-soundio/lib_soundio.gpr";
+
+project Lib_Synthetizer_Win32 is
+
+   for Object_Dir use "obj";
+   for Source_Dirs use ("src", "src_win32", "tests");
+
+   for Library_Name use "synth";
+   for Library_Kind use "relocatable";
+   for Library_Dir use "lib";
+
+   -- to link dependencies finally
+   for Shared_Library_Minimum_Switches use
+     ("-shared","-shared-libgcc",
+      "-LC:\Users\use\workspaceGNAT\Ada-Synthetizer-Lib",
+      "-lsoundio");
+
+   package Linker is
+      -- for Linker_Options use ("-lwinmm");
+   end Linker;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-g", "-gnato",
+                                        "-gnatwa", "-gnata",
+                                        "-gnatQ", "-gnat12",
+                                        "-fstack-check",
+                                        "-gnatyaAbBcefhiIklnprSmtux");
+   end Compiler;
+
+end Lib_Synthetizer_Win32;
+
