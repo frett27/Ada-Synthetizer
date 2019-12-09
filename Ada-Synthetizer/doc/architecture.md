@@ -70,6 +70,8 @@ Since v0.1.5, the synthetizer can also capable to play ahead of time, see the "A
 
 Introducing buffer create a jitter between the play and command sent. Main objective in the tuning is to choose the proper buffer size to reduce the jitter time and preserve the real time behaviour of the play. If the buffer is too small, the preparing buffer task will probably not have the proper time to finish, causing 'tick' or 'claq' in the sound playing.
 
+
+
 ### Jitter choosing
 
 Sound subsystem may also have its own buffer for rendering. And we have to discover the buffer to preserve the timing. 
@@ -125,9 +127,9 @@ Play Buffer task is responsible to convert the float sample array into sound dri
 
 ### AHead of Time playing
 
-Since 0.1.5, synthetizer has a ahead of time event play'in. This version introduce an internal timer, permitting to stick the play / stop event in time. This timer permit to prepare events before the buffer is prepared. 
+Since **0.1.5**, synthetizer has a ahead of time event play'in. This version introduce an internal timer, permitting to stick the play / stop event in time. This timer permit to prepare events before the buffer is prepared. 
 
-Play / Stop primitive now take a Play_Time and Stop_Time parameter to plan the voice allocation.
+**Play** / **Stop** primitives now take a **Play_Time** and **Stop_Time** parameter to plan the voice allocation.
 
 ```
    ----------
@@ -164,7 +166,9 @@ a Synthetizer Audit Interface is setup to be aware of the next sound buffer prep
 
 ```
 
-this interface is specified in the Open statement of the synthetizer.
+Thank's to this interface, it is now possible to prepare ahead of time,  the event to play in the next prepared buffer. 
+
+To use this Audit interface, pass the associated reference in the **Open** procedure of the synthetizer.
 
 ```
    --  open the synth device
