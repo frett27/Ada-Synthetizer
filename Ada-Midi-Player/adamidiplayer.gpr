@@ -1,5 +1,5 @@
 with "../Ada-Midi/adamidi.gpr";
-with "../Ada-Synthetizer/synthetizer_win32.gpr";
+with "../Ada-Synthetizer/synthetizer.gpr";
 with "../Ada-Synthetizer-Bank/synthetizer_bank.gpr";
 
 project AdaMidiPlayer is
@@ -8,34 +8,12 @@ project AdaMidiPlayer is
    for Exec_Dir use ".";
    type Build_Kind is
       ("default", "relocatable");
-   Win32Ada_Build : Build_Kind := external ("WIN32ADA_BUILD");
    type Os_Type is
       ("Any", "GNU/Linux", "Windows");
-   Adamidi : Os_Type := external ("ADAMIDI");
 
-   case Win32Ada_Build is
+   for Source_Dirs use ("src", "tests");
+   for Main use ("main.adb");
 
-      when "default" =>
-
-         case Adamidi is
-
-            when "Any" =>
-               for Source_Dirs use ("src", "tests");
-               for Main use ("main.adb");
-
-            when "GNU/Linux" =>
-               for Source_Dirs use ("src", "tests");
-               for Main use ("main.adb");
-
-            when "Windows" =>
-               for Source_Dirs use ("src", "tests");
-               for Main use ("main.adb");
-         end case;
-
-      when "relocatable" =>
-         for Source_Dirs use ("src", "tests");
-         for Main use ("main.adb");
-   end case;
 
    -- on linux , gnat 4.6 - 4.8 does not support OS env variable
    -- type Os_Type is
@@ -43,26 +21,7 @@ project AdaMidiPlayer is
    -- Os : Os_Type := external ("OS");
 
    package Compiler is
-
-      case Win32Ada_Build is
-
-         when "default" =>
-
-            case Adamidi is
-
-               when "Any" =>
-                  for Switches ("ada") use ("-g", "-fcallgraph-info=su,da", "-funroll-loops", "-gnatn", "-O", "-gnatf");
-
-               when "GNU/Linux" =>
-                  for Switches ("ada") use ("-O3", "-gnatp");
-
-               when "Windows" =>
-                  for Switches ("ada") use ("-O3", "-gnatp");
-            end case;
-
-         when "relocatable" =>
-            for Switches ("ada") use ("-O3", "-gnatp");
-      end case;
+      for Switches ("ada") use ("-g", "-funroll-loops", "-gnatn", "-O", "-gnatf");
    end Compiler;
 
    package Linker is
@@ -70,25 +29,7 @@ project AdaMidiPlayer is
    end Linker;
 
    package Binder is
-
-      case Win32Ada_Build is
-
-         when "default" =>
-
-            case Adamidi is
-
-               when "Any" =>
-                  for Switches ("ada") use ("-E", "-r");
-
-               when "GNU/Linux" =>
-
-               when "Windows" =>
-
-            end case;
-
-         when "relocatable" =>
-
-      end case;
+      for Switches ("ada") use ("-E", "-r");
    end Binder;
 
 end AdaMidiPlayer;

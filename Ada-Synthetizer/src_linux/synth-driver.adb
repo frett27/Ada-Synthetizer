@@ -28,7 +28,7 @@ with Synth.Driver.CxSoundio;
 package body Synth.Driver is
 
    
-   procedure Open (Driver : out Sound_Driver_Access
+   procedure Open (Driver : out Sound_Driver_Access;
                    Frequency : Frequency_Type) is
    begin
            Synth.Driver.CxSoundio

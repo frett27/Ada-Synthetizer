@@ -1,4 +1,4 @@
-with "../Ada-Synthetizer/synthetizer_win32.gpr";
+with "../Ada-Synthetizer/synthetizer.gpr";
 project Synthetizer_Bank is
 
 
