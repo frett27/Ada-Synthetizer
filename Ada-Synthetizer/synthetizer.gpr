@@ -1,0 +1,22 @@
+
+aggregate library project Synthetizer is
+
+   type OS_Type is ("Any", "GNU/Linux", "Windows_NT");
+   OS : OS_Type := external ("OS", "Any");
+
+   for Library_Name use "synthetizer";
+   for Library_Dir use "lib";
+
+
+   case OS is
+      when "Windows_NT" =>
+         for Project_Files use ("synthetizer_win32.gpr");
+      when "GNU/Linux" =>
+         for Project_Files use ("synthetizer_linux.gpr");
+      when "Any" => 
+         for Project_Files use ("synthetizer_linux.gpr");
+   end case;
+
+
+end Synthetizer;
+

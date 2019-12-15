@@ -1,0 +1,178 @@
+V "GNAT Lib v2018"
+A -gnatA
+A -g
+A -gnato
+A -gnatwa
+A -gnata
+A -gnatQ
+A -gnat12
+A -fstack-check=specific
+A -gnatya
+A -gnatyA
+A -gnatyb
+A -gnatyB
+A -gnatyc
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyI
+A -gnatyk
+A -gnatyl
+A -gnatyn
+A -gnatyp
+A -gnatyr
+A -gnatyS
+A -gnatym
+A -gnatyt
+A -gnatyu
+A -gnatyx
+A -mtune=generic
+A -march=x86-64
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_DELAY
+RV NO_DISPATCHING_CALLS
+RV NO_FLOATING_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_ACCESS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U synth.driver.wav%b	synth-driver-wav.adb	e7e2166d OO PK
+W ada%s			ada.ads			ada.ali
+W ada.real_time%s	a-reatim.adb		a-reatim.ali
+Z ada.real_time.delays%s  a-retide.adb		a-retide.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W synth%s		synth.adb		synth.ali
+W synth.driver%s	synth-driver.adb	synth-driver.ali
+W synth.wav%s		synth-wav.adb		synth-wav.ali
+
+U synth.driver.wav%s	synth-driver-wav.ads	9cffc665 EE OO PF PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W synth%s		synth.adb		synth.ali
+W synth.driver%s	synth-driver.adb	synth-driver.ali
+W synth.wav%s		synth-wav.adb		synth-wav.ali
+Z system%s		system.ads		system.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+Z system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+
+D ada.ads		20180524051736 76789da1 ada%s
+D a-except.ads		20180524051736 291912d5 ada.exceptions%s
+D a-finali.ads		20180524051738 bf4f806b ada.finalization%s
+D a-ioexce.ads		20180524051736 e4a01f64 ada.io_exceptions%s
+D a-reatim.ads		20180524051738 0240fc73 ada.real_time%s
+D a-retide.ads		20180524051738 081cdaa4 ada.real_time.delays%s
+D a-stream.ads		20180524051736 119b8fb3 ada.streams%s
+D a-ststio.ads		20180524051736 a75f3183 ada.streams.stream_io%s
+D a-tags.ads		20180524051738 491b781d ada.tags%s
+D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20180524051736 5ab55268 interfaces%s
+D i-c.ads		20180524051736 5421119b interfaces.c%s
+D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
+D i-cstrea.ads		20180524051736 e53d8b8e interfaces.c_streams%s
+D synth.ads		20191207182936 a8a70baa synth%s
+D synth-driver.ads	20191012065612 d9d9377e synth.driver%s
+D synth-driver-wav.ads	20191012065612 554145ec synth.driver.wav%s
+D synth-driver-wav.adb	20191012065612 a0841b05 synth.driver.wav%b
+D synth-wav.ads		20191207180934 1067b4f7 synth.wav%s
+D system.ads		20180524051738 32a08138 system%s
+D s-atacco.ads		20180524051738 4c36d12f system.address_to_access_conversions%s
+D s-crtl.ads		20180524051736 0ebbdb71 system.crtl%s
+D s-exctab.ads		20180524051738 54135002 system.exception_table%s
+D s-ficobl.ads		20180524051738 078245e4 system.file_control_block%s
+D s-finmas.ads		20180524051738 7811a767 system.finalization_masters%s
+D s-finroo.ads		20180524051738 4ff27390 system.finalization_root%s
+D s-multip.ads		20180524051736 38ac9f73 system.multiprocessors%s
+D s-osinte.ads		20180524051738 2e5b26a9 system.os_interface%s
+D s-parame.ads		20180524051738 48ec542b system.parameters%s
+D s-pooglo.ads		20180524051736 ede33ef8 system.pool_global%s
+D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20180524051736 a7318a92 system.soft_links%s
+D s-stache.ads		20180524051738 a37c21ec system.stack_checking%s
+D s-stausa.ads		20180524051736 017a0a05 system.stack_usage%s
+D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
+D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20180524051736 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20180524051736 b16154c2 system.storage_pools%s
+D s-stratt.ads		20180524051736 aedef97e system.stream_attributes%s
+D s-tasinf.ads		20180524051738 601f6b72 system.task_info%s
+D s-taspri.ads		20180524051738 6c1d93d4 system.task_primitives%s
+D s-taprop.ads		20180524051738 1dd2e1b6 system.task_primitives.operations%s
+D s-taskin.ads		20180524051738 1d8c1ccb system.tasking%s
+D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20180524051736 34867c83 system.unsigned_types%s
+D s-win32.ads		20180524051736 b7f96285 system.win32%s
+X 1 ada.ads
+16K9*Ada 20e8 18|27r6 28r5
+X 5 a-reatim.ads
+39K13*Real_Time 185e18 18|27w10 28r9
+49O9*Time<duration> 18|67r26
+54O9*Time_Span<duration>
+61V13*Clock{49O9} 18|67s34
+65V14*"+"{49O9} 18|67s40
+117V13*Microseconds{54O9} 18|68s9
+117i27 US{integer} 18|69r15
+X 15 synth.ads
+27K9*Synth 91e10 17|24r6 26r9 64r18 67r5 18|24r6 25r5 30r14 97r5
+31F12*Frame{float} 18|76r24
+33A9*Frame_Array(31F12)<integer> 18|72r24
+34P9*Frame_Array_Access(33A9)
+35F12*Frequency_Type{float} 17|37r32 58r19 63r19 18|38r19 91r14
+75I9*PCM_Frame<short_integer>
+81A9*PCM_Frame_Array(75I9)<integer>
+82P9*PCM_Frame_Array_Access(81A9) 17|52r16 18|64r16
+X 16 synth-driver.ads
+30K15*Driver 15|27k9 16|64e17 17|26r15 67r11 18|30r20 97r11
+32H9*Sound_Driver 32e52 17|28r27 62r27
+34P9*Sound_Driver_Access(32R9) 17|36r33 18|37r20 46r17
+X 17 synth-driver-wav.ads
+26K22*Wav 16|30k15 17|62E9 67l18 67e21 18|30b27 97l18 97t21
+28R9*WAV_Driver<16|32R9> 30r41 44P25 44r48 50P25 51r23 57P24 57r48 62c9 65e14
+. 18|41r45 53r48 63r23 90r16
+30P9*WAV_Driver_Access(28R9) 18|41r20
+36U14*Open 36<20 37>20 38>20 18|36b14 47l8 47t12
+36p20 Driver{16|34P9} 18|37b7 46m7
+37f20 Frequency{15|35F12} 18|38b7 43r22
+38a20 FileName{string} 18|39b7 44r35
+44U25*Close<16|48p14> 44=32 18|53b25 56l8 56t13
+44r32 Driver{28R9} 18|53b32 55r39
+50U25*Play<16|40p14> 51=7 52>7 18|62b25 83l8 83t12
+51r7 Driver{28R9} 18|63b7 70r51 79r31
+52p7 Buffer{15|82P9} 18|64b7 71r24 72r40 75r16 76r38
+57V24*Get_Frequency{15|35F12}<16|61p13> 57>39 18|89b24 95l8 95t21
+57r39 Driver{28R9} 18|90b7 94r14
+63f7 Frequency{15|35F12} 18|43m9 70r58 94r21
+64p7 WAV_File{19|79P9} 18|45m36 55r46 79r38
+X 18 synth-driver-wav.adb
+41p7 S{17|30P9} 43r7 45r34 46r38
+67o7 EndTime{5|49O9} 82r19
+72a7 Frames{15|33A9} 76m10 80m31 80r31
+75i11 I{integer} 76r18 76r46
+X 19 synth-wav.ads
+27K15*Wav 17|24w12 64r24 18|24w12 25r11 19|183e14
+79P9*WAV_Write_Type(78R9) 17|64r28
+81U14*Open_For_Write 18|44s7
+81a30 FileName{string} 18|44r23
+81p49 WAV_File{79P9} 18|45r22
+83U14*Write_Data 18|79s7
+83p26 WAV_File{79P9} 18|79r19
+83p53 Datas{15|34P9} 18|80r19
+85U14*Close_And_Finalize 18|55s7
+85p34 WAV_File{79P9} 18|55r27
+X 34 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

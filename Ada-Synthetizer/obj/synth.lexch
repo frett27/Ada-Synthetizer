@@ -1,0 +1,15 @@
+[LIBRARY PATH]
+C:\Users\use\workspaceGNAT\Ada-Synthetizer\lib\libsynth.dll
+[OBJECT FILES]
+C:\Users\use\workspaceGNAT\Ada-Synthetizer\obj\synth-driver-cxsoundio.o
+20191207190620
+C:\Users\use\workspaceGNAT\Ada-Synthetizer\obj\synth-driver-wav.o
+20191207190616
+C:\Users\use\workspaceGNAT\Ada-Synthetizer\obj\synth-driver.o
+20191207190616
+C:\Users\use\workspaceGNAT\Ada-Synthetizer\obj\synth-synthetizer.o
+20191207190616
+C:\Users\use\workspaceGNAT\Ada-Synthetizer\obj\synth-wav.o
+20191207190618
+C:\Users\use\workspaceGNAT\Ada-Synthetizer\obj\synth.o
+20191207190614

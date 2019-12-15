@@ -1,0 +1,213 @@
+V "GNAT Lib v2018"
+A -gnatA
+A -g
+A -gnato
+A -gnatwa
+A -gnata
+A -gnatQ
+A -gnat12
+A -fstack-check=specific
+A -gnatya
+A -gnatyA
+A -gnatyb
+A -gnatyB
+A -gnatyc
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyI
+A -gnatyk
+A -gnatyl
+A -gnatyn
+A -gnatyp
+A -gnatyr
+A -gnatyS
+A -gnatym
+A -gnatyt
+A -gnatyu
+A -gnatyx
+A -mtune=generic
+A -march=x86-64
+P CE NO ZX
+
+RN
+RV SIMPLE_BARRIERS
+RV PURE_BARRIERS
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_LOCAL_ALLOCATORS
+RV NO_PROTECTED_TYPES
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_CONVERSION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+RV MAX_PROTECTED_ENTRIES=2
+RV MAX_ENTRY_QUEUE_LENGTH=1+
+
+U synth.driver.win32%b	synth-driver-win32.adb	36581552 OO SE PK
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+W ada.real_time%s	a-reatim.adb		a-reatim.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W synth.driver%s	synth-driver.adb	synth-driver.ali
+Z system%s		system.ads		system.ali
+W win32.winbase%s	win32-winbase.ads	win32-winbase.ali
+W win32.windef%s	win32-windef.ads	win32-windef.ali
+
+D ada.ads		20180524051736 76789da1 ada%s
+D a-except.ads		20180524051736 291912d5 ada.exceptions%s
+D a-ioexce.ads		20180524051736 e4a01f64 ada.io_exceptions%s
+D a-reatim.ads		20180524051738 0240fc73 ada.real_time%s
+D a-stream.ads		20180524051736 119b8fb3 ada.streams%s
+D a-textio.ads		20180524051738 881db35a ada.text_io%s
+D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20180524051736 5ab55268 interfaces%s
+D i-c.ads		20180524051736 5421119b interfaces.c%s
+D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
+D i-cstrea.ads		20180524051736 e53d8b8e interfaces.c_streams%s
+D synth.ads		20191019133048 a8a70baa synth%s
+D synth-driver.ads	20191012065612 d9d9377e synth.driver%s
+D synth-driver-win32.ads  20180930080400 b944c34b synth.driver.win32%s
+D synth-driver-win32.adb  20180930080400 2718150a synth.driver.win32%b
+D system.ads		20180524051738 32a08138 system%s
+D s-atacco.ads		20180524051738 4c36d12f system.address_to_access_conversions%s
+D s-crtl.ads		20180524051736 0ebbdb71 system.crtl%s
+D s-ficobl.ads		20180524051738 078245e4 system.file_control_block%s
+D s-multip.ads		20180524051736 38ac9f73 system.multiprocessors%s
+D s-osinte.ads		20180524051738 2e5b26a9 system.os_interface%s
+D s-parame.ads		20180524051738 48ec542b system.parameters%s
+D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20180524051736 a7318a92 system.soft_links%s
+D s-stache.ads		20180524051738 a37c21ec system.stack_checking%s
+D s-stausa.ads		20180524051736 017a0a05 system.stack_usage%s
+D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
+D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
+D s-tasinf.ads		20180524051738 601f6b72 system.task_info%s
+D s-taspri.ads		20180524051738 6c1d93d4 system.task_primitives%s
+D s-taprop.ads		20180524051738 1dd2e1b6 system.task_primitives.operations%s
+D s-taskin.ads		20180524051738 1d8c1ccb system.tasking%s
+D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20180524051736 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20180524051738 1b7d22d2 system.wch_con%s
+D s-win32.ads		20180524051736 b7f96285 system.win32%s
+D win32.ads		00000000000000 00000000
+D win32-mmsystem.ads	00000000000000 00000000
+D win32-winbase.ads	00000000000000 00000000
+D win32-windef.ads	00000000000000 00000000
+X 1 ada.ads
+16K9*Ada 20e8 14|26r6 72r32 15|24w6 25r6 25r25 29r6 29r23 53r31 58r36 62r29
+. 66r33 70r31 74r31 78r38 169r32 173r30 253r33 257r34
+X 4 a-reatim.ads
+39K13*Real_Time 185e18 15|25w10 25r29
+49O9*Time<duration> 15|265r16
+61V13*Clock{49O9} 15|313s17
+X 6 a-textio.ads
+49K13*Text_IO 471e16 15|29w10 29r27
+X 7 a-unccon.ads
+17+9 Source 15|54r7 59r7 79r7 170r7 174r7 254r10 258r10
+18+9 Target 15|171r7 175r7 255r10
+20v14*Unchecked_Conversion 14|26w10 72r36 15|53r35 58r40 62r33 66r37 70r35
+. 74r35 78r42 169r36 173r34 253r37 257r38
+X 8 interfac.ads
+38K9*Interfaces 184e15 15|27r6 27r24 197r14 197r44
+X 9 i-c.ads
+18K20*C 230e17 15|27w17 27r35 197r25 197r55
+45M9*unsigned_long 15|197r27 197r57
+X 12 synth.ads
+27K9*Synth 90e10 14|33r9 76r29 110r5 15|39r14 420r5
+35F12*Frequency_Type{float} 14|44r32 65r19 79r19 15|182r32 415r34
+74I9*PCM_Frame<short_integer> 15|261r66 285r43
+80A9*PCM_Frame_Array(74I9)<integer>
+81P9*PCM_Frame_Array_Access(80A9) 14|58r16 15|248r16
+88U14*DumpException 15|165s10 363s13
+X 13 synth-driver.ads
+30K15*Driver 12|27k9 13|64e17 14|33r15 76r35 110r11 15|39r20 420r11
+32H9*Sound_Driver 32e52 14|35r29 76r42
+34P9*Sound_Driver_Access(32R9) 14|43r33 15|181r33
+X 14 synth-driver-win32.ads
+33K22*Win32 13|30k15 14|69E9 110l18 110e23 15|32r25 33r24 39b27 420l18 420t23
+35R9*WIN32_Driver<13|32R9> 37r43 50P25 50r48 56P25 57r23 64P24 64r55 76c9
+. 84e14 15|187r31 247r23 374r37 414r44
+37P9*WIN32_Driver_Access(35R9) 15|60r17 63r17 82r41 121r25 184r26
+43U14*Open 43<20 44>20 15|181b14 240l8 240t12
+43p20 Driver{13|34P9} 15|181b20 238m7
+44f20 Frequency{12|35F12} 15|182b20 188r37 197r72
+50U25*Close<13|48p14> 50=32 15|374b14 385l8 385t13
+50r32 Driver{35R9} 15|374b21 378r31
+56U25*Play<13|40p14> 57=7 58>7 15|246b14 368l8 368t12
+57r7 Driver{35R9} 15|247b7 336m7 336r55 337m7 337r22
+58p7 Buffer{12|81P9} 15|248b7 261r49 285r27 309r32
+64V24*Get_Frequency{12|35F12}<13|61p13> 64=39 15|414b13 418l8 418t21
+64r39 Driver{35R9} 15|414b28 417r14
+69M9 Play_Buffer_Cursor 70r36 81r22 81r44 82r21 82r43 15|336r30
+70A9 Play_Buffer_Type(any type)<69M9> 80r16 80r36
+77i7 hWo{any type}
+78i7 wfx{any type}
+79f7 Frequency{12|35F12} 15|188m24 417r21
+80a7 Buffer{70A9}
+81m7 Buffer_First{69M9} 15|336m14 336r62
+82m7 Buffer_Last{69M9}
+83b7 IsPlaying{boolean}
+88P9 Sound_Call_Back_Type 88>51 89>37 90>37 90>49 90>59 91r32 15|170r17
+88i51 hwo{any type}
+89i37 uMsg{any type}
+90i37 dwInstance{any type}
+90i49 dwParam1{any type}
+90i59 dwParam2{any type}
+93U14 Sound_Driver_Call_Back 93>38 94>37 95>37 95>49 95>59 96i28 15|115b14
+. 167l8 167t30
+93i38 hwo{any type} 15|116b7 120r28
+94i37 uMsg{any type} 15|117b7 125r12
+95i37 dwInstance{any type} 15|118b7 121r65
+95i49 dwParam1{any type} 15|118b19 120r43
+95i59 dwParam2{any type} 15|118b29 120r33
+99W19 Semaphore 99d30 104E7 105l8 105e17 107r14 108r20 15|391b19 408l8 408t17
+99i30 N{positive} 104r28 15|398r38 405r17
+100Y13 Passen 15|332s15 335s21 393b13 396l11 396t17
+101Y13 Verlassen 15|338s21 393r46 398b13 401l11 401t20
+102V16 Allocated{natural} 15|403b16 406l11 406t20
+104i7 Current{natural} 15|393r25 395m10 395r21 398r28 400m10 400r21 405r21
+107w4 SBuffer{99W19} 15|332r7
+108w4 SBufferCursor{99W19} 15|335r7 338r7
+X 15 synth-driver-win32.adb
+43N4 WOM_OPEN
+46N4 WOM_CLOSE
+49N4 WOM_DONE
+82U14 FreeStructure 82b14 82>29 82>62 113l8 113t21
+82p29 Driver{14|37P9}
+82i62 Buffer{any type} 93r48 108r48
+84i10 H{any type} 94m10 96r34
+85i10 I{integer} 96m10 98r13 109m10 110r13
+87i7 Result{any type} 102m10
+88i7 CanUnlock{any type} 93m10 108m10
+121p7 Driver{14|37P9}
+164r12 E{2|63R9} 165r25
+183i7 result{any type} 216m7 225r10
+184p7 WIN32_Driver_Ref{14|37P9} 187m7 188r7 190r7 200r10 238r17
+197m10 F{9|45M9}
+251i7 H{any type} 273m7 281r10 285m7 290m7 293m7 299r10 306r43 337r46 341r46
+261A12 Buffer_Range(12|74I9)<integer> 305r17 309r18
+263i7 result{any type} 316m7 324r10 348m13 354r16
+265o7 Timing{4|49O9} 266r28 313m7
+305a10 Dest{261A12} 306m14 306r14 309m10
+341i10 BufferToPlay{any type}
+361r15 e{2|63R9} 363r28
+375i7 result{any type} 378m7 380r10
+X 16 system.ads
+37K9*System 14|27w6 73r17 15|55r17 89r11 174r17 254r20 259r20 285r60 16|200e11
+67M9*Address 14|73r24 15|55r24 174r24 254r27 259r27
+71N4*Storage_Unit 15|285r67
+X 26 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+

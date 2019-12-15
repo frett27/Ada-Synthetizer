@@ -1,0 +1,562 @@
+V "GNAT Lib v2018"
+A -gnatA
+A -mtune=generic
+A -march=x86-64
+P SS ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_CONVERSION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV NO_OBSOLESCENT_FEATURES
+RV SPARK_05
+
+U soundio%b		soundio.adb		e4d48529 NE OO PK
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+W ada.unchecked_conversion%s
+Z system%s		system.ads		system.ali
+
+U soundio%s		soundio.ads		c5aad086 BN EE OO PK
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.unchecked_conversion%s
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W interfaces.c.extensions%s  i-cexten.ads	i-cexten.ali
+W interfaces.c.pointers%s
+W interfaces.c.strings%s  i-cstrin.adb		i-cstrin.ali
+W system%s		system.ads		system.ali
+Z system.exception_table%s  s-exctab.adb	s-exctab.ali
+Z system.parameters%s	s-parame.adb		s-parame.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20180524051736 76789da1 ada%s
+D a-except.ads		20180524051736 291912d5 ada.exceptions%s
+D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20180524051736 5ab55268 interfaces%s
+D i-c.ads		20180524051736 5421119b interfaces.c%s
+D i-cexten.ads		20180524051736 47f3eec4 interfaces.c.extensions%s
+D i-cpoint.ads		20180524051738 ee8a93ec interfaces.c.pointers%s
+D i-cpoint.adb		20180524051738 d5172521 interfaces.c.pointers%b
+D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
+D soundio.ads		20190407175400 3e4f30d2 soundio%s
+D soundio.adb		20190407175400 d4009294 soundio%b
+D system.ads		20180524051738 32a08138 system%s
+D s-exctab.ads		20180524051738 54135002 system.exception_table%s
+D s-parame.ads		20180524051738 48ec542b system.parameters%s
+D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
+D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
+D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
+D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
+X 1 ada.ads
+16K9*Ada 20e8 11|1r6 15r41
+X 3 a-unccon.ads
+17+9 Source 11|16r10
+18+9 Target 11|16r36
+20v14*Unchecked_Conversion 11|1w10 15r45
+X 4 interfac.ads
+38K9*Interfaces 184e15 10|3r6 3r24 4r6 6r6 7r6 227r14 242r30 259r45 281r18
+. 283r53 284r54 290r12 291r14 326r28 347r14 355r35 382r47 385r61 412r63 415r37
+. 455r60 574r56 583r14
+X 5 i-c.ads
+18K20*C 230e17 10|3w17 3r35 4r17 6r17 7r17 227r25 242r41 259r56 281r29 283r64
+. 284r65 290r23 291r25 326r39 347r25 355r46 382r58 385r72 412r74 415r48 455r71
+. 574r67 583r25
+35I9*int<integer> 10|228r31 234r21 235r21 239r31 243r7 249r22 266r15 272r17
+. 278r79 294r30 297r30 300r35 301r37 306r27 307r29 314r36 321r31 322r31 325r87
+. 328r36 329r36 330r36 337r29 343r20 344r20 346r82 349r33 350r34 351r30 358r34
+. 361r34 364r34 382r35 388r65 391r64 415r79 418r49 421r49 424r57 427r128
+. 435r32 437r32 440r92 443r67 446r75 446r87 451r23 452r21 452r33 458r70 461r71
+. 464r69 467r70 470r78 473r79 494r88 497r87 497r99 515r25 521r83 524r101
+. 527r111 536r72 539r73 545r28 545r40 548r76 551r98 554r108 563r28 570r56
+. 578r57 587r57 591r56 595r56 11|11r17 35r15
+56I9*ptrdiff_t<long_long_integer> 11|23r20 38r54
+65F9*double<long_float> 10|302r38 303r38 304r42 316r36 339r34 527r96 554r93
+X 6 i-cexten.ads
+37K22*Extensions 468e28 10|6w19 305r24 327r36 348r35 394r61 409r130 430r91
+. 482r106 488r101 491r125 494r100 524r77 551r74
+59B9*bool<boolean> 10|305r35 327r47 348r46 394r72 409r141 430r102 482r117
+. 488r112 491r136 494r111 524r88 551r85
+X 7 i-cpoint.ads
+44k22*Pointers 102e26 10|7w19 242r43 259r58
+47P9*Pointer(character) 10|245r36[242] 262r66[259]
+68V14*"+"{47P9[10|242]} 11|23s18[10|242] 38s52[10|259]
+X 9 i-cstrin.ads
+36K22*Strings 106e25 10|4w19 227r27 281r31 283r66 284r67 290r25 291r27 326r41
+. 347r27 355r48 382r60 385r74 412r76 415r50 455r73 574r69 583r27
+47P9*chars_ptr 10|227r35 281r39 283r74 284r75 290r33 291r35 326r49 347r35
+. 355r56 382r68 385r82 412r84 415r58 455r81 574r77 583r35
+X 10 soundio.ads
+9K9*Soundio 602l5 602e12 11|3b14 54l5 54t12
+11N4*SOUNDIO_MAX_CHANNELS
+13X4*SoundIo_Exception 11|50r16
+15E9*SoundIo_Error 31e28 32r26 175r35 373r59 376r94 506r75 509r76 515r37
+. 518r80 11|47r35
+16n7*Error_None{15E9} 11|49r19
+17n7*Error_NoMem{15E9}
+18n7*Error_InitAudioBackend{15E9}
+19n7*Error_SystemResources{15E9}
+20n7*Error_OpeningDevice{15E9}
+21n7*Error_NoSuchDevice{15E9}
+22n7*Error_Invalid{15E9}
+23n7*Error_BackendUnavailable{15E9}
+24n7*Error_Streaming{15E9}
+25n7*Error_IncompatibleDevice{15E9}
+26n7*Error_NoSuchClient{15E9}
+27n7*Error_IncompatibleBackend{15E9}
+28n7*Error_BackendDisconnected{15E9}
+29n7*Error_Interrupted{15E9}
+30n7*Error_Underflow{15E9}
+31n7*Error_EncodingString{15E9}
+34E9*SoundIo_Channel_Id 103e24 104r26 225r54 412r36 415r91 427r101
+35n7*Channel_Id_Invalid{34E9}
+36n7*Channel_Id_FrontLeft{34E9}
+37n7*Channel_Id_FrontRight{34E9}
+38n7*Channel_Id_FrontCenter{34E9}
+39n7*Channel_Id_Lfe{34E9}
+40n7*Channel_Id_BackLeft{34E9}
+41n7*Channel_Id_BackRight{34E9}
+42n7*Channel_Id_FrontLeftCenter{34E9}
+43n7*Channel_Id_FrontRightCenter{34E9}
+44n7*Channel_Id_BackCenter{34E9}
+45n7*Channel_Id_SideLeft{34E9}
+46n7*Channel_Id_SideRight{34E9}
+47n7*Channel_Id_TopCenter{34E9}
+48n7*Channel_Id_TopFrontLeft{34E9}
+49n7*Channel_Id_TopFrontCenter{34E9}
+50n7*Channel_Id_TopFrontRight{34E9}
+51n7*Channel_Id_TopBackLeft{34E9}
+52n7*Channel_Id_TopBackCenter{34E9}
+53n7*Channel_Id_TopBackRight{34E9}
+54n7*Channel_Id_BackLeftCenter{34E9}
+55n7*Channel_Id_BackRightCenter{34E9}
+56n7*Channel_Id_FrontLeftWide{34E9}
+57n7*Channel_Id_FrontRightWide{34E9}
+58n7*Channel_Id_FrontLeftHigh{34E9}
+59n7*Channel_Id_FrontCenterHigh{34E9}
+60n7*Channel_Id_FrontRightHigh{34E9}
+61n7*Channel_Id_TopFrontLeftCenter{34E9}
+62n7*Channel_Id_TopFrontRightCenter{34E9}
+63n7*Channel_Id_TopSideLeft{34E9}
+64n7*Channel_Id_TopSideRight{34E9}
+65n7*Channel_Id_LeftLfe{34E9}
+66n7*Channel_Id_RightLfe{34E9}
+67n7*Channel_Id_Lfe2{34E9}
+68n7*Channel_Id_BottomCenter{34E9}
+69n7*Channel_Id_BottomLeftCenter{34E9}
+70n7*Channel_Id_BottomRightCenter{34E9}
+71n7*Channel_Id_MsMid{34E9}
+72n7*Channel_Id_MsSide{34E9}
+73n7*Channel_Id_AmbisonicW{34E9}
+74n7*Channel_Id_AmbisonicX{34E9}
+75n7*Channel_Id_AmbisonicY{34E9}
+76n7*Channel_Id_AmbisonicZ{34E9}
+77n7*Channel_Id_XyX{34E9}
+78n7*Channel_Id_XyY{34E9}
+79n7*Channel_Id_HeadphonesLeft{34E9}
+80n7*Channel_Id_HeadphonesRight{34E9}
+81n7*Channel_Id_ClickTrack{34E9}
+82n7*Channel_Id_ForeignLanguage{34E9}
+83n7*Channel_Id_HearingImpaired{34E9}
+84n7*Channel_Id_Narration{34E9}
+85n7*Channel_Id_Haptic{34E9}
+86n7*Channel_Id_DialogCentricMix{34E9}
+87n7*Channel_Id_Aux{34E9}
+88n7*Channel_Id_Aux0{34E9}
+89n7*Channel_Id_Aux1{34E9}
+90n7*Channel_Id_Aux2{34E9}
+91n7*Channel_Id_Aux3{34E9}
+92n7*Channel_Id_Aux4{34E9}
+93n7*Channel_Id_Aux5{34E9}
+94n7*Channel_Id_Aux6{34E9}
+95n7*Channel_Id_Aux7{34E9}
+96n7*Channel_Id_Aux8{34E9}
+97n7*Channel_Id_Aux9{34E9}
+98n7*Channel_Id_Aux10{34E9}
+99n7*Channel_Id_Aux11{34E9}
+100n7*Channel_Id_Aux12{34E9}
+101n7*Channel_Id_Aux13{34E9}
+102n7*Channel_Id_Aux14{34E9}
+103n7*Channel_Id_Aux15{34E9}
+106E9*SoundIo_Channel_Layout_Id 132e35 133r26
+107n7*Channel_Layout_Id_Mono{106E9}
+108n7*Channel_Layout_Id_Stereo{106E9}
+109n7*Channel_Layout_Id_2Point1{106E9}
+110n7*Channel_Layout_Id_3Point0{106E9}
+111n7*Channel_Layout_Id_3Point0Back{106E9}
+112n7*Channel_Layout_Id_3Point1{106E9}
+113n7*Channel_Layout_Id_4Point0{106E9}
+114n7*Channel_Layout_Id_Quad{106E9}
+115n7*Channel_Layout_Id_QuadSide{106E9}
+116n7*Channel_Layout_Id_4Point1{106E9}
+117n7*Channel_Layout_Id_5Point0Back{106E9}
+118n7*Channel_Layout_Id_5Point0Side{106E9}
+119n7*Channel_Layout_Id_5Point1{106E9}
+120n7*Channel_Layout_Id_5Point1Back{106E9}
+121n7*Channel_Layout_Id_6Point0Side{106E9}
+122n7*Channel_Layout_Id_6Point0Front{106E9}
+123n7*Channel_Layout_Id_Hexagonal{106E9}
+124n7*Channel_Layout_Id_6Point1{106E9}
+125n7*Channel_Layout_Id_6Point1Back{106E9}
+126n7*Channel_Layout_Id_6Point1Front{106E9}
+127n7*Channel_Layout_Id_7Point0{106E9}
+128n7*Channel_Layout_Id_7Point0Front{106E9}
+129n7*Channel_Layout_Id_7Point1{106E9}
+130n7*Channel_Layout_Id_7Point1Wide{106E9}
+131n7*Channel_Layout_Id_7Point1WideBack{106E9}
+132n7*Channel_Layout_Id_Octagonal{106E9}
+135E9*SoundIo_Backend 142e21 143r26 280r33 376r70 385r37 391r76 394r37
+136n7*Backend_None{135E9}
+137n7*Backend_Jack{135E9}
+138n7*Backend_PulseAudio{135E9}
+139n7*Backend_Alsa{135E9}
+140n7*Backend_CoreAudio{135E9}
+141n7*Backend_Wasapi{135E9}
+142n7*Backend_Dummy{135E9}
+145E9*SoundIo_Device_Aim 147e24 148r26 292r21
+146n7*Device_AimInput{145E9}
+147n7*Device_AimOutput{145E9}
+150E9*SoundIo_Format 169e24 170r26 177r33 180r33 183r33 186r33 189r33 192r33
+. 195r37 198r37 201r33 204r33 207r33 210r33 213r33 216r33 219r37 222r37 296r24
+. 298r32 313r36 336r24 443r44 446r43 450r16 455r37 488r78
+151n7*Format_Invalid{150E9}
+152n7*Format_S8{150E9}
+153n7*Format_U8{150E9}
+154n7*Format_S16LE{150E9} 178r37 202r55
+155n7*Format_S16BE{150E9} 178r55 202r37
+156n7*Format_U16LE{150E9} 181r37 205r57
+157n7*Format_U16BE{150E9} 181r55 205r39
+158n7*Format_S24LE{150E9} 184r37 208r55
+159n7*Format_S24BE{150E9} 184r55 208r37
+160n7*Format_U24LE{150E9} 187r37 211r55
+161n7*Format_U24BE{150E9} 187r55 211r37
+162n7*Format_S32LE{150E9} 190r37 214r55
+163n7*Format_S32BE{150E9} 190r55 214r37
+164n7*Format_U32LE{150E9} 193r37 217r55
+165n7*Format_U32BE{150E9} 193r55 217r37
+166n7*Format_Float32LE{150E9} 196r37 220r59
+167n7*Format_Float32BE{150E9} 196r59 220r37
+168n7*Format_Float64LE{150E9} 199r37 223r59
+169n7*Format_Float64BE{150E9} 199r59 223r37
+173e4*DFE=173:42{12|91E9} 178r10 181r10 184r10 187r10 190r10 193r10 196r10
+. 199r10 202r10 205r10 208r10 211r10 214r10 217r10 220r10 223r10
+175U14*Check_Error 175>27 11|47b14 52l8 52t19
+175e27 Error{15E9} 11|47b27 49r10
+177V13*Format_S16NE{150E9}
+180V13*Format_U16NE{150E9}
+183V13*Format_S24NE{150E9}
+186V13*Format_U24NE{150E9}
+189V13*Format_S32NE{150E9}
+192V13*Format_U32NE{150E9}
+195V13*Format_Float32NE{150E9}
+198V13*Format_Float64NE{150E9}
+201V13*Format_S16FE{150E9}
+204V13*Format_U16FE{150E9}
+207V13*Format_S24FE{150E9}
+210V13*Format_U24FE{150E9}
+213V13*Format_S32FE{150E9}
+216V13*Format_U32FE{150E9}
+219V13*Format_Float32FE{150E9}
+222V13*Format_Float64FE{150E9}
+225A9*Channels_Array(34E9)<integer> 229r26
+226R9*SoundIo_Channel_Layout 230e14 231r39 293r24 295r32 315r36 338r24 409r55
+. 409r99 421r77 424r85 427r67 430r60 434r43 436r43 437r60 440r53 491r94
+227p7*Name{9|47P9}
+228i7*Channel_Count{5|35I9}
+229a7*Channels{225A9}
+233R9*SoundIo_Sample_Rate_Range 236e14 237r39 299r29
+234i7*min{5|35I9}
+235i7*max{5|35I9}
+239A9*Chars_Array(character)<5|35I9> 240r26 243r23
+242K12*Chars_Ptrs[7|44] 245r25 11|20r11
+245P12*Chars_Ptr{7|47P9[242]} 248r14 11|18r31
+247R9*SoundIo_Channel_Area 250e14 251r39 254r43 257r14 260r16 266r27 271r17
+. 11|10r17 35r27
+248p7*Ptr{245P12} 257m39 11|23r14
+249i7*Step{5|35I9} 257m52 11|23r44
+253A9*Soundio_Channel_Area_Array(247R9)<integer> 255r26 260r38
+257r4*No_Area{247R9} 260r66
+259K12*Soundio_Channel_Area_Ptrs[7|44] 262r40 11|37r11
+262P12*SoundIo_Channel_Area_Ptr{7|47P9[259]} 265r15 514r19 544r19 11|34r15
+. 38r18
+264V13*Get_Area{247R9} 265>7 266>7 11|33b13 41l8 41t16
+265p7 Areas{262P12} 11|34b7 38r46
+266i7 Index{5|35I9} 11|35b7 38r65
+269+12 Sample_Type 273r17 11|12r17 14r45
+270u14*Write_Sample 271>7 272>7 273>7 11|9b14 27l8 27t20
+271r7 Area{247R9} 11|10b7 23r9 23r39
+272i7 Index{5|35I9} 11|11b7 23r31
+273*7 Sample{269+12} 11|12b7 26r28
+275R9*SoundIo 285e14
+276m7*userdata{12|67M9}
+277p7*on_devices_change
+277p45 arg1(275R9)
+278p7*on_backend_disconnect
+278p49 arg1(275R9)
+278i72 arg2{5|35I9}
+279p7*on_events_signal
+279p44 arg1(275R9)
+280e7*current_backend{135E9}
+281p7*app_name{9|47P9}
+282p7*emit_rtprio_warning
+283p7*jack_info_callback
+283p46 arg1{9|47P9}
+284p7*jack_error_callback
+284p47 arg1{9|47P9}
+288R9*SoundIo_Device 308e14 309r39 312r35 335r23 464r88 467r89 476r42 479r44
+. 482r47 482r83 485r59 488r53 491r53 494r58 497r57 500r47 530r46
+289p7*The_Soundio(275R9)
+290p7*id{9|47P9}
+291p7*name{9|47P9}
+292e7*aim{145E9}
+293p7*layouts(226R9)
+294i7*layout_count{5|35I9}
+295r7*current_layout{226R9}
+296p7*formats(150E9)
+297i7*format_count{5|35I9}
+298e7*current_format{150E9}
+299p7*sample_rates(233R9)
+300i7*sample_rate_count{5|35I9}
+301i7*sample_rate_current{5|35I9}
+302f7*software_latency_min{5|65F9}
+303f7*software_latency_max{5|65F9}
+304f7*software_latency_current{5|65F9}
+305b7*is_raw{6|59E9}
+306i7*ref_count{5|35I9}
+307i7*probe_error{5|35I9}
+311R9*SoundIo_Out_Stream 331e14
+312p7*Device(288R9)
+313e7*Format{150E9}
+314i7*Sample_Rate{5|35I9}
+315r7*Layout{226R9}
+316f7*Software_Latency{5|65F9}
+317m7*User_Data{12|67M9}
+319p7*Write_Callback
+320p13 Out_Stream(311R9)
+321i13 Frame_Count_Min{5|35I9}
+322i13 Frame_Count_Max{5|35I9}
+324p7*Underflow_Callback
+324p46 arg1(311R9)
+325p7*Error_Callback
+325p46 arg1(311R9)
+325i80 arg2{5|35I9}
+326p7*Name{9|47P9}
+327b7*Non_Terminal_Hint{6|59E9}
+328i7*Bytes_Per_Frame{5|35I9}
+329i7*Bytes_Per_Sample{5|35I9}
+330i7*Layout_Error{5|35I9}
+334R9*SoundIo_In_Stream 352e14
+335p7*Device(288R9)
+336e7*format{150E9}
+337i7*sample_rate{5|35I9}
+338r7*layout{226R9}
+339f7*software_latency{5|65F9}
+340m7*userdata{12|67M9}
+341p7*read_callback
+342p13 arg1(334R9)
+343i13 arg2{5|35I9}
+344i13 arg3{5|35I9}
+345p7*overflow_callback
+345p45 arg1(334R9)
+346p7*error_callback
+346p42 arg1(334R9)
+346i75 arg2{5|35I9}
+347p7*name{9|47P9}
+348b7*non_terminal_hint{6|59E9}
+349i7*bytes_per_frame{5|35I9}
+350i7*bytes_per_sample{5|35I9}
+351i7*layout_error{5|35I9}
+355V13*Version_String{9|47P9} 356b<c,soundio_version_string>22
+358V13*Version_Major{5|35I9} 359b<c,soundio_version_major>22
+361V13*Version_Minor{5|35I9} 362b<c,soundio_version_minor>22
+364V13*Version_Patch{5|35I9} 365b<c,soundio_version_patch>22
+367V13*Create(275R9) 368b<c,soundio_create>22
+370U14*Destroy 370^23 371b<c,soundio_destroy>22
+370p23 The_Soundio(275R9)
+373V13*Connect{15E9} 373^22 374b<c,soundio_connect>22
+373p22 The_Soundio(275R9)
+376V13*Connect_Backend{15E9} 376^30 376>60 377b<c,soundio_connect_backend>22
+376p30 The_Soundio(275R9)
+376e60 Backend{135E9}
+379U14*Disconnect 379^26 380b<c,soundio_disconnect>22
+379p26 The_Soundio(275R9)
+382V13*Error_String{9|47P9} 382>27 383b<c,soundio_strerror>22
+382i27 Error{5|35I9}
+385V13*Backend_Name{9|47P9} 385>27 386b<c,soundio_backend_name>22
+385e27 Backend{135E9}
+388V13*Backend_Count{5|35I9} 388^28 389b<c,soundio_backend_count>22
+388p28 The_Soundio(275R9)
+391V13*Get_Backend{135E9} 391^26 391>56 392b<c,soundio_get_backend>22
+391p26 The_Soundio(275R9)
+391i56 index{5|35I9}
+394V13*Have_Backend{6|59E9} 394>27 395b<c,soundio_have_backend>22
+394e27 Backend{135E9}
+397U14*Flush_Events 397^28 398b<c,soundio_flush_events>22
+397p28 The_Soundio(275R9)
+400U14*Wait_Events 400^27 401b<c,soundio_wait_events>22
+400p27 The_Soundio(275R9)
+403U14*Wake_Up 403^23 404b<c,soundio_wakeup>22
+403p23 The_Soundio(275R9)
+406U14*Force_Device_Scan 406^33 407b<c,soundio_force_device_scan>22
+406p33 The_Soundio(275R9)
+409V13*Channel_Layout_Equal{6|59E9} 409^35 409^79 410b<c,soundio_channel_layout_equal>22
+409p35 L(226R9)
+409p79 R(226R9)
+412V13*Get_Channel_Name{9|47P9} 412>31 413b<c,soundio_get_channel_name>22
+412e31 id{34E9}
+415V13*Parse_Channel_Id{34E9} 415>31 415>69 416b<c,soundio_parse_channel_id>22
+415p31 str{9|47P9}
+415i69 str_len{5|35I9}
+418V13*Channel_Layout_Builtin_Count{5|35I9} 419b<c,soundio_channel_layout_builtin_count>22
+421V13*Channel_Layout_Get_Builtin(226R9) 421>41 422b<c,soundio_channel_layout_get_builtin>22
+421i41 index{5|35I9}
+424V13*Channel_Layout_Get_Default(226R9) 424>41 425b<c,soundio_channel_layout_get_default>22
+424i41 channel_count{5|35I9}
+427V13*Channel_Layout_Find_Channel{5|35I9} 427^42 427>91 428b<c,soundio_channel_layout_find_channel>22
+427p42 layout(226R9)
+427e91 channel{34E9}
+430V13*Channel_Layout_Detect_Builtin{6|59E9} 430^44 431b<c,soundio_channel_layout_detect_builtin>22
+430p44 layout(226R9)
+433V13*Best_Matching_Channel_Layout(226R9) 434^7 435>7 436^7 437>7 438b<c,soundio_best_matching_channel_layout>22
+434p7 preferred_layouts(226R9)
+435i7 preferred_layout_count{5|35I9}
+436p7 available_layouts(226R9)
+437i7 available_layout_count{5|35I9}
+440U14*Sort_Channel_Layouts 440^36 440>77 441b<c,soundio_sort_channel_layouts>22
+440p36 layouts(226R9)
+440i77 layout_count{5|35I9}
+443V13*Get_Bytes_Per_Sample{5|35I9} 443>35 444b<c,soundio_get_bytes_per_sample>22
+443e35 format{150E9}
+446V13*Get_Bytes_Per_Frame{5|35I9} 446>34 446>59 447b<cpp,_ZL27soundio_get_bytes_per_frame13SoundIoFormati>24
+446e34 format{150E9}
+446i59 channel_count{5|35I9}
+449V13*Get_Bytes_Per_Second{5|35I9} 450>7 451>7 452>7 453b<cpp,_ZL28soundio_get_bytes_per_second13SoundIoFormatii>24
+450e7 format{150E9}
+451i7 channel_count{5|35I9}
+452i7 sample_rate{5|35I9}
+455V13*Format_String{9|47P9} 455>28 456b<c,soundio_format_string>22
+455e28 format{150E9}
+458V13*Input_Device_Count{5|35I9} 458^33 459b<c,soundio_input_device_count>22
+458p33 The_Soundio(275R9)
+461V13*Output_Device_Count{5|35I9} 461^34 462b<c,soundio_output_device_count>22
+461p34 The_Soundio(275R9)
+464V13*Get_Input_Device(288R9) 464^31 464>61 465b<c,soundio_get_input_device>22
+464p31 The_Soundio(275R9)
+464i61 index{5|35I9}
+467V13*Get_Output_Device(288R9) 467^32 467>62 468b<c,soundio_get_output_device>22
+467p32 The_Soundio(275R9)
+467i62 index{5|35I9}
+470V13*Default_Onput_Device_Index{5|35I9} 470^41 471b<c,soundio_default_input_device_index>22
+470p41 The_Soundio(275R9)
+473V13*Default_Output_Device_Index{5|35I9} 473^42 474b<c,soundio_default_output_device_index>22
+473p42 The_Soundio(275R9)
+476U14*Device_Ref 476^26 477b<c,soundio_device_ref>22
+476p26 Device(288R9)
+479U14*Device_Unref 479^28 480b<c,soundio_device_unref>22
+479p28 Device(288R9)
+482V13*Device_Equal{6|59E9} 482^27 482^63 483b<c,soundio_device_equal>22
+482p27 L(288R9)
+482p63 R(288R9)
+485U14*Device_Sort_Channel_Layouts 485^43 486b<c,soundio_device_sort_channel_layouts>22
+485p43 Device(288R9)
+488V13*Device_Supports_Format{6|59E9} 488^37 488>69 489b<c,soundio_device_supports_format>22
+488p37 Device(288R9)
+488e69 format{150E9}
+491V13*Device_Supports_Layout{6|59E9} 491^37 491^69 492b<c,soundio_device_supports_layout>22
+491p37 Device(288R9)
+491p69 layout(226R9)
+494V13*Device_Supports_Sample_Rate{6|59E9} 494^42 494>74 495b<c,soundio_device_supports_sample_rate>22
+494p42 Device(288R9)
+494i74 sample_rate{5|35I9}
+497V13*Device_Nearest_Sample_Rate{5|35I9} 497^41 497>73 498b<c,soundio_device_nearest_sample_rate>22
+497p41 Device(288R9)
+497i73 sample_rate{5|35I9}
+500V13*Outstream_Create(311R9) 500^31 501b<c,soundio_outstream_create>22
+500p31 Device(288R9)
+503U14*Outstream_Destroy 503^33 504b<c,soundio_outstream_destroy>22
+503p33 outstream(311R9)
+506V13*Outstream_Open{15E9} 506^29 507b<c,soundio_outstream_open>22
+506p29 outstream(311R9)
+509V13*Outstream_Start{15E9} 509^30 510b<c,soundio_outstream_start>22
+509p30 outstream(311R9)
+512V13*Outstream_Begin_Write{15E9} 513^7 514<7 515<7 516b<c,soundio_outstream_begin_write>22
+513p7 outstream(311R9)
+514p7 Areas{262P12}
+515i7 Frame_Count{5|35I9}
+518V13*Outstream_End_Write{15E9} 518^34 519b<c,soundio_outstream_end_write>22
+518p34 outstream(311R9)
+521V13*Outstream_Clear_Buffer{5|35I9} 521^37 522b<c,soundio_outstream_clear_buffer>22
+521p37 outstream(311R9)
+524V13*Outstream_Pause{5|35I9} 524^30 524>69 525b<c,soundio_outstream_pause>22
+524p30 outstream(311R9)
+524b69 pause{6|59E9}
+527V13*Outstream_Get_Latency{5|35I9} 527^36 527^75 528b<c,soundio_outstream_get_latency>22
+527p36 outstream(311R9)
+527p75 out_latency(5|65F9)
+530V13*Instream_Create(334R9) 530^30 531b<c,soundio_instream_create>22
+530p30 Device(288R9)
+533U14*Instream_Destroy 533^32 534b<c,soundio_instream_destroy>22
+533p32 Instream(334R9)
+536V13*Instream_Open{5|35I9} 536^28 537b<c,soundio_instream_open>22
+536p28 Instream(334R9)
+539V13*Instream_Start{5|35I9} 539^29 540b<c,soundio_instream_start>22
+539p29 Instream(334R9)
+542V13*Instream_Begin_Read{5|35I9} 543^7 544<7 545^7 546b<c,soundio_instream_begin_read>22
+543p7 Instream(334R9)
+544p7 Areas{262P12}
+545p7 Frame_Count(5|35I9)
+548V13*Instream_End_Read{5|35I9} 548^32 549b<c,soundio_instream_end_read>22
+548p32 Instream(334R9)
+551V13*Instream_Pause{5|35I9} 551^29 551>66 552b<c,soundio_instream_pause>22
+551p29 Instream(334R9)
+551b66 pause{6|59E9}
+554V13*Instream_Get_Latency{5|35I9} 554^35 554^72 555b<c,soundio_instream_get_latency>22
+554p35 Instream(334R9)
+554p72 out_latency(5|65F9)
+558R9*SoundIo_Ring_Buffer 559r39 563r47 566r56 570r28 574r28 578r28 582r28
+. 587r28 591r28 595r28 599r28
+561V13*Ring_Buffer_Create(558R9) 562^7 563>7 564b<c,soundio_ring_buffer_create>22
+562p7 The_Soundio(275R9)
+563i7 Requested_Capacity{5|35I9}
+566U14*Ring_Buffer_Destroy 566^35 567b<c,soundio_ring_buffer_destroy>22
+566p35 Ring_Buffer(558R9)
+569V13*Ring_Buffer_Capacity{5|35I9} 570^7 571b<c,soundio_ring_buffer_capacity>22
+570p7 Ring_Buffer(558R9)
+573V13*Ring_Buffer_Write_Ptr{9|47P9} 574^7 575b<c,soundio_ring_buffer_write_ptr>22
+574p7 Ring_Buffer(558R9)
+577U14*Ring_Buffer_Advance_Write_Ptr 578^7 578>49 579b<c,soundio_ring_buffer_advance_write_ptr>22
+578p7 Ring_Buffer(558R9)
+578i49 count{5|35I9}
+581V13*Ring_Buffer_Read_Ptr{9|47P9} 582^7 584b<c,soundio_ring_buffer_read_ptr>22
+582p7 Ring_Buffer(558R9)
+586U14*Ring_Buffer_Advance_Read_Ptr 587^7 587>49 588b<c,soundio_ring_buffer_advance_read_ptr>22
+587p7 Ring_Buffer(558R9)
+587i49 count{5|35I9}
+590V13*Ring_Buffer_Fill_Count{5|35I9} 591^7 592b<c,soundio_ring_buffer_fill_count>22
+591p7 Ring_Buffer(558R9)
+594V13*Ring_Buffer_Free_Count{5|35I9} 595^7 596b<c,soundio_ring_buffer_free_count>22
+595p7 Ring_Buffer(558R9)
+598U14*Ring_Buffer_Clear 599^7 600b<c,soundio_ring_buffer_clear>22
+599p7 Ring_Buffer(558R9)
+X 11 soundio.adb
+14P12 Sample_Type_Access(10|269+12) 16r46 19r23
+15V16 Address_To_Access[3|20]{14P12} 24s24
+18p7 Sample_Access_As_Char{10|245P12} 22m7 25r10
+19p7 Sample_Access{14P12} 24m7 26r7
+38p7 Area_Ptr{10|262P12} 40r14
+X 12 system.ads
+37K9*System 10|5w6 172r8 173r10 173r35 276r18 317r28 340r18 11|16r20 12|200e11
+67M9*Address 10|276r25 317r35 340r25 11|16r27
+91E9*Bit_Order 10|173r17 12|91e57
+91n41*Low_Order_First{91E9} 10|178r16 181r16 184r16 187r16 190r16 193r16
+. 196r16 199r16 202r16 205r18 208r16 211r16 214r16 217r16 220r16 223r16
+92e4*Default_Bit_Order{91E9} 10|173r42
+

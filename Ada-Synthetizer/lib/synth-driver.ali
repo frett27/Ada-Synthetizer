@@ -1,0 +1,145 @@
+V "GNAT Lib v2018"
+A -gnatA
+A -g
+A -gnato
+A -gnatwa
+A -gnata
+A -gnatQ
+A -gnat12
+A -fstack-check=specific
+A -gnatya
+A -gnatyA
+A -gnatyb
+A -gnatyB
+A -gnatyc
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyi
+A -gnatyI
+A -gnatyk
+A -gnatyl
+A -gnatyn
+A -gnatyp
+A -gnatyr
+A -gnatyS
+A -gnatym
+A -gnatyt
+A -gnatyu
+A -gnatyx
+A -mtune=generic
+A -march=x86-64
+P ZX
+
+RN
+RV NO_DISPATCH
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U synth.driver%b	synth-driver.adb	2ef1b2d2 NE OO PK
+W synth%s		synth.adb		synth.ali
+W synth.driver%s	synth-driver.adb	synth-driver.ali
+W synth.driver.cxsoundio%s  synth-driver-cxsoundio.adb  synth-driver-cxsoundio.ali
+
+U synth.driver%s	synth-driver.ads	717e3cd4 EE OO PF PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W synth%s		synth.adb		synth.ali
+Z system%s		system.ads		system.ali
+Z system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+
+D ada.ads		20180524051736 76789da1 ada%s
+D a-except.ads		20180524051736 291912d5 ada.exceptions%s
+D a-finali.ads		20180524051738 bf4f806b ada.finalization%s
+D a-reatim.ads		20180524051738 0240fc73 ada.real_time%s
+D a-stream.ads		20180524051736 119b8fb3 ada.streams%s
+D a-tags.ads		20180524051738 491b781d ada.tags%s
+D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20180524051736 5ab55268 interfaces%s
+D i-c.ads		20180524051736 5421119b interfaces.c%s
+D i-cexten.ads		20180524051736 47f3eec4 interfaces.c.extensions%s
+D i-cpoint.ads		20180524051738 ee8a93ec interfaces.c.pointers%s
+D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
+D soundio.ads		20190407175400 3e4f30d2 soundio%s
+D synth.ads		20191207182936 a8a70baa synth%s
+D synth-driver.ads	20191012065612 d9d9377e synth.driver%s
+D synth-driver.adb	20191019132904 2cfefda9 synth.driver%b
+D synth-driver-cxsoundio.ads  20191012065612 dbd67805 synth.driver.cxsoundio%s
+D system.ads		20180524051738 32a08138 system%s
+D s-atacco.ads		20180524051738 4c36d12f system.address_to_access_conversions%s
+D s-exctab.ads		20180524051738 54135002 system.exception_table%s
+D s-finmas.ads		20180524051738 7811a767 system.finalization_masters%s
+D s-finroo.ads		20180524051738 4ff27390 system.finalization_root%s
+D s-memory.ads		20180524051736 597d6634 system.memory%s
+D s-multip.ads		20180524051736 38ac9f73 system.multiprocessors%s
+D s-osinte.ads		20180524051738 2e5b26a9 system.os_interface%s
+D s-parame.ads		20180524051738 48ec542b system.parameters%s
+D s-pooglo.ads		20180524051736 ede33ef8 system.pool_global%s
+D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20180524051736 a7318a92 system.soft_links%s
+D s-stache.ads		20180524051738 a37c21ec system.stack_checking%s
+D s-stausa.ads		20180524051736 017a0a05 system.stack_usage%s
+D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
+D s-stalib.adb		20180524051736 f2fe2716 system.standard_library%b
+D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20180524051736 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20180524051736 b16154c2 system.storage_pools%s
+D s-stratt.ads		20180524051736 aedef97e system.stream_attributes%s
+D s-tasinf.ads		20180524051738 601f6b72 system.task_info%s
+D s-taspri.ads		20180524051738 6c1d93d4 system.task_primitives%s
+D s-taprop.ads		20180524051738 1dd2e1b6 system.task_primitives.operations%s
+D s-taskin.ads		20180524051738 1d8c1ccb system.tasking%s
+D s-taprob.ads		20180524051738 acd6094d system.tasking.protected_objects%s
+D s-tpoben.ads		20180524051738 60ad3dae system.tasking.protected_objects.entries%s
+D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20180524051736 34867c83 system.unsigned_types%s
+D s-win32.ads		20180524051736 b7f96285 system.win32%s
+X 14 synth.ads
+27K9*Synth 91e10 15|30r9 64r5 16|24r6 26r14 31r12 36r5
+35F12*Frequency_Type{float} 15|55r32 62r11 16|29r32
+75I9*PCM_Frame<short_integer>
+81A9*PCM_Frame_Array(75I9)<integer>
+82P9*PCM_Frame_Array_Access(81A9) 15|42r16
+X 15 synth-driver.ads
+30K15*Driver 14|27k9 15|64l11 64e17 16|24r12 26b20 31r18 36l11 36t17
+32H9*Sound_Driver 32e52 34r43 40p14 41r23 48p14 48r32 61p13 61r37
+34P9*Sound_Driver_Access(32R9) 54r33 16|28r36
+40x14*Play 41=7 42>7
+41r7 Driver{32R9}
+42p7 Buffer{14|82P9}
+48x14*Close 48=21
+48r21 S{32R9}
+54U14*Open 54<20 55>20 16|28b17 34l11 34t15
+54p20 Driver{34P9} 16|28b23 32m33
+55f20 Frequency{14|35F12} 16|29b20 33r36
+61y13*Get_Frequency{14|35F12} 61>28
+61r28 Driver{32R9}
+X 17 synth-driver-cxsoundio.ads
+28K22*CxSoundio 16|24w19 31r25 17|95e27
+38U14*Open 16|32s17
+38p20 Driver{15|34P9} 16|32r23
+39f20 Frequency{14|35F12} 16|33r23
+X 18 system.ads
+67M9*Address
+X 23 s-memory.ads
+53V13*Alloc{18|67M9} 103i<c,__gnat_malloc>22
+68U14*Free 104i<c,__gnat_free>22
+76V13*Realloc{18|67M9} 105i<c,__gnat_realloc>22
+X 31 s-stausa.ads
+203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
+268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
+X 33 s-stalib.adb
+93U14 Break_Start 94i<c,__gnat_break_start>22
+

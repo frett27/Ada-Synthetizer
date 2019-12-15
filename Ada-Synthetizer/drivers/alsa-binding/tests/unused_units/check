@@ -1,0 +1,50 @@
+#! /bin/bash
+#-----------------------------------------------------------------------------
+#--  Set current working directory:
+
+if cd "$(dirname "$0")"; then
+   true
+else
+   echo "Could not make '$(dirname "$0")' the current working directory." 1>&2
+   exit 1
+fi
+
+#-----------------------------------------------------------------------------
+#--  Temporary storage:
+
+compiled_source_files=$(mktemp)
+project_source_files=$(mktemp)
+
+#-----------------------------------------------------------------------------
+#--  List compiled source files:
+
+grep --no-filename '^D' ../../obj/*.ali \
+  | cut -c3- \
+  | cut -f1 \
+  | cut -d' ' -f1 \
+  | LANG=C sort -u \
+  > ${compiled_source_files}
+
+#-----------------------------------------------------------------------------
+#--  List project source files:
+
+find ../../src -type f -name '*.ad[sb]' \
+  | perl -lpe 's!^.+/([^/]+[.](ads|adb))$!$1!;' \
+  | LANG=C sort -u \
+  > ${project_source_files}
+
+#-----------------------------------------------------------------------------
+
+if diff ${compiled_source_files} ${project_source_files} | grep '^> ' 1>/dev/null; then
+   echo "Unused units:"
+   diff ${compiled_source_files} ${project_source_files} | grep '^> '
+   result=1
+else
+   result=0
+fi
+
+rm -f ${compiled_source_files} ${project_source_files}
+
+exit ${result}
+
+#-----------------------------------------------------------------------------

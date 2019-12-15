@@ -1,16 +1,14 @@
-# AdaSynthetizer
+# Ada-Synthetizer Suite
 
-*Patrice Freydiere - October 2019*
+*Patrice Freydiere - December 2019*
 
-
-
-This **library** provides a **synthetizer** for making music from samples (.wav files). A similar larger project is for example : timidity, fluidsynth. This library has been setted up to be able to handle Highly Polyphonic rendering. 
+This **repository** provides a **synthetizer library implementation** for making music from samples (.wav files). A similar larger project is for example : timidity, fluidsynth. This library has been setted up to be able to handle Highly Polyphonic rendering. 
 
 The Synthetizer takes on one side the samples, and on the other side the Notes to play. Each Wav can be reused for multiple play. 
 
 
 
-![](C:/Users/use/workspaceGNAT/Ada-Synthetizer/doc/Synthetizer.png)
+![](Ada-Synthetizer/doc/Synthetizer.png)
 
 
 
@@ -20,7 +18,13 @@ The Synthetizer takes on one side the samples, and on the other side the Notes t
 
 
 
-As this library handle a simple level of synthetizer, there are no notions of instruments or sound bank yet. These concepts can be introduced easily on top of this library.
+As this library handle a simple level of synthetizer, there are no notions of instruments or sound bank yet. The core library need to be provided the individuals .wav files for each kind of sound played. Nonetheless, a first introduction of a sound bank is tested or demonstrated on the Ada-Synthetizer-Bank folder. This preview only support APrint Studio's soundbank format (instrument bundle : ie , zip with wav files in it).
+
+
+
+A preview **Ada-Midi-Player** has been added in the repository to use the synthetizer with MIDI Files, using the Ada-Midi library. For more information, go to [Ada-Midi-Player](Ada-Midi-Player) folder for more informations.
+
+
 
 **Disclamer on possible API changes** : This library is a maturing sound engine and planned for organ and musicbox software. It is on the right path of production use. This project is opened to any contributions, or pull requests improvements. 
 
@@ -125,13 +129,13 @@ end;
 
 More information about the API and internals can be found in the link below, especially for version v0.1.5, where a ahead of time complementary API is provided.
 
-[Additional technical insights can be found at this location](doc/architecture.md)
+[Additional technical insights can be found at this location](Ada-Synthetizer/doc/architecture.md)
 
 
 
 ## Feedbacks
 
-The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, but can be improved.
+The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, but can be improved. Any Help, or efforts welcome.
 
 
 
@@ -152,9 +156,14 @@ Version 0.1.5 - **DONE**
 
 - ~~Ahead of time playin~~
 
-Version 0.2: 
+Version 0.2:  - **In Progress**
 
-- Interfaçing with C, Java for consuming the library
+- ~~Interfaçing with C, Java for consuming the library~~ - first version included in Ada-Synthetizer-Lib Folder
+
+- ~~Ada-Midi-Player, using the synthetizer playin from Midi Files~~
+
+Version 0.3
+
 - Digital Signal processing : Low / High Bandwidth filters, Compressors, Volume regulation, FadeIn / FadeOut
 
 Mid Term Version, may be a rewrite targeting smaller footprint architectures:

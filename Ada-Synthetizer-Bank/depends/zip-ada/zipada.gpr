@@ -1,0 +1,144 @@
+--  This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+--  for the Zip-Ada project:
+--
+--      home page:     http://unzip-ada.sf.net/
+--      project page:  http://sf.net/projects/unzip-ada/
+--      mirror:        https://github.com/svn2github/unzip-ada
+--
+--  Build me with "gprbuild -p -P zipada", or "gnatmake -p -P zipada",
+--  or open me with GPS.
+--
+--  Important: for building tests, see the zipada_test.gpr project file.
+--
+project ZipAda is
+
+   type Build_Mode_Type is
+      ("Debug", 
+       "Fast", 
+       "Small",
+       "Profiling",
+       --  Check_95 mode is for checking that the *library* is strictly
+       --  Ada-95-compliant for being compiled by the broadest set of compilers.
+       --  The demos, tools and tests are using some Ada 2005 & 2012 features.
+       "Check_95"  
+      );
+   Build_Mode : Build_Mode_Type := external ("Build_Mode", "Fast");
+   for Exec_Dir use ".";
+   
+   case Build_Mode is
+      when "Check_95" =>
+         for Source_Dirs use ("zip_lib");
+         for Main use ();
+      when others =>
+         for Source_Dirs use ("zip_lib", "extras", "tools", "demo");
+         for Main use (
+           "zipada.adb", 
+           "unzipada.adb",
+           "comp_zip.adb", 
+           "find_zip.adb",
+           "rezip.adb", 
+           "demo_csv_into_zip.adb", 
+           "demo_zip.adb",
+           "demo_unzip.adb",
+           --  Miscellaneous, non-Zip or experimental stuff
+           "bunzip",   --  Standalone BZip2 decoder (for .bz2 files)
+           "lzhuf",    --  A simple LZ-Huffman coder/decoder
+           "lzma_dec", --  LZMA decoder
+           "lzma_enc", --  LZMA encoder
+           "bwt_demo", --  Burrows-Wheeler precompression demo
+           "bwt_enc",  --  Burrows-Wheeler file encoder
+           "bwt_dec"   --  Burrows-Wheeler file decoder
+         );
+   end case;
+
+   case Build_Mode is
+      when "Debug" | "Check_95" =>  for Object_Dir use "obj_dbg";
+      when "Fast" =>                for Object_Dir use "obj_opt";
+      when "Small" =>               for Object_Dir use "obj_small";
+      when "Profiling" =>           for Object_Dir use "obj_pro";
+   end case;
+
+   package Binder is
+      --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
+      for Default_Switches ("ada") use ("-Es");
+   end Binder;
+
+   package Linker is
+
+      case Build_Mode is
+
+         when "Debug" | "Check_95" =>
+            for Default_Switches ("ada") use ("-g");
+
+         when "Fast" | "Small" =>
+            for Default_Switches ("ada") use ("-s", "-Wl,--gc-sections");
+
+         when "Profiling" =>
+            for Default_Switches ("ada") use ("-pg");
+      end case;
+   end Linker;
+
+   package Compiler is
+
+      case Build_Mode is
+
+         when "Check_95" => for Default_Switches ("ada") use (
+              "-gnat95", "-gnatwa",
+              "-gnatec=" & project'Project_Dir & "restrictions.pra"
+              );
+      
+         when "Debug" =>
+            for Default_Switches ("ada") use (
+              "-gnatyaknpr",  --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+              "-gnatybfhiu",  --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+              "-gnatyx",      --  Style: check x:no extra parens
+              "-gnatye",      --  Style: check e:end/exit labels present
+              "-gnat12", 
+              "-gnatf", 
+              "-gnato", 
+              "-fstack-check", "-g", 
+              "-gnatVa",                        --  Validity checks switches
+              "-gnatwa",                        --  Warnings switches
+              "-gnatwcijkmopruvz.c.n.p.t.w.x",  --  Warnings switches
+              "-gnatec=" & project'Project_Dir & "debug.pra"
+              );
+
+         when "Fast" =>
+            for Default_Switches ("ada") use (
+              "-gnat12", "-O2", "-gnatp", "-gnatn", 
+              "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers", 
+              "-fpredictive-commoning", "-fgcse-after-reload", "-ftree-vectorize", "-fipa-cp-clone",
+              "-ffunction-sections", 
+              "-gnatec=" & project'Project_Dir & "za_elim.pra"
+              );
+
+         when "Small" =>
+            for Default_Switches ("ada") use (
+              "-gnat12", "-Os", "-gnatp",
+              "-ffunction-sections", 
+              "-gnatec=" & project'Project_Dir & "za_elim.pra"
+              );
+
+         when "Profiling" =>
+            for Default_Switches ("ada") use (
+              "-gnat12", "-O2", "-gnatp",  
+              "-fno-inline", 
+              "-funroll-loops", "-fpeel-loops", "-funswitch-loops", "-ftracer", "-fweb", "-frename-registers",
+              "-fpredictive-commoning", "-fgcse-after-reload", "-ftree-vectorize", "-fipa-cp-clone",
+              "-g", "-pg"
+              );
+      end case;
+   end Compiler;
+
+   package Builder is
+      --   "If -j0 is used, then the maximum number of simultaneous compilation
+      --    jobs is the number of core processors on the platform."
+      for Default_Switches ("ada") use ("-j0");
+   end Builder;
+
+   package Ide is
+      for Default_Switches ("adacontrol") use ("-f", "verif.aru");
+      for Vcs_Kind use "Subversion";
+   end Ide;
+   
+end ZipAda;

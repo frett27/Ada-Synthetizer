@@ -1,0 +1,37 @@
+with "../Ada-Synthetizer/lib_synthetizer_win32.gpr";
+
+project AdaSynthLib is
+
+   for Library_Name use "synthlib";
+   for Library_Dir use "lib";
+   for Library_Kind use "dynamic";
+   for Library_Interface use ("synthlib");
+   for Library_Standalone use "standard";
+   for Object_Dir use "obj";
+   for Source_Dirs use ("src", "tests");
+   type Library_Type_Type is
+      ("relocatable");
+   Library_Type : Library_Type_Type := external ("LIBRARY_TYPE", "relocatable");
+
+   package Compiler is
+      for Switches ("ada") use ("-g", "-fcallgraph-info=su,da", "-funroll-loops", "-gnatn", "-O", "-gnatf");
+   end Compiler;
+
+   package Binder is
+      for Switches ("ada") use ("-E", "-r","-n");
+
+      case Library_Type is
+
+         when "relocatable" =>
+            for Switches ("ada") use ("-E","-n");
+      end case;
+   end Binder;
+
+   package Linker is
+      for Linker_Options use ("-lsoundio");
+   end Linker;
+
+
+
+end AdaSynthLib;
+

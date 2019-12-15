@@ -1,0 +1,9 @@
+with "adamidi";
+project testadamidi is
+
+	for object_dir use "buildtest";
+	for source_dirs use ("test");
+	for source_files use ("testmidi.adb");
+	for main use ("testmidi.adb");
+
+end testadamidi; 

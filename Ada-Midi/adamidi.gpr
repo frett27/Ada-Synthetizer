@@ -1,0 +1,38 @@
+
+Library project Adamidi is
+
+   type Os_Type is
+      ("Any", "GNU/Linux","Windows");
+   Os : Os_Type := external ("ADAMIDI", "Any");
+
+   for source_dirs use ("src");
+   for source_files use ("midi.adb", "midi.ads", "midi-file.ads", "midi-file.adb");
+
+   for library_dir use "lib";
+   for library_name use "adamidi";
+   for Object_Dir use "build";
+   for library_kind use "static";
+   for Languages use ("Ada");
+
+   Version := "1";
+
+   case Os is
+      when "Windows" =>
+         for library_version use "libadamidi" & Version & ".dll" ;
+      when "GNU/Linux" =>
+         for library_version use "libadamidi.so." & Version;
+      when "Any" =>
+         for library_version use "libadamidi.so." & Version;
+   end case;
+
+   package Compiler is
+        for Default_Switches("Ada") use ("-gnatyaAbBcefhiIklnprSmtux");
+   end Compiler;
+
+   package Binder is
+      for Default_Switches ("ada") use ("-E");
+   end Binder;
+
+
+end Adamidi;
+

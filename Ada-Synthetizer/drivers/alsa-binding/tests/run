@@ -1,0 +1,83 @@
+#! /bin/bash
+#-----------------------------------------------------------------------------
+#                                                                            #
+#                     Copyright (C) 2012-2013, AdaHeads K/S                  #
+#       Copyright (C) 2013-, Jacob Sparre Andersen Research & Innovation     #
+#                                                                            #
+#  This is free software;  you can redistribute it  and/or modify it         #
+#  under terms of the  GNU General Public License as published  by the       #
+#  Free Software  Foundation;  either version 3,  or (at your option) any    #
+#  later version.  This software is distributed in the hope  that it will    #
+#  be useful, but WITHOUT ANY WARRANTY;  without even the implied warranty   #
+#  of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU       #
+#  General Public License for  more details.                                 #
+#  You should have  received  a copy of the GNU General  Public  License     #
+#  distributed  with  this  software;   see  file COPYING3.  If not, go      #
+#  to http://www.gnu.org/licenses for a complete copy of the license.        #
+#                                                                            #
+#-----------------------------------------------------------------------------
+#--  Configuration:
+
+export default_allowed_time_in_seconds=5
+
+#-----------------------------------------------------------------------------
+#--  Work from the 'tests/' directory:
+
+test_root="$(cd "$(dirname "$0")" && pwd)"
+
+#-----------------------------------------------------------------------------
+#--  Work-around if 'parallel' is missing:
+
+if [ ! -x "$(which parallel)" ]; then
+   alias parallel=xargs
+fi
+
+#-----------------------------------------------------------------------------
+#--  Collect jobs:
+
+job_list="$(mktemp)"
+find "${test_root}" -mindepth 2 -type f -perm -0100 | sort > "${job_list}"
+
+#-----------------------------------------------------------------------------
+#--  Run jobs:
+
+echo -n "Running tests...   "
+
+parallel "${test_root}/run_job" < "${job_list}" 2>"${test_root}/run.status"
+
+#-----------------------------------------------------------------------------
+#--  Collect results:
+
+failed_list="$(mktemp)"
+succeeded_list="$(mktemp)"
+
+while read job ; do
+   if [ ! -r "${job}.exit_code" ]; then
+      echo "${job} (no exit_code found)"        >> "${failed_list}"
+   elif grep -q succeeded "${job}.exit_code" ; then
+      echo "${job}"                             >> "${succeeded_list}"
+   else
+      echo "${job} ($(cat "${job}.exit_code"))" >> "${failed_list}"
+   fi
+
+   rm -f "${job}.exit_code"
+done < "${job_list}"
+
+total=$(cat "${succeeded_list}" "${failed_list}" | wc -l)
+failed=$(cat "${failed_list}" | wc -l)
+
+#-----------------------------------------------------------------------------
+#--  Report results (and clean up):
+
+if [ -s "${failed_list}" ]; then
+   echo "${failed} out of ${total} tests failed:"
+   uniq < "${failed_list}" | sed 's|^|   |'
+else
+   echo "All ${total} tests succeeded."
+fi
+
+rm -f "${job_list}" "${failed_list}" "${succeeded_list}"
+
+exit ${failed}
+
+#-----------------------------------------------------------------------------
