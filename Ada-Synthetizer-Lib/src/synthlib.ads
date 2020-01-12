@@ -29,8 +29,13 @@ with Interfaces.C.Strings;
 package SynthLib is
 
    type API_Synth is private;
+   type API_Synth_Access is private;
 
-   type API_Synth_Access is access all API_Synth;
+
+   type C_Float_Array is array(Natural range 0..Natural'Last) of Interfaces.C.C_float;
+   pragma Convention(C, C_Float_Array);
+   type C_Float_Array_Access is access all C_Float_Array;
+
 
    subtype API_ERROR_CODE is Natural;
 
@@ -38,35 +43,57 @@ package SynthLib is
    subtype API_Voice is Synth.Synthetizer.Voice;
 
    type BufferPrepare_CallBack is access procedure (S : API_Synth_Access;
-      Current_Buffer_Time, Next_Buffer_Time           : API_Synthetizer_Time);
+                                                    Current_Buffer_Time, Next_Buffer_Time           : API_Synthetizer_Time);
 
    -- synthetizer initialization
    function Synthetizer_Init (S : in out API_Synth_Access;
-      Call_Back                  : in     BufferPrepare_CallBack) return API_ERROR_CODE;
+                              Buffer_Size : in Interfaces.C.int;
+                              Call_Back                  : in     BufferPrepare_CallBack)
+                              return API_ERROR_CODE;
+
+   function Synthetizer_Get_Time(S : in out API_Synth_Access;
+                                 Time: out API_Synthetizer_Time) return API_ERROR_CODE;
 
    -- synthetize resource freeze
    function Synthetizer_Close (S : in out API_Synth_Access) return API_ERROR_CODE;
 
-   -- sound handling
-
+   -- sound loading from wav file
    function Synthetizer_Load_Wav_Sample(Filename: Interfaces.C.Strings.chars_ptr;
-                                         Sample_Frequency: in Interfaces.C.C_Float;
-                                         Sample_No: out Natural) return API_ERROR_CODE;
-   -- procedure Synthetizer_Free_Sample(Sample_No: Natural);
+                                        Note_Frequency: in Interfaces.C.C_Float;
+                                        Sample_No: out Natural) return API_ERROR_CODE;
 
+   -- sound loading from memory frame array
+   function Synthetizer_Load_Sample(Buffer: C_Float_Array_Access;
+                                    BufferSize: in Interfaces.c.int;
+                                    Sample_Frequency: in Interfaces.C.C_float;
+                                    Note_Frequency: in Interfaces.C.C_float;
+                                    CantStop : in Interfaces.C.int;
+                                    Has_Loop: in Interfaces.C.int;
+                                    Loop_Start : in Interfaces.C.int;
+                                    Loop_End : in Interfaces.C.int;
+                                    Sample_No: out Natural) return API_ERROR_CODE;
+
+
+   -- free sample
+   procedure Synthetizer_Free_Sample(Sample_No: Natural);
+
+   -- realtime play
    function Synthetizer_Play (S : in API_Synth_Access;
-      Sample_No : in     Natural; Frequency : in Interfaces.C.C_float;
-      Voice_Result               :    out API_Voice) return API_ERROR_CODE;
+                              Sample_No : in     Natural; Frequency : in Interfaces.C.C_float;
+                              Voice_Result               :    out API_Voice) return API_ERROR_CODE;
 
+   -- play with associated time
    function Synthetizer_Timed_Play (S : in API_Synth_Access;
-      Sample_No : in     Natural; Frequency : in Interfaces.C.C_float;
-      T : in     API_Synthetizer_Time; Voice : out API_Voice) return API_ERROR_CODE;
+                                    Sample_No : in     Natural; Frequency : in Interfaces.C.C_float;
+                                    T : in     API_Synthetizer_Time; Voice : out API_Voice) return API_ERROR_CODE;
 
+   --stop playing with time
    function Synthetizer_Stop (S : in API_Synth_Access;
-      Voice_No                   : in     API_Voice) return API_ERROR_CODE;
+                              Voice_No                   : in     API_Voice) return API_ERROR_CODE;
 
-   function Synthetizer_Timed_Stop (S :     API_Synth_Access;
-      Voice : in out API_Voice; T : API_Synthetizer_Time) return API_ERROR_CODE;
+   --stop playing with time
+   function Synthetizer_Timed_Stop (S : API_Synth_Access;
+                                    Voice : in out API_Voice; T : API_Synthetizer_Time) return API_ERROR_CODE;
 
    -- test method for testing calling convention
    procedure ValidateCall;
@@ -83,6 +110,8 @@ package SynthLib is
    E_NULLSOUNDSAMPLE: constant API_ERROR_CODE := 100;
    E_LOAD_SOUNDSAMPLE: constant API_ERROR_CODE := 101;
 
+   E_NO_FREE_SOUNDSAMPLE : constant API_ERROR_CODE := 200;
+
 
 private
 
@@ -96,6 +125,8 @@ private
    pragma Export (C, Synthetizer_Timed_Stop);
 
    pragma Export (C, Synthetizer_Load_Wav_Sample);
+   pragma Export (C, Synthetizer_Load_Sample);
+   pragma Export (C, Synthetizer_Free_Sample);
 
    pragma Export (C, Synthetizer_Close);
 
@@ -106,15 +137,18 @@ private
       Callback : BufferPrepare_CallBack;
    end record;
 
-    -- procedure associated to Audit Interface
+   -- procedure associated to Audit Interface
    procedure Ready_To_Prepare (S : in out API_Synth;
                                Current_Buffer_Time,
                                Next_Buffer_Time : Synth.Synthetizer.Synthetizer_Time);
 
+   type  API_Synth_Access is  access all API_Synth;
+   -- pragma Convention(C, API_Synth_Access);
+
 
    type Sound_Sample_Array is array (Positive range <>) of Synth.SoundSample;
    MAX_SOUND_SAMPLE    : constant Positive := 100;
-   SoundSample_Buffers : Sound_Sample_Array (1 .. MAX_SOUND_SAMPLE);
+   SoundSample_Buffers : Sound_Sample_Array (1 .. MAX_SOUND_SAMPLE) := (others => Synth.Null_Sound_Sample);
    CurrentSoundSample_Index: Natural := 0; --mean no initial sound samples
 
    API_No_Voice : constant Natural := 0;
