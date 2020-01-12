@@ -8,6 +8,12 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.LongByReference;
 import com.sun.jna.ptr.PointerByReference;
 
+/**
+ * Simple Java class to consume the Synthetizer Ada Library
+ * 
+ * @author pfreydiere
+ *
+ */
 public class Synthetizer {
 
 	static {
@@ -15,8 +21,24 @@ public class Synthetizer {
 		System.loadLibrary("libsynthlib");
 	}
 
+	/**
+	 * call back interface for preparing the buffers, using synth calls.
+	 * 
+	 * @author pfreydiere
+	 *
+	 */
 	interface callback extends Callback {
 		void prepare(Pointer p, long currentTime, long nextTime);
+	}
+
+	interface BufferPrepareFacilities {
+		long play(long time, long soundid, float frequency);
+
+		void stop(long time, long voiceid);
+	}
+
+	interface BufferPrepare {
+		void prepareBuffer(BufferPrepareFacilities synth, long startBufferTime, long stopBufferTime);
 	}
 
 	interface CLibrary extends Library {
@@ -36,7 +58,6 @@ public class Synthetizer {
 
 		// sound sample
 		long synthetizer_load_wav_sample(Pointer filename, float sample_frequency, LongByReference voiceOut);
-
 
 		long synthetizer_load_sample(Pointer floatFeatures, int floatFeaturesSize, float sampleFrequency,
 				float noteFrequency, int cantstop, int hasloop, int loopStart, int loopend, LongByReference voiceOut);
@@ -66,24 +87,53 @@ public class Synthetizer {
 	}
 
 	private Pointer cSynth;
+	private BufferPrepare javaCallBack;
 	
+	public void setPrepareBufferCallBack(BufferPrepare callback) {
+		this.javaCallBack = callback;
+	}
+
 	public int defaultBufferSize = 10_000;
 
 	public void open() throws Exception {
+
+		BufferPrepareFacilities bufferApi = new BufferPrepareFacilities() {
+
+			LongByReference voiceReturn = new LongByReference();
+
+			@Override
+			public long play(long time, long soundid, float frequency) {
+				long ret = clibrary.synthetizer_timed_play(cSynth, soundid, frequency, time, voiceReturn);
+				if (ret > 0) {
+					// error handling,
+					// we don't want exception to be raised in the synth
+				}
+				return voiceReturn.getValue();
+			}
+
+			@Override
+			public void stop(long time, long voiceid) {
+				long ret = clibrary.synthetizer_timed_stop(cSynth, voiceid, time);
+				if (ret > 0) {
+					// error handling,
+					// we don't want exception to be raised in the synth
+				}
+			}
+		};
 
 		PointerByReference pByRef = new PointerByReference();
 		long ret = clibrary.synthetizer_init(pByRef, defaultBufferSize, new callback() {
 			@Override
 			public void prepare(Pointer p, long currentTime, long nextTime) {
-				// System.out.println(currentTime);
-				// System.out.println(nextTime);
-
+				if (javaCallBack != null) {
+					javaCallBack.prepareBuffer(bufferApi, currentTime, nextTime);
+				}
 			}
 		});
 		if (ret > 0) {
 			throw new Exception("Exception in openning the synthetizer, it returns :" + ret);
 		}
-		
+
 		cSynth = pByRef.getValue();
 	}
 
@@ -120,7 +170,7 @@ public class Synthetizer {
 	 * @param wavFilename the filename
 	 * @return
 	 */
-	public long loadSound(String wavFilename) throws Exception {
+	public long loadSound(String wavFilename, float sampleMainFrequency) throws Exception {
 		LongByReference soundSampleOut = new LongByReference();
 
 		byte[] data = Native.toByteArray(wavFilename);
@@ -128,7 +178,7 @@ public class Synthetizer {
 		strpointer.write(0, data, 0, data.length);
 		strpointer.setByte(data.length, (byte) 0);
 
-		long ret = clibrary.synthetizer_load_wav_sample(strpointer, 440.0f, soundSampleOut);
+		long ret = clibrary.synthetizer_load_wav_sample(strpointer, sampleMainFrequency, soundSampleOut);
 		if (ret > 0) {
 			throw new Exception("Error in load sound, " + ret + " returned");
 		}
@@ -138,7 +188,7 @@ public class Synthetizer {
 	/**
 	 * load a sample into synth memory
 	 * 
-	 * @param buffer the samples (float -1 .. 1)
+	 * @param buffer          the samples (float -1 .. 1)
 	 * @param sampleFrequency
 	 * @param noteFrequency
 	 * @param cantStop
@@ -150,7 +200,7 @@ public class Synthetizer {
 		LongByReference sampleOut = new LongByReference();
 		assert buffer != null;
 
-		final Pointer pFloatFeatures = new Memory(buffer.length  * Native.getNativeSize(Float.TYPE));
+		final Pointer pFloatFeatures = new Memory(buffer.length * Native.getNativeSize(Float.TYPE));
 		for (int i = 0; i < buffer.length; i++) {
 			pFloatFeatures.setFloat(i * Native.getNativeSize(Float.TYPE), buffer[i]);
 		}
@@ -172,6 +222,15 @@ public class Synthetizer {
 		return voiceReturn.getValue();
 	}
 
+	/**
+	 * play a sound at given time
+	 * 
+	 * @param sound     the soundid
+	 * @param frequency play frequency
+	 * @param time      time at which the sound is played
+	 * @return the opened voice number
+	 * @throws Exception
+	 */
 	public long play(long sound, float frequency, long time) throws Exception {
 		LongByReference voiceReturn = new LongByReference();
 		long ret = clibrary.synthetizer_timed_play(cSynth, sound, frequency, time, voiceReturn);
@@ -190,6 +249,13 @@ public class Synthetizer {
 		return voiceReturn.getValue();
 	}
 
+	/**
+	 * 
+	 * @param voice the voice previously created with play
+	 * @param time  the time at which the voice is stopped
+	 * @return the voice id
+	 * @throws Exception
+	 */
 	public long stop(long voice, long time) throws Exception {
 		LongByReference voiceReturn = new LongByReference();
 		long ret = clibrary.synthetizer_timed_stop(cSynth, voice, time);

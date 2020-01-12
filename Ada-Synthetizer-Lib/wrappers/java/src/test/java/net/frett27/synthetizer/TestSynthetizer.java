@@ -1,6 +1,11 @@
 package net.frett27.synthetizer;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.junit.Test;
+
+import net.frett27.synthetizer.Synthetizer.BufferPrepare;
+import net.frett27.synthetizer.Synthetizer.BufferPrepareFacilities;
 
 public class TestSynthetizer {
 
@@ -11,7 +16,7 @@ public class TestSynthetizer {
 		s.open();
 		try {
 
-			long nn = s.loadSound("DR2-0003N_BaM.wav");
+			long nn = s.loadSound("DR2-0003N_BaM.wav", 440f);
 			Thread.sleep(1000);
 			s.play(nn, 440);
 
@@ -31,18 +36,7 @@ public class TestSynthetizer {
 		s.open();
 		try {
 
-			float[] sin = new float[100000];
-			float freq = 44_100; // Hz
-			float pFreq = 1 / freq;
-			float noteFreq = 440;
-			float pnfreq = 1 / noteFreq;
-
-			for (int i = 0; i < sin.length; i++) {
-				sin[i] = (float) Math.sin(i * (2 * Math.PI / (pnfreq)) * pFreq);
-			}
-
-			System.out.println("load sample");
-			long no = s.loadSample(sin, freq, noteFreq, false);
+			long no = createSinSoundSample(s);
 			Thread.sleep(2000);
 			System.out.println("play");
 			s.play(no, 440.0f);
@@ -52,6 +46,49 @@ public class TestSynthetizer {
 			s.close();
 		}
 
+	}
+
+	private long createSinSoundSample(Synthetizer s) throws Exception {
+		float[] sin = new float[100000];
+		float freq = 44_100; // Hz
+		float pFreq = 1 / freq;
+		float noteFreq = 440;
+		float pnfreq = 1 / noteFreq;
+		
+		float volumeFactor = 0.2f;
+
+		for (int i = 0; i < sin.length; i++) {
+			sin[i] = (float) Math.sin(i * (2 * Math.PI / (pnfreq)) * pFreq) * volumeFactor;
+		}
+
+		System.out.println("load sample");
+		long no = s.loadSample(sin, freq, noteFreq, false);
+		return no;
+	}
+
+	@Test
+	public void testCallback() throws Exception {
+		Synthetizer s = new Synthetizer();
+		AtomicInteger i = new AtomicInteger(0);
+		s.defaultBufferSize = 10_000;
+		s.open();
+		try {
+			long soundid = createSinSoundSample(s);
+
+			s.setPrepareBufferCallBack(new BufferPrepare() {
+				@Override
+				public void prepareBuffer(BufferPrepareFacilities synth, long startBufferTime, long stopBufferTime) {
+					float f = (i.getAndIncrement() % 12) / 12.0f;
+					float freq = (float) (440f * Math.pow(2, f));
+					System.out.println(f + " " + freq);
+					if (i.get() % 4 == 0)
+					synth.play(( startBufferTime + stopBufferTime )/2, soundid, freq);
+				}
+			});
+			Thread.sleep(10_000);
+		} finally {
+			s.close();
+		}
 	}
 
 }
