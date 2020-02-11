@@ -23,6 +23,7 @@
 
 with Ada.Exceptions;
 with Ada.Real_Time; use Ada.Real_Time;
+with Ada.Unchecked_Deallocation;
 
 package Synth is
 
@@ -38,9 +39,12 @@ package Synth is
 
    function MIDICode_To_Frequency (Midi_Code : Natural) return Frequency_Type;
 
+   procedure Free_Frame_Array is
+     new Ada.Unchecked_Deallocation (Object => Frame_Array,
+                                     Name   => Frame_Array_Access);
+
    ---------------------------------------------------------------------------
    --  This is a recorded Sound
-
 
    type SoundSample (HasLoop : Boolean := False) is record
       --  File Frequency

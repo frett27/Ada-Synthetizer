@@ -14,24 +14,28 @@ project AdaSynthLib is
    Library_Type : Library_Type_Type := external ("LIBRARY_TYPE", "relocatable");
 
    package Compiler is
-      for Switches ("ada") use ("-g", "-fcallgraph-info=su,da", "-funroll-loops", "-gnatn", "-O", "-gnatf");
-   end Compiler;
-
-   package Binder is
-      for Switches ("ada") use ("-E", "-r","-n");
+      for Switches ("ada") use ("-g", "-fcallgraph-info=su,da", "-funroll-loops", "-gnatn", "-gnatf");
 
       case Library_Type is
 
          when "relocatable" =>
-            for Switches ("ada") use ("-E","-n");
+            for Switches ("ada") use ("-g", "-fcallgraph-info=su,da", "-funroll-loops", "-gnatn", "-gnatf", "-O");
+      end case;
+   end Compiler;
+
+   package Binder is
+      for Switches ("ada") use ("-E", "-r", "-n");
+
+      case Library_Type is
+
+         when "relocatable" =>
+            for Switches ("ada") use ("-E", "-n");
       end case;
    end Binder;
 
    package Linker is
-      for Linker_Options use ("-lsoundio");
+      for Linker_Options use ("-LC:\projects\2018_Synthetiseur\Ada-Synthetizer\Ada-Synthetizer-Lib", "-lsoundio");
    end Linker;
-
-
 
 end AdaSynthLib;
 

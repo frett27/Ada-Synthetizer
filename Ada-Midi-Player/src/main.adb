@@ -35,6 +35,7 @@ with Ada.Exceptions;
 procedure Main is
    p: Midi.Player.MidiPlayerParameters;
    S: SoundBank_Access;
+
 begin
 
    Midi.Player.ReadCommandLineParameters(p);

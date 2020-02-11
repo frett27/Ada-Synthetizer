@@ -31,16 +31,43 @@ public class Synthetizer {
 		void prepare(Pointer p, long currentTime, long nextTime);
 	}
 
-	interface BufferPrepareFacilities {
+	/**
+	 * provide functions to call associated to the callback execution context, for
+	 * interact with synth.
+	 *
+	 */
+	public interface BufferPrepareFacilities {
+		/**
+		 * trigger a sound play, this function return a voice id
+		 * 
+		 * @param time
+		 * @param soundid
+		 * @param frequency
+		 * @return
+		 */
 		long play(long time, long soundid, float frequency);
 
+		/**
+		 * stop a voice
+		 * 
+		 * @param time
+		 * @param voiceid
+		 */
 		void stop(long time, long voiceid);
 	}
 
-	interface BufferPrepare {
+	/**
+	 * function to implement in synth call back
+	 * 
+	 * @author pfreydiere
+	 */
+	public interface BufferPrepare {
 		void prepareBuffer(BufferPrepareFacilities synth, long startBufferTime, long stopBufferTime);
 	}
 
+	/**
+	 * internal C interface of synthetizer api
+	 */
 	interface CLibrary extends Library {
 
 		void synthlibinit();
@@ -72,7 +99,7 @@ public class Synthetizer {
 		long synthetizer_timed_play(Pointer p, long sample_no, float frequency, long time,
 				LongByReference voice_result);
 
-		long synthetizer_timed_stop(Pointer p, long voice, long time);
+		long synthetizer_timed_stop(Pointer p, LongByReference voice, long time);
 
 	}
 
@@ -88,12 +115,14 @@ public class Synthetizer {
 
 	private Pointer cSynth;
 	private BufferPrepare javaCallBack;
-	
+
 	public void setPrepareBufferCallBack(BufferPrepare callback) {
 		this.javaCallBack = callback;
 	}
 
-	public int defaultBufferSize = 10_000;
+	private callback referenceToKeepCodeNotBeenGarbaged;
+
+	public int defaultBufferSize = 50_000;
 
 	public void open() throws Exception {
 
@@ -113,7 +142,8 @@ public class Synthetizer {
 
 			@Override
 			public void stop(long time, long voiceid) {
-				long ret = clibrary.synthetizer_timed_stop(cSynth, voiceid, time);
+				voiceReturn.setValue(voiceid);
+				long ret = clibrary.synthetizer_timed_stop(cSynth, voiceReturn, time);
 				if (ret > 0) {
 					// error handling,
 					// we don't want exception to be raised in the synth
@@ -122,14 +152,23 @@ public class Synthetizer {
 		};
 
 		PointerByReference pByRef = new PointerByReference();
-		long ret = clibrary.synthetizer_init(pByRef, defaultBufferSize, new callback() {
+		referenceToKeepCodeNotBeenGarbaged = new callback() {
 			@Override
 			public void prepare(Pointer p, long currentTime, long nextTime) {
+
+				// these display synchronize the call,
+				// and make it work ????
+				System.out.println("in java");
 				if (javaCallBack != null) {
 					javaCallBack.prepareBuffer(bufferApi, currentTime, nextTime);
+				} else {
+					System.out.println("javacallbak is null");
 				}
+				System.out.println("en java");
 			}
-		});
+		};
+
+		long ret = clibrary.synthetizer_init(pByRef, defaultBufferSize, referenceToKeepCodeNotBeenGarbaged);
 		if (ret > 0) {
 			throw new Exception("Exception in openning the synthetizer, it returns :" + ret);
 		}
@@ -168,7 +207,7 @@ public class Synthetizer {
 	 * Load a Wav file into Sound memory
 	 * 
 	 * @param wavFilename the filename
-	 * @return
+	 * @return the sound handle
 	 */
 	public long loadSound(String wavFilename, float sampleMainFrequency) throws Exception {
 		LongByReference soundSampleOut = new LongByReference();
@@ -192,7 +231,7 @@ public class Synthetizer {
 	 * @param sampleFrequency
 	 * @param noteFrequency
 	 * @param cantStop
-	 * @return
+	 * @return sound handle
 	 * @throws Exception
 	 */
 	public long loadSample(float[] buffer, float sampleFrequency, float noteFrequency, boolean cantStop)
@@ -213,6 +252,14 @@ public class Synthetizer {
 		return sampleOut.getValue();
 	}
 
+	/**
+	 * play a sound at a given frequency
+	 * 
+	 * @param sound     the sound handle
+	 * @param frequency
+	 * @return
+	 * @throws Exception
+	 */
 	public long play(long sound, float frequency) throws Exception {
 		LongByReference voiceReturn = new LongByReference();
 		long ret = clibrary.synthetizer_play(cSynth, sound, frequency, voiceReturn);
@@ -257,8 +304,8 @@ public class Synthetizer {
 	 * @throws Exception
 	 */
 	public long stop(long voice, long time) throws Exception {
-		LongByReference voiceReturn = new LongByReference();
-		long ret = clibrary.synthetizer_timed_stop(cSynth, voice, time);
+		LongByReference voiceReturn = new LongByReference(voice);
+		long ret = clibrary.synthetizer_timed_stop(cSynth, voiceReturn, time);
 		if (ret > 0) {
 			throw new Exception("Error in play sound, " + ret + " returned");
 		}

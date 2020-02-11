@@ -39,11 +39,12 @@ package SynthLib is
 
    subtype API_ERROR_CODE is Natural;
 
-   subtype API_Synthetizer_Time is Synth.Synthetizer.Synthetizer_Time;
+   type API_Synthetizer_Time is new Natural;
    subtype API_Voice is Synth.Synthetizer.Voice;
 
    type BufferPrepare_CallBack is access procedure (S : API_Synth_Access;
-                                                    Current_Buffer_Time, Next_Buffer_Time           : API_Synthetizer_Time);
+                                                    Current_Buffer_Time,
+                                                    Next_Buffer_Time : API_Synthetizer_Time);
 
    -- synthetizer initialization
    function Synthetizer_Init (S : in out API_Synth_Access;
@@ -92,8 +93,8 @@ package SynthLib is
                               Voice_No                   : in     API_Voice) return API_ERROR_CODE;
 
    --stop playing with time
-   function Synthetizer_Timed_Stop (S : API_Synth_Access;
-                                    Voice : in out API_Voice; T : API_Synthetizer_Time) return API_ERROR_CODE;
+   function Synthetizer_Timed_Stop (S : in API_Synth_Access;
+                                    Voice : in out API_Voice; T : in API_Synthetizer_Time) return API_ERROR_CODE;
 
    -- test method for testing calling convention
    procedure ValidateCall;
@@ -121,6 +122,8 @@ private
    pragma Export (C, Synthetizer_Play);
    pragma Export (C, Synthetizer_Stop);
 
+   pragma Export (C, Synthetizer_Get_Time);
+
    pragma Export (C, Synthetizer_Timed_Play);
    pragma Export (C, Synthetizer_Timed_Stop);
 
@@ -143,12 +146,14 @@ private
                                Next_Buffer_Time : Synth.Synthetizer.Synthetizer_Time);
 
    type  API_Synth_Access is  access all API_Synth;
-   -- pragma Convention(C, API_Synth_Access);
+   pragma Convention(C, API_Synth_Access);
 
 
    type Sound_Sample_Array is array (Positive range <>) of Synth.SoundSample;
    MAX_SOUND_SAMPLE    : constant Positive := 100;
-   SoundSample_Buffers : Sound_Sample_Array (1 .. MAX_SOUND_SAMPLE) := (others => Synth.Null_Sound_Sample);
+
+   SoundSample_Buffers : Sound_Sample_Array (1 .. MAX_SOUND_SAMPLE) :=
+     (others => Synth.Null_Sound_Sample);
    CurrentSoundSample_Index: Natural := 0; --mean no initial sound samples
 
    API_No_Voice : constant Natural := 0;

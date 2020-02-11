@@ -104,6 +104,12 @@ package Synth.Synthetizer is
       Channel : Positive := 1;
       Opened_Voice :    out Voice);
 
+   -- Get synth internal time
+   function Get_Time
+     (Synth : Synthetizer_Type) return Synthetizer_Time;
+
+
+
    ----------
    -- Stop --
    ----------
@@ -316,41 +322,7 @@ private
    type Buffer_Preparing_Task_Access is access all Buffer_Preparing_Task_Type;
 
    --  Synthetizer type as protected object
-   protected type Synthetizer_Structure_Type is
-
-      procedure Init (D : Synth.Driver.Sound_Driver_Access;
-                      NBBuffer : Positive;
-                      Buffer_Length : Positive;
-                      Audit : Synthetizer_Audit_Access;
-                      T : out Time);
-
-      --  Play a sound sample, with the given frequency
-      --  Return the allocated voice
-      procedure Play
-        (S            : SoundSample;
-         Frequency    : Float;
-         Volume : Float := 1.0;
-         Channel : Natural := 1;
-         Opened_Voice :    out Voice);
-
-      procedure Play
-        (S            : SoundSample;
-         Frequency    : Float;
-         Play_Time    : Synthetizer_Time;
-         Volume       : Float := 1.0;
-         Channel : Positive := 1;
-         Opened_Voice :    out Voice);
-
-      procedure Stop (V : Voice);
-      procedure Stop (V : Voice;
-                      Stop_Time : Synthetizer_Time);
-
-      procedure Close;
-
-      function Get_Synthetizer_Time return Synthetizer_Time;
-      function Get_Allocated_Voices return Natural;
-
-   private
+   type Synthetizer_Structure_Type is record
 
       Inited : Boolean := False;
 
@@ -373,7 +345,46 @@ private
 
       Next_Buffer_Time : Synthetizer_Time;
 
-   end Synthetizer_Structure_Type;
+   end record;
+
+   procedure Init (SST : in out Synthetizer_Structure_Type;
+
+                   D : Synth.Driver.Sound_Driver_Access;
+                      NBBuffer : Positive;
+                      Buffer_Length : Positive;
+                      Audit : Synthetizer_Audit_Access;
+                      T : out Time);
+
+      --  Play a sound sample, with the given frequency
+      --  Return the allocated voice
+      procedure Play
+     (
+      SST : Synthetizer_Structure_Type;
+      S            : SoundSample;
+         Frequency    : Float;
+         Volume : Float := 1.0;
+         Channel : Natural := 1;
+         Opened_Voice :    out Voice);
+
+      procedure Play
+     (
+      SST : Synthetizer_Structure_Type;
+      S            : SoundSample;
+         Frequency    : Float;
+         Play_Time    : Synthetizer_Time;
+         Volume       : Float := 1.0;
+         Channel : Positive := 1;
+         Opened_Voice :    out Voice);
+
+      procedure Stop (SST : Synthetizer_Structure_Type; V : Voice);
+      procedure Stop (SST : Synthetizer_Structure_Type; V : Voice;
+                      Stop_Time : Synthetizer_Time);
+
+      procedure Close(SST : in out Synthetizer_Structure_Type);
+
+      function Get_Synthetizer_Time(SST : Synthetizer_Structure_Type) return Synthetizer_Time;
+      function Get_Allocated_Voices(SST : Synthetizer_Structure_Type) return Natural;
+
 
    type Synthetizer_Type is access Synthetizer_Structure_Type;
 

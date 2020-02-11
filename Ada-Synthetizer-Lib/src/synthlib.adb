@@ -28,6 +28,7 @@ with Synth.Synthetizer;use Synth.Synthetizer;
 with Synth.Wav;
 with Synth.Driver; use Synth.Driver;
 with ada.Text_IO;use ada.Text_IO;
+with Ada.Real_Time;
 
 package body SynthLib is
 
@@ -62,6 +63,7 @@ package body SynthLib is
 
       Synth.Synthetizer.Open(Driver_Access  => D,
                              Synt           => S.S.all,
+                             Buffers_Number => 2,
                              Buffer_Size => Natural(Buffer_Size),
                              Audit => Synthetizer_Audit_Access(S) );
       return SS_OK;
@@ -72,13 +74,28 @@ package body SynthLib is
    end;
 
 
+
+   function To_Synth_Time(T : API_Synthetizer_Time) return Synthetizer_Time is
+      use Ada.Real_Time;
+   begin
+      return Synthetizer_Time(Microseconds(Natural(T)));
+   end;
+
+   function From_Synth_Time(T : Synthetizer_Time) return API_Synthetizer_Time is
+      use Ada.Real_Time;
+   begin
+      return API_Synthetizer_Time(Natural(To_Duration(T) * 1_000_000));
+   end;
+
+
    function Synthetizer_Get_Time(S : in out API_Synth_Access;
                                  Time: out API_Synthetizer_Time) return API_ERROR_CODE is
+      use Ada.Real_Time;
    begin
       if S = null then
          return E_FAILED;
       end if;
-      Time := Synth.Synthetizer.Get_Time(Synth => S.S.all);
+      Time := From_Synth_Time( Synth.Synthetizer.Get_Time(Synth => S.S.all));
       return SS_OK;
    exception
       when E: others =>
@@ -89,14 +106,17 @@ package body SynthLib is
 
 
 
+
    -- procedure associated to Audit Interface
    procedure Ready_To_Prepare (S : in out API_Synth;
                                Current_Buffer_Time,
                                Next_Buffer_Time : Synthetizer_Time) is
+
    begin
 
       if S.Callback /= null then
-         S.Callback(S'Unchecked_Access, Current_Buffer_Time, Next_Buffer_Time);
+         S.Callback(S'Unchecked_Access, From_Synth_Time(Current_Buffer_Time),
+           From_Synth_Time(Next_Buffer_Time));
       end if;
 
    end;
@@ -168,7 +188,7 @@ package body SynthLib is
                              S            => Sound,
                              Frequency    => Float(Frequency),
                              Volume       => 1.0,
-                             Play_Time => T,
+                             Play_Time => To_Synth_Time(T),
                              Channel      => 1,
                              Opened_Voice => Voice);
 
@@ -180,12 +200,14 @@ package body SynthLib is
 
    end Synthetizer_Timed_Play;
 
-   function Synthetizer_Timed_Stop (S :     API_Synth_Access;
+   function Synthetizer_Timed_Stop (S :  in   API_Synth_Access;
                                     Voice : in out API_Voice;
-                                    T : API_Synthetizer_Time) return API_ERROR_CODE is
+                                    T : in API_Synthetizer_Time) return API_ERROR_CODE is
    begin
       Synth.Synthetizer.Stop(Synt         => S.S.all,
-                             Opened_Voice => Voice);
+                             Opened_Voice => Voice,
+                             Stop_Time    => To_Synth_Time(T)
+                            );
       Voice := No_Voice;
       return SS_OK;
    exception
@@ -254,7 +276,9 @@ package body SynthLib is
          f := Buffer( Natural(I) - 1 );
 
          if Float(f) < -1.0 or float(f) > 1.0 then
-            Ada.Text_IO.Put_Line("range failed for  :" & C_Float'image(f) & " in " & Integer'image(i));
+            Ada.Text_IO.Put_Line("range failed for  :" &
+                                   C_Float'image(f) & " in " &
+                                   Integer'image(i));
             return E_FAILED;
          end if;
 

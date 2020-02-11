@@ -10,6 +10,7 @@ Library project Adamidi is
 
    for library_dir use "lib";
    for library_name use "adamidi";
+
    for Object_Dir use "build";
    for library_kind use "static";
    for Languages use ("Ada");
