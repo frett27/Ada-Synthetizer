@@ -50,7 +50,8 @@ package Synth.Driver.CxSoundio is
 
    overriding procedure Play
      (Driver : in out Soundio_Driver;
-      Buffer : PCM_Frame_Array_Access);
+      Buffer : PCM_Frame_Array_Access;
+      Play_Reference_Buffer_Start_Time : Synthetizer_Time);
 
    -------------------
    -- Get_Frequency --
@@ -58,6 +59,16 @@ package Synth.Driver.CxSoundio is
 
    overriding function Get_Frequency (Driver : Soundio_Driver)
            return Frequency_Type;
+
+
+
+   ---------------------------
+   -- Get_Current_Play_Time --
+   ---------------------------
+
+   overriding function Get_Current_Play_Time(Driver: Soundio_Driver)
+                                  return Synthetizer_Time;
+
 
 private
 
@@ -72,7 +83,13 @@ private
       CurrentPlayedBuffer : PCM_Frame_Array_Access := null;
       CurrentIndex : Natural := 0;
 
+      Current_Buffer_Start_Time: Synthetizer_Time;
+
       IsPlaying : Boolean := False;
+
+      -- clock at the beginning of the play
+      Buffer_Playing_Ref_Time : Time;
+
    end record;
 
    --  simple semaphone for synchronous play and buffers creation

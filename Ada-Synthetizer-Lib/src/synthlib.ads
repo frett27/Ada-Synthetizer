@@ -22,6 +22,7 @@
 ------------------------------------------------------------------------------
 
 with Synth.Synthetizer;
+with Synth.Driver;
 
 with Interfaces.C;
 with Interfaces.C.Strings;
@@ -55,6 +56,10 @@ package SynthLib is
    function Synthetizer_Get_Time(S : in out API_Synth_Access;
                                  Time: out API_Synthetizer_Time) return API_ERROR_CODE;
 
+
+   function Synthetizer_Estimate_Play_Time(S : in out API_Synth_Access;
+                                           Time: out API_Synthetizer_Time) return API_ERROR_CODE;
+
    -- synthetize resource freeze
    function Synthetizer_Close (S : in out API_Synth_Access) return API_ERROR_CODE;
 
@@ -76,7 +81,7 @@ package SynthLib is
 
 
    -- free sample
-   procedure Synthetizer_Free_Sample(Sample_No: Natural);
+   function Synthetizer_Free_Sample(Sample_No: Natural) return API_ERROR_CODE;
 
    -- realtime play
    function Synthetizer_Play (S : in API_Synth_Access;
@@ -123,6 +128,7 @@ private
    pragma Export (C, Synthetizer_Stop);
 
    pragma Export (C, Synthetizer_Get_Time);
+   pragma Export (C, Synthetizer_Estimate_Play_Time);
 
    pragma Export (C, Synthetizer_Timed_Play);
    pragma Export (C, Synthetizer_Timed_Stop);
@@ -143,7 +149,7 @@ private
    -- procedure associated to Audit Interface
    procedure Ready_To_Prepare (S : in out API_Synth;
                                Current_Buffer_Time,
-                               Next_Buffer_Time : Synth.Synthetizer.Synthetizer_Time);
+                               Next_Buffer_Time : Synth.Synthetizer_Time);
 
    type  API_Synth_Access is  access all API_Synth;
    pragma Convention(C, API_Synth_Access);

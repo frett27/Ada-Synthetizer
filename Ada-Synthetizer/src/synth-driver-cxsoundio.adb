@@ -77,6 +77,7 @@ package body Synth.Driver.CxSoundio is
       while Frame_Count > 0 loop
          Sample := Driver.CurrentPlayedBuffer (Driver.CurrentIndex);
          Float_Sample := Float (Sample) / Float (2**16);
+         -- both voices on left and right
          Write_Float_Sample
            (Get_Area (Areas, 0), Frame, Float_Sample);
          Write_Float_Sample
@@ -93,6 +94,11 @@ package body Synth.Driver.CxSoundio is
      --  Put_Line (Err'Img);
 
       SBuffer.Verlassen;
+   exception
+      when others =>
+         -- don't propagate exception in the C callback play ..
+         SBuffer.Verlassen;
+
 
    end Write_Device_Callback;
 
@@ -125,8 +131,12 @@ package body Synth.Driver.CxSoundio is
          SIODriver.Device := Get_Output_Device (SIODriver.IO,
                                                 Default_Device_Index);
 
+
+
          Out_Stream := Outstream_Create (SIODriver.Device);
+
          Out_Stream.Format := Format_Float32NE;
+         Out_Stream.Sample_Rate := Interfaces.C.Int(Frequency);
          Out_Stream.Write_Callback :=
               Write_Device_Callback'Access;
 
@@ -159,7 +169,8 @@ package body Synth.Driver.CxSoundio is
 
    overriding procedure Play
      (Driver : in out Soundio_Driver;
-      Buffer : PCM_Frame_Array_Access)
+      Buffer : PCM_Frame_Array_Access;
+      Play_Reference_Buffer_Start_Time : Synthetizer_Time)
    is
    begin
 
@@ -167,10 +178,24 @@ package body Synth.Driver.CxSoundio is
       Driver.CurrentPlayedBuffer := Buffer;
       Driver.CurrentIndex := Buffer'First;
 
+      Driver.Current_Buffer_Start_Time := Play_Reference_Buffer_Start_Time;
+      Driver.Buffer_Playing_Ref_Time := Clock;
+
       SBuffer.Passen; -- block the exit, to avoid freeing the buffer by caller
+                      -- will be released on callback
       SBuffer.Verlassen;
 
    end Play;
+
+
+   overriding function Get_Current_Play_Time(Driver: Soundio_Driver)
+                                             return Synthetizer_Time is
+      -- T : Time := Clock;
+     --  Modifier_Time  :Time_Span := T - Driver.Buffer_Playing_Ref_Time;
+   begin
+      return Driver.Current_Buffer_Start_Time; -- + Synthetizer_Time(Modifier_Time);
+   end Get_Current_Play_Time;
+
 
    -------------------
    -- Get_Frequency --

@@ -1,2 +1,5 @@
 **/*.o
 **/*.ali
+lib/*.a
+lib/*.dll
+lib/*.so

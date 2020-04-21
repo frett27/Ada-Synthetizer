@@ -26,8 +26,6 @@ with Synth.Driver;
 
 package Synth.Synthetizer is
 
-   subtype Synthetizer_Time is Time_Span;
-
    Not_Defined_Clock : constant Synthetizer_Time :=
      Synthetizer_Time (Time_Span_Last);
 
@@ -108,7 +106,8 @@ package Synth.Synthetizer is
    function Get_Time
      (Synth : Synthetizer_Type) return Synthetizer_Time;
 
-
+   function Get_Buffer_Time
+     (Synth : Synthetizer_Type) return Synthetizer_Time;
 
    ----------
    -- Stop --
@@ -124,6 +123,9 @@ package Synth.Synthetizer is
                    Stop_Time     : Synthetizer_Time);
 
    function Get_Opened_Voices (Synt : Synthetizer_Type) return Natural;
+
+   -- Accessor for getting underlying associated driver
+   function Get_Driver_Access (Synt : Synthetizer_Type) return Synth.Driver.Sound_Driver_Access;
 
    Synthetizer_Not_Inited : exception;
 
@@ -172,7 +174,9 @@ private
    MAX_VOICES_INDICE : constant Voice := Voice (MAX_VOICES);
 
 
+   -- buffer for preparing the sound output
    type Buffer_Type is record
+      Buffer_Start_Time : Synthetizer_Time; -- buffer start synthetizer time
       BP : PCM_Frame_Array_Access;
       BF : Frame_Array_Access;
    end record;
@@ -192,9 +196,10 @@ private
 
       procedure Init;
 
-      entry Consume_Buffer (Buffer : out PCM_Frame_Array_Access);
+      entry Consume_Buffer (T: out Synthetizer_Time; Buffer : out PCM_Frame_Array_Access);
 
-      entry Freeze_New_Buffer (Buffer : out Frame_Array_Access);
+      -- this allocate the buffer
+      entry Freeze_New_Buffer (T: Synthetizer_Time; Buffer : out Frame_Array_Access);
 
       entry UnFreeze_New_Buffer (Buffer : Frame_Array_Access);
 
@@ -203,7 +208,7 @@ private
    private
 
       --  buffers (frame and compiled ones)
-      Buffers : Buffers_Type (1 .. NBBuffer);
+      Buffers : Buffers_Type (1 .. NBBuffer) := (others => Buffer_Type'(To_Time_Span (Duration (0.0)),null,null));
 
       --  buffers that can be consumed
       Available_For_Consume : Boolean_Array (1 .. NBBuffer) :=

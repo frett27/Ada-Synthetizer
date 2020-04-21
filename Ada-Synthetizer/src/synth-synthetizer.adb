@@ -135,6 +135,17 @@ package body Synth.Synthetizer is
       return Get_Synthetizer_Time (Synth.all);
    end Get_Time;
 
+   --  Compute a buffer time
+   function Get_Buffer_Time
+     (Synth : Synthetizer_Type) return Synthetizer_Time is
+      Drv : Driver.Sound_Driver_Access := Synth.D;
+   begin
+      return Milliseconds( Integer( 1000.0 * Float(Synth.BR.Buffer_Length) *
+                             Float(1.0) / Float(Driver.Get_Frequency(Drv.all))));
+   end;
+
+
+
    ----------
    -- Stop --
    ----------
@@ -211,11 +222,12 @@ package body Synth.Synthetizer is
       -- Consume_Buffer --
       --------------------
 
-      entry Consume_Buffer (Buffer : out PCM_Frame_Array_Access)
+      entry Consume_Buffer (T: out Synthetizer_Time; Buffer : out PCM_Frame_Array_Access)
         when Available_For_Consume (Current_Consume) is
       begin
 
          Buffer := Buffers (Current_Consume).BP;
+         T := Buffers(Current_Consume).Buffer_Start_Time;
 
          Available_For_Consume (Current_Consume) := False; -- has been consumed
 
@@ -223,7 +235,6 @@ package body Synth.Synthetizer is
          pragma Assert (Free_Buffers <= Buffers'Length);
 
          Current_Consume := (Current_Consume mod NBBuffer) + Buffers'First;
-
          pragma Assert (Current_Consume in Buffers'Range);
 
       end Consume_Buffer;
@@ -232,7 +243,7 @@ package body Synth.Synthetizer is
       -- Freeze_New_Buffer --
       -----------------------
 
-      entry Freeze_New_Buffer (Buffer : out Frame_Array_Access)
+      entry Freeze_New_Buffer (T : Synthetizer_Time; Buffer : out Frame_Array_Access)
         when Free_Buffers > 0
       is
          Search_Index : Natural := Current_Consume;
@@ -253,6 +264,7 @@ package body Synth.Synthetizer is
                         and then Available_For_Consume (Search_Index) = False);
 
          Buffer := Buffers (Search_Index).BF;
+         Buffers(Search_Index).Buffer_Start_Time := T;
          Outed_Frame_Buffer (Search_Index) := True;
          Free_Buffers := Free_Buffers - 1;
 
@@ -291,11 +303,15 @@ package body Synth.Synthetizer is
    ---------------------------
    -- Buffer_Play_Task_Type --
    ---------------------------
+
    --  this task continuously send buffer to the play
    task body Buffer_Play_Task_Type is
       Task_BR : Buffer_Ring_Access;
       Task_Driver : Driver.Sound_Driver_Access;
       Terminated : Boolean := False;
+
+      --  time to send to the sound driver the buffer
+      Task_Last_Play_Time_Span : Time_Span;
    begin
 
       accept Start (TheDriver : Driver.Sound_Driver_Access;
@@ -314,16 +330,29 @@ package body Synth.Synthetizer is
 
             declare
                Buffer : PCM_Frame_Array_Access;
+               Buffer_Start_Time : Synthetizer_Time;
+               Start_Time : Time;
             begin
                if Task_BR.Available_Buffer_For_Consume then
                   --  Put_Line("Play Task Started Consumming buffer");
-                  Task_BR.Consume_Buffer (Buffer);
+                  Task_BR.Consume_Buffer (Buffer_Start_Time, Buffer);
                   --           Put_Line("Play Task buffer consummed");
+
+                  -- this transfert the sound to driver
+                  -- might be blocking until the transfert is done, or
+                  -- driver buffer is full
+                  --
+                  -- can be triky to have the play time
+                  Start_Time := Clock;
                   Synth.Driver.Play (Driver => Task_Driver.all,
-                                     Buffer => Buffer);
+                                     Buffer => Buffer,
+                                     Play_Reference_Buffer_Start_Time => Buffer_Start_Time
+                                    );
+                  Task_Last_Play_Time_Span := Clock - Start_Time;
                   --         Put_Line("Done");
+
                end if;
-               delay 0.01;
+                delay 0.01;
             exception
                when E : others =>
                   DumpException (E);
@@ -402,12 +431,14 @@ package body Synth.Synthetizer is
 
             begin
 
-               Task_Buffer_Ring.Freeze_New_Buffer (Buffer => Preparing_Buffer);
+               Task_Buffer_Ring.Freeze_New_Buffer (T => Current_Buffer_Start_Time,
+                                                   Buffer => Preparing_Buffer);
 
                --  compute the next buffer start time (inclusive)
                Next_Buffer_Last_Time :=
                  Current_Buffer_Start_Time +
                    Driver_Frequency_Period * (Preparing_Buffer.all'Length + 1);
+
 
                --  call back, to populate the new buffer, commit all events before
 
@@ -741,6 +772,8 @@ package body Synth.Synthetizer is
    begin
 
       SST.Ref_Time := Clock;
+
+      SST.D := D;
       --  init the buffers
       SST.BR := new Buffer_Ring (NBBuffer, Buffer_Length);
       SST.BR.Init;
@@ -773,8 +806,9 @@ package body Synth.Synthetizer is
       while SST.BR.Available_Buffer_For_Consume loop
          declare
             Buffer : PCM_Frame_Array_Access;
+            T : Synthetizer_Time;
          begin
-            SST.BR.Consume_Buffer (Buffer);
+            SST.BR.Consume_Buffer (T, Buffer);
          end;
       end loop;
 
@@ -785,8 +819,9 @@ package body Synth.Synthetizer is
       while SST.BR.Available_Buffer_For_Consume loop
          declare
             Buffer : PCM_Frame_Array_Access;
+            T : Synthetizer_Time;
          begin
-            SST.BR.Consume_Buffer (Buffer);
+            SST.BR.Consume_Buffer (T, Buffer);
          end;
       end loop;
    end Close;
@@ -943,6 +978,18 @@ package body Synth.Synthetizer is
    begin
       return Synthetizer_Time (Current_Clock - SST.Ref_Time);
    end Get_Synthetizer_Time;
+
+
+   ------------------------
+   --  Get_Driver_Access --
+   ------------------------
+
+   function Get_Driver_Access (Synt : Synthetizer_Type) return Synth.Driver.Sound_Driver_Access is
+   begin
+      return Synt.D;
+   end;
+
+
 
    ---------------------------
    --  Get_Allocated_Voices --

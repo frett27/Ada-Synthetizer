@@ -29,6 +29,8 @@ package Synth is
 
    --  basic types used in this synthetizer
 
+   subtype Synthetizer_Time is Time_Span;
+
    subtype Frame is Float range -1.0 .. 1.0;
 
    type Frame_Array is array (Natural range <>) of aliased Frame;

@@ -1,1 +1,0 @@
-synth-driver-wav.adb:28:01: warning: "Real_Time" is already use-visible through previous use_clause at synth.ads:25

@@ -39,7 +39,8 @@ package Synth.Driver is
 
    procedure Play
      (Driver : in out Sound_Driver;
-      Buffer : PCM_Frame_Array_Access) is abstract;
+      Buffer : PCM_Frame_Array_Access;
+      Play_Reference_Buffer_Start_Time : Synthetizer_Time) is abstract;
 
    -----------
    -- Close --
@@ -60,5 +61,14 @@ package Synth.Driver is
 
    function Get_Frequency (Driver : Sound_Driver)
    return Frequency_Type is abstract;
+
+
+   ---------------------------
+   -- Get_Current_Play_Time --
+   ---------------------------
+
+   function Get_Current_Play_Time(Driver: Sound_Driver)
+                                  return Synthetizer_Time is abstract;
+
 
 end Synth.Driver;

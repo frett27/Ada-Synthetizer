@@ -61,7 +61,8 @@ package body Synth.Driver.Wav is
 
    overriding procedure Play
      (Driver : in out WAV_Driver;
-      Buffer : PCM_Frame_Array_Access)
+      Buffer : PCM_Frame_Array_Access;
+      Play_Reference_Buffer_Start_Time : Synthetizer_Time)
    is
       --  compute the end of play
       EndTime : constant Time := Clock +
@@ -71,6 +72,7 @@ package body Synth.Driver.Wav is
               * Float (Buffer.all'Length * 1_000_000)));
       Frames : aliased Frame_Array := (Buffer.all'Range => 0.0);
    begin
+      Driver.Current_Buffer_Start_Time := Play_Reference_Buffer_Start_Time;
 
       for I in Buffer.all'Range loop
          Frames (I) := Frame (Float (Buffer (I)) / Float (2**15));
@@ -93,5 +95,18 @@ package body Synth.Driver.Wav is
    begin
       return Driver.Frequency;
    end Get_Frequency;
+
+
+   ---------------------------
+   -- Get_Current_Play_Time --
+   ---------------------------
+
+   overriding function Get_Current_Play_Time(Driver: WAV_Driver)
+                                  return Synthetizer_Time is
+   begin
+      return Driver.Current_Buffer_Start_Time;
+   end Get_Current_Play_Time;
+
+
 
 end Synth.Driver.Wav;

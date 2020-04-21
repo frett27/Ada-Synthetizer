@@ -49,7 +49,8 @@ package Synth.Driver.Wav is
 
    overriding procedure Play
      (Driver : in out WAV_Driver;
-      Buffer : PCM_Frame_Array_Access);
+      Buffer : PCM_Frame_Array_Access;
+      Play_Reference_Buffer_Start_Time : Synthetizer_Time);
 
    -------------------
    -- Get_Frequency --
@@ -57,11 +58,21 @@ package Synth.Driver.Wav is
    overriding function Get_Frequency (Driver : WAV_Driver)
            return Frequency_Type;
 
+
+
+   ---------------------------
+   -- Get_Current_Play_Time --
+   ---------------------------
+
+   function Get_Current_Play_Time(Driver: WAV_Driver)
+                                  return Synthetizer_Time;
+
 private
 
    type WAV_Driver is new Sound_Driver with record
       Frequency : Frequency_Type;
       WAV_File : Synth.Wav.WAV_Write_Type;
+      Current_Buffer_Start_Time: Synthetizer_Time;
    end record;
 
 end Synth.Driver.Wav;

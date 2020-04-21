@@ -1,5 +1,8 @@
 package net.frett27.synthetizer;
 
+import java.io.Closeable;
+import java.util.ArrayList;
+
 import com.sun.jna.Callback;
 import com.sun.jna.Library;
 import com.sun.jna.Memory;
@@ -14,7 +17,7 @@ import com.sun.jna.ptr.PointerByReference;
  * @author pfreydiere
  *
  */
-public class Synthetizer {
+public class Synthetizer implements Closeable {
 
 	static {
 		// load library at startup
@@ -82,6 +85,8 @@ public class Synthetizer {
 		long synthetizer_close(PointerByReference p);
 
 		long synthetizer_get_time(PointerByReference p, LongByReference time);
+
+		long synthetizer_estimate_play_time(PointerByReference p, LongByReference time);
 
 		// sound sample
 		long synthetizer_load_wav_sample(Pointer filename, float sample_frequency, LongByReference voiceOut);
@@ -155,16 +160,11 @@ public class Synthetizer {
 		referenceToKeepCodeNotBeenGarbaged = new callback() {
 			@Override
 			public void prepare(Pointer p, long currentTime, long nextTime) {
-
-				// these display synchronize the call,
-				// and make it work ????
-				System.out.println("in java");
 				if (javaCallBack != null) {
 					javaCallBack.prepareBuffer(bufferApi, currentTime, nextTime);
 				} else {
 					System.out.println("javacallbak is null");
 				}
-				System.out.println("en java");
 			}
 		};
 
@@ -176,16 +176,39 @@ public class Synthetizer {
 		cSynth = pByRef.getValue();
 	}
 
+	public void freeSample(long soundHandle) throws Exception {
+		long ret = clibrary.synthetizer_free_sample(soundHandle);
+		if (ret > 0) {
+			throw new Exception("exception is releasing sound " + soundHandle + " it returns :" + ret);
+		}
+		loadedSounds.remove(soundHandle);
+	}
+
 	/**
 	 * Close Synthetizer
 	 * 
 	 * @throws Exception
 	 */
-	public void close() throws Exception {
+	@Override
+	public void close() {
+		// release loaded sounds
+		while (loadedSounds.size() > 0) {
+			Long handle = loadedSounds.get(0);
+
+			try {
+				if (handle != null) {
+					freeSample(handle);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
 		long ret = clibrary.synthetizer_close(new PointerByReference(cSynth));
 		if (ret > 0) {
-			throw new Exception("Exception in closing the synthizer, it returns :" + ret);
+			throw new RuntimeException("Exception in closing the synthizer, it returns :" + ret);
 		}
+
 	}
 
 	/**
@@ -202,6 +225,24 @@ public class Synthetizer {
 		}
 		return returnedTime.getValue();
 	}
+
+	/**
+	 * get estimated synthetizer play time (taking into account the buffer play
+	 * size)
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public long getEstimateTime() throws Exception {
+		LongByReference returnedTime = new LongByReference();
+		long ret = clibrary.synthetizer_estimate_play_time(new PointerByReference(cSynth), returnedTime);
+		if (ret > 0) {
+			throw new Exception("Exception in getting estimated time: " + ret);
+		}
+		return returnedTime.getValue();
+	}
+
+	private ArrayList<Long> loadedSounds = new ArrayList<Long>();
 
 	/**
 	 * Load a Wav file into Sound memory
@@ -221,7 +262,9 @@ public class Synthetizer {
 		if (ret > 0) {
 			throw new Exception("Error in load sound, " + ret + " returned");
 		}
-		return soundSampleOut.getValue();
+		long soundHandle = soundSampleOut.getValue();
+		loadedSounds.add(soundHandle);
+		return soundHandle;
 	}
 
 	/**
@@ -249,7 +292,9 @@ public class Synthetizer {
 		if (ret > 0) {
 			throw new Exception("Error in creating sound sample sound, " + ret + " returned");
 		}
-		return sampleOut.getValue();
+		long soundHandle = sampleOut.getValue();
+		loadedSounds.add(soundHandle);
+		return soundHandle;
 	}
 
 	/**
@@ -287,6 +332,13 @@ public class Synthetizer {
 		return voiceReturn.getValue();
 	}
 
+	/**
+	 * stop given voice immediately
+	 * 
+	 * @param voice
+	 * @return
+	 * @throws Exception
+	 */
 	public long stop(long voice) throws Exception {
 		LongByReference voiceReturn = new LongByReference();
 		long ret = clibrary.synthetizer_stop(cSynth, voice);

@@ -49,9 +49,9 @@ package body SynthLib is
 
       D : Sound_Driver_Access;
    begin
-      s := new API_Synth;
-      s.S := new Synthetizer_Type;
-      s.Callback := Call_Back;
+      S := new API_Synth;
+      S.S := new Synthetizer_Type;
+      S.Callback := Call_Back;
 
       begin
          Synth.Driver.Open(Driver    => D,
@@ -63,7 +63,7 @@ package body SynthLib is
 
       Synth.Synthetizer.Open(Driver_Access  => D,
                              Synt           => S.S.all,
-                             Buffers_Number => 2,
+                             Buffers_Number => 3,
                              Buffer_Size => Natural(Buffer_Size),
                              Audit => Synthetizer_Audit_Access(S) );
       return SS_OK;
@@ -104,6 +104,29 @@ package body SynthLib is
    end;
 
 
+   function Synthetizer_Estimate_Play_Time(S : in out API_Synth_Access;
+                                           Time: out API_Synthetizer_Time) return API_ERROR_CODE is
+      use Ada.Real_Time;
+   begin
+      if S = null then
+         return E_FAILED;
+      end if;
+
+      declare
+         T : Synthetizer_Time :=
+           Synth.Driver.Get_Current_Play_Time(
+                                              Synth.Synthetizer.Get_Driver_Access(
+                                                S.S.all).all);
+      begin
+         Time := From_Synth_Time(T);
+      end;
+
+      return SS_OK;
+   exception
+      when E: others =>
+         DumpException(E);
+         return E_FAILED;
+   end;
 
 
 
@@ -116,7 +139,7 @@ package body SynthLib is
 
       if S.Callback /= null then
          S.Callback(S'Unchecked_Access, From_Synth_Time(Current_Buffer_Time),
-           From_Synth_Time(Next_Buffer_Time));
+                    From_Synth_Time(Next_Buffer_Time));
       end if;
 
    end;
@@ -306,85 +329,86 @@ package body SynthLib is
       end if;
 
 
-   SoundSample_Buffers(NewSample_No) := Sound;
-   sample_No := NewSample_No;
+      SoundSample_Buffers(NewSample_No) := Sound;
+      sample_No := NewSample_No;
 
       return SS_OK;
 
-      exception
-   when E: others =>
-      DumpException(E);
-      return E_FAILED;
-end Synthetizer_Load_Sample;
-
-
-
--- load a sound sample from wav file
-function Synthetizer_Load_Wav_Sample(Filename: Interfaces.C.Strings.chars_ptr;
-                                     Note_Frequency: in Interfaces.C.C_Float;
-                                     Sample_No: out Natural) return API_ERROR_CODE is
-   Sound : SoundSample;
-   FN : String := Interfaces.C.Strings.Value(Filename);
-   NewSample_No : Natural;
-begin
-
-   Get_Next_Sample_No(Allocated_Sample_No => NewSample_No);
-   if NewSample_No = 0 then
-      return E_NO_FREE_SOUNDSAMPLE;
-   end if;
-
-
-   Ada.Text_IO.Put_Line("loading " & FN);
-   begin
-      Synth.Wav.load(FileName => FN,  Sample   => Sound);
    exception
-      when E : others =>
+      when E: others =>
          DumpException(E);
-         return E_LOAD_SOUNDSAMPLE;
-   end;
+         return E_FAILED;
+   end Synthetizer_Load_Sample;
 
 
-   Ada.Text_IO.Put_Line("loaded");
-   Sound.Note_Frequency := Float(Note_Frequency);
 
-
-   -- find next free slot
-   CurrentSoundSample_Index := NewSample_No;
-
-   SoundSample_Buffers(CurrentSoundSample_Index) := Sound;
-   Sample_No := Positive(CurrentSoundSample_Index);
-   return SS_OK;
-exception
-   when E: others =>
-      DumpException(E);
-      return E_FAILED;
-end Synthetizer_Load_Wav_Sample;
-
-procedure Synthetizer_Free_Sample(Sample_No: Natural) is
-begin
-   declare
-      S : SoundSample := SoundSample_Buffers(Sample_No);
+   -- load a sound sample from wav file
+   function Synthetizer_Load_Wav_Sample(Filename: Interfaces.C.Strings.chars_ptr;
+                                        Note_Frequency: in Interfaces.C.C_Float;
+                                        Sample_No: out Natural) return API_ERROR_CODE is
+      Sound : SoundSample;
+      FN : String := Interfaces.C.Strings.Value(Filename);
+      NewSample_No : Natural;
    begin
-      if S /= Synth.Null_Sound_Sample then
-         Synth.Free_Frame_Array(S.Mono_Data);
+
+      Get_Next_Sample_No(Allocated_Sample_No => NewSample_No);
+      if NewSample_No = 0 then
+         return E_NO_FREE_SOUNDSAMPLE;
       end if;
-      SoundSample_Buffers(Sample_No) := Synth.Null_Sound_Sample;
+
+
+      Ada.Text_IO.Put_Line("loading " & FN);
+      begin
+         Synth.Wav.load(FileName => FN,  Sample   => Sound);
+      exception
+         when E : others =>
+            DumpException(E);
+            return E_LOAD_SOUNDSAMPLE;
+      end;
+
+
+      Ada.Text_IO.Put_Line("loaded");
+      Sound.Note_Frequency := Float(Note_Frequency);
+
+
+      -- find next free slot
+      CurrentSoundSample_Index := NewSample_No;
+
+      SoundSample_Buffers(CurrentSoundSample_Index) := Sound;
+      Sample_No := Positive(CurrentSoundSample_Index);
+      return SS_OK;
+   exception
+      when E: others =>
+         DumpException(E);
+         return E_FAILED;
+   end Synthetizer_Load_Wav_Sample;
+
+   function Synthetizer_Free_Sample(Sample_No: Natural) return API_ERROR_CODE is
+   begin
+      declare
+         S : SoundSample := SoundSample_Buffers(Sample_No);
+      begin
+         if S /= Synth.Null_Sound_Sample then
+            Synth.Free_Frame_Array(S.Mono_Data);
+         end if;
+         SoundSample_Buffers(Sample_No) := Synth.Null_Sound_Sample;
+      end;
+      return SS_OK;
+   exception
+      when E: others =>
+         DumpException(E);
+         return E_FAILED;
    end;
-exception
-   when E: others =>
-      DumpException(E);
-      raise;
-end;
 
 
-function Synthetizer_Close(S: in out API_Synth_Access) return API_ERROR_CODE is
-begin
-   Synth.Synthetizer.Close(Synt => S.S.all);
-   return SS_OK;
-exception
-   when others =>
-      return E_FAILED;
-end;
+   function Synthetizer_Close(S: in out API_Synth_Access) return API_ERROR_CODE is
+   begin
+      Synth.Synthetizer.Close(Synt => S.S.all);
+      return SS_OK;
+   exception
+      when others =>
+         return E_FAILED;
+   end;
 
 
 end SynthLib;
