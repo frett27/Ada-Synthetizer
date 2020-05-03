@@ -1,6 +1,6 @@
 # Ada-Synthetizer Suite
 
-*Patrice Freydiere - December 2019*
+*Patrice Freydiere - April 2020*
 
 This **repository** provides a **synthetizer library implementation** for making music from samples (.wav files). A similar larger project is for example : timidity, fluidsynth. This library has been setted up to be able to handle Highly Polyphonic rendering. 
 
@@ -61,15 +61,17 @@ Can be extended outside the library, depending on needs. Theses drivers show how
 
 ### Supported Plateforms
 
-The Synthetizer has been tested on x64, x32 desktop computers.
+The Synthetizer has been tested on x64, x32 desktop computers (linux, windows, arm v6/v7)
 
-It also works well on ARM based processor, 
+It also works well on ARM based processor (RPI/Orangepi)
+
+
 
 
 
 ## Using the Synthetizer by example : the code
 
-Below, an example of the 5 mins , RealTime use of the synthetizer :
+Below, an example of the 5 mins , **RealTime** use of the synthetizer :
 
 
 
@@ -127,7 +129,7 @@ end;
 
 ```
 
-More information about the API and internals can be found in the link below, especially for version v0.1.5, where a ahead of time complementary API is provided.
+More information about the API and internals can be found in the link below, especially for version v0.1.5, where a ahead of time complementary API is provided. 
 
 [Additional technical insights can be found at this location](Ada-Synthetizer/doc/architecture.md)
 
@@ -139,28 +141,13 @@ The synthetizer behave nicely, there are no large amount or synchro between comp
 
 
 
+## Version changes
+
+The current version is 1.2, see [ChangeLog][ChangeLog.md] for more informations about updates, and current improvments.
+
+
+
 ## Next actions
-
-Version 0.1.1 - **DONE**
-
-- ~~Fix Memory Leak for Win32 driver~~
-- ~~Eval portaudio for output rendering (X Plateform sound toolkit)~~
-- ~~Add Alsa Driver for linux plateforms~~
-- ~~Add Wav Driver for debugging purpose or to disk exports~~
-
-Version 0.1.2 - **DONE**
-
-- ~~x64 support, opening to x64 compatible library~~
-
-Version 0.1.5 - **DONE**
-
-- ~~Ahead of time playin~~
-
-Version 0.2:  - **In Progress**
-
-- ~~Interfaçing with C, Java for consuming the library~~ - first version included in Ada-Synthetizer-Lib Folder
-
-- ~~Ada-Midi-Player, using the synthetizer playin from Midi Files~~
 
 Version 0.3
 
@@ -171,6 +158,7 @@ Mid Term Version, may be a rewrite targeting smaller footprint architectures:
 - Porting to Spark profile, remove the task part for embedded usage
 
 
+
 ### Areas That can be covered next (if time permit)
 
-FM generators : The current buffers are filled with Wav samples, but a short abstraction can be done to introduce signal generators and modulators to extends the use to "analog like" synthetizers.
+Oscillators / FM generators : The current buffers are filled with Wav samples, but a short abstraction can be done to introduce signal generators and modulators to extends the use to "analog like" synthetizers.
