@@ -270,6 +270,22 @@ public class Synthetizer implements Closeable {
 	/**
 	 * load a sample into synth memory
 	 * 
+	 * @param buffer
+	 * @param sampleFrequency
+	 * @param noteFrequency
+	 * @param cantStop
+	 * @return
+	 * @throws Exception
+	 */
+	public long loadSample(float[] buffer, float sampleFrequency, float noteFrequency, boolean cantStop)
+			throws Exception {
+		return loadSample(buffer, sampleFrequency, noteFrequency, false, 0, 0, cantStop);
+
+	}
+
+	/**
+	 * load a sample into synth memory
+	 * 
 	 * @param buffer          the samples (float -1 .. 1)
 	 * @param sampleFrequency
 	 * @param noteFrequency
@@ -277,8 +293,8 @@ public class Synthetizer implements Closeable {
 	 * @return sound handle
 	 * @throws Exception
 	 */
-	public long loadSample(float[] buffer, float sampleFrequency, float noteFrequency, boolean cantStop)
-			throws Exception {
+	public long loadSample(float[] buffer, float sampleFrequency, float noteFrequency,
+			boolean hasLoop, int loop_start, int loop_end,  boolean cantStop) throws Exception {
 		LongByReference sampleOut = new LongByReference();
 		assert buffer != null;
 
@@ -288,7 +304,7 @@ public class Synthetizer implements Closeable {
 		}
 
 		long ret = clibrary.synthetizer_load_sample(pFloatFeatures, buffer.length, sampleFrequency, noteFrequency,
-				cantStop ? 1 : 0, 0, 0, 0, sampleOut);
+				cantStop ? 1 : 0, hasLoop ? 1 : 0, loop_start, loop_end, sampleOut);
 		if (ret > 0) {
 			throw new Exception("Error in creating sound sample sound, " + ret + " returned");
 		}
