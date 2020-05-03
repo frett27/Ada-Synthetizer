@@ -24,11 +24,16 @@ jobs:
     - name: Check out submodules
       run: git submodule update --init --recursive
 
-    - name: install dependencies
+    - name: update system package list
       run: sudo apt-get update
 
     - name: install dependencies
-      run: sudo apt-get install gnat-9 libasound-dev gprbuild
+      run: sudo apt-get install gnat-9 libasound-dev gprbuild  
+      
+    - name: compile midi player
+      working-directory: Ada-Midi-Player
+      run: gprbuild adamidiplayer.gpr
+
 
 #    - name: Upload logs (if failed)
 #      if: failure()
