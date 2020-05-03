@@ -293,8 +293,8 @@ package body Midi.Player is
    
    type Player_Synth_Audit is new Synth.Synthetizer.Synthetizer_Audit with record
       CT : Long_Float := 0.0;
-      S_Time : Synth.Synthetizer.Synthetizer_Time := 
-        Synth.Synthetizer.Synthetizer_Time(Microseconds(0));
+      S_Time : Synth.Synthetizer_Time := 
+        Synth.Synthetizer_Time(Microseconds(0));
       EventCursor : Event_Vector.Cursor;
       TempoFactor: Float := 1.0;
       Event_Counter : Natural := 0;
@@ -307,7 +307,7 @@ package body Midi.Player is
    --
    procedure Ready_To_Prepare(Audit : in out Player_Synth_Audit;
                               Current_Buffer_Time,
-                              Next_Buffer_Time : Synth.Synthetizer.Synthetizer_Time) is 
+                              Next_Buffer_Time : Synth.Synthetizer_Time) is 
       use Synth.Synthetizer;
    begin
          
@@ -425,7 +425,7 @@ package body Midi.Player is
          Audit : aliased Player_Synth_Audit := 
            Player_Synth_Audit'(
                                ct => 0.0,
-                               S_Time => Synth.Synthetizer.Synthetizer_Time(Seconds(3)),
+                               S_Time => Synth.Synthetizer_Time(Seconds(3)),
                                TempoFactor => Parameters.TempoFactor,
                                Sounds => Sounds,
                                Event_Counter => 0,
