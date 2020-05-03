@@ -438,7 +438,7 @@ package body Midi.Player is
          Synth.Synthetizer.Open (Driver_Access => D,
                                  Synt => S,
                                  Buffers_Number =>  2,
-                                 Buffer_Size => 40_000, -- 10_000
+                                 Buffer_Size => 10_000, -- 10_000
                                  Audit =>  Audit'Unchecked_Access
                                 );
          
