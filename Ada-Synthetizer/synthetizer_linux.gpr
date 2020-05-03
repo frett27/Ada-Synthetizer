@@ -1,16 +1,21 @@
--- with "./drivers/alsa-binding/alsa_binding.gpr";
-with "./drivers/ada-soundio/soundio.gpr";
+with "./drivers/alsa-binding/alsa_binding.gpr";
+-- with "./drivers/ada-soundio/soundio.gpr";
 
 project Synthetizer_Linux is
 
-   for Source_Dirs use ("src", "src_linux");
+   for Source_Dirs use ("src", "src_linux", "src_linux/alsa");
 
    for Object_Dir use "obj";
 
    for Languages use ("Ada");
 
+   package Linker is
+      for Linker_Options use ("-lasound");
+   end Linker;
+
+
    package Compiler is
-      for Default_Switches ("Ada") use ("-g", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
+      for Default_Switches ("Ada") use ("-g", "-O3", "-gnato", "-gnatwa", "-gnata", "-gnatQ", "-gnat12", "-fstack-check");
    end Compiler;
 
 

@@ -5,7 +5,7 @@ project Synthetizer_Win32 is
 
  
    for Object_Dir use "obj";
-   for Source_Dirs use ("src","src_win32", "tests");
+   for Source_Dirs use ("src", "src_generic" , "src_win32", "tests");
 
    package Linker is
       for Linker_Options use ("-lwinmm");

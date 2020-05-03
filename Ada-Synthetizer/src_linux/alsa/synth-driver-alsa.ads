@@ -39,7 +39,8 @@ package Synth.Driver.Alsa is
    -- Open --
    ----------
    --  factory
-   procedure Open (Driver : out Sound_Driver_Access);
+   procedure Open (Driver : out Sound_Driver_Access;
+	   Frequency: Frequency_Type := 44100.0);
 
    -----------
    -- Close --
@@ -49,7 +50,7 @@ package Synth.Driver.Alsa is
    -------------------
    -- Get_Frequency --
    -------------------
-   overriding function Get_Frequency (Driver : in ALSA_Driver)
+   overriding function Get_Frequency (Driver : ALSA_Driver)
                           return Frequency_Type;
    ----------
    -- Play --
@@ -57,13 +58,23 @@ package Synth.Driver.Alsa is
 
    overriding procedure Play
      (Driver : in out ALSA_Driver;
-      Buffer : PCM_Frame_Array_Access);
+      Buffer : PCM_Frame_Array_Access;
+      Play_Reference_Buffer_Start_Time : Synthetizer_Time);
+
+   ---------------------------
+   -- Get_Current_Play_Time --
+   ---------------------------
+
+   overriding function Get_Current_Play_Time(Driver: ALSA_Driver)
+                                  return Synthetizer_Time;
+
 
 private
    type ALSA_Driver is new Synth.Driver.Sound_Driver with record
       Speakers    : Sound.Mono.Line_Type;
       Frequency   : Frequency_Type;
-
+      Current_Buffer_Start_Time : Synthetizer_Time;
+      Buffer_Playing_Ref_Time : Time;
    end record;
 
 

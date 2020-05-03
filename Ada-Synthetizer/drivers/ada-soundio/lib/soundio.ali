@@ -1,5 +1,6 @@
-V "GNAT Lib v2018"
+V "GNAT Lib v9"
 A -gnatA
+A -fPIC
 A -mtune=generic
 A -march=x86-64
 P SS ZX
@@ -23,7 +24,7 @@ Z ada.exceptions%s	a-except.adb		a-except.ali
 W ada.unchecked_conversion%s
 Z system%s		system.ads		system.ali
 
-U soundio%s		soundio.ads		c5aad086 BN EE OO PK
+U soundio%s		soundio.ads		ce1bb268 BN EE OO PK
 W ada%s			ada.ads			ada.ali
 Z ada.exceptions%s	a-except.adb		a-except.ali
 Z ada.unchecked_conversion%s
@@ -38,24 +39,24 @@ Z system.parameters%s	s-parame.adb		s-parame.ali
 Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
 Z system.standard_library%s  s-stalib.adb	s-stalib.ali
 
-D ada.ads		20180524051736 76789da1 ada%s
-D a-except.ads		20180524051736 291912d5 ada.exceptions%s
-D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
-D interfac.ads		20180524051736 5ab55268 interfaces%s
-D i-c.ads		20180524051736 5421119b interfaces.c%s
-D i-cexten.ads		20180524051736 47f3eec4 interfaces.c.extensions%s
-D i-cpoint.ads		20180524051738 ee8a93ec interfaces.c.pointers%s
-D i-cpoint.adb		20180524051738 d5172521 interfaces.c.pointers%b
-D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
-D soundio.ads		20190407175400 3e4f30d2 soundio%s
-D soundio.adb		20190407175400 d4009294 soundio%b
-D system.ads		20180524051738 32a08138 system%s
-D s-exctab.ads		20180524051738 54135002 system.exception_table%s
-D s-parame.ads		20180524051738 48ec542b system.parameters%s
-D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
-D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
-D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
-D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
+D ada.ads		20200312110721 76789da1 ada%s
+D a-except.ads		20200312110721 291912d5 ada.exceptions%s
+D a-unccon.ads		20200312110721 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20200312110721 5ab55268 interfaces%s
+D i-c.ads		20200312110721 5421119b interfaces.c%s
+D i-cexten.ads		20200312110721 38d7e116 interfaces.c.extensions%s
+D i-cpoint.ads		20200312110721 ee8a93ec interfaces.c.pointers%s
+D i-cpoint.adb		20200312110721 d5172521 interfaces.c.pointers%b
+D i-cstrin.ads		20200312110721 341d0ddf interfaces.c.strings%s
+D soundio.ads		20200503084939 3e4f30d2 soundio%s
+D soundio.adb		20200503084939 d4009294 soundio%b
+D system.ads		20200312110721 4635ec04 system%s
+D s-exctab.ads		20200312110721 54135002 system.exception_table%s
+D s-parame.ads		20200312110721 48ec542b system.parameters%s
+D s-secsta.ads		20200312110721 20bbe636 system.secondary_stack%s
+D s-stalib.ads		20200312110721 09bd3940 system.standard_library%s
+D s-stoele.ads		20200312110721 2dc34a04 system.storage_elements%s
+D s-traent.ads		20200312110721 005bf670 system.traceback_entries%s
 X 1 ada.ads
 16K9*Ada 20e8 11|1r6 15r41
 X 3 a-unccon.ads
@@ -78,10 +79,10 @@ X 5 i-c.ads
 . 464r69 467r70 470r78 473r79 494r88 497r87 497r99 515r25 521r83 524r101
 . 527r111 536r72 539r73 545r28 545r40 548r76 551r98 554r108 563r28 570r56
 . 578r57 587r57 591r56 595r56 11|11r17 35r15
-56I9*ptrdiff_t<long_long_integer> 11|23r20 38r54
+56I9*ptrdiff_t<long_integer> 11|23r20 38r54
 65F9*double<long_float> 10|302r38 303r38 304r42 316r36 339r34 527r96 554r93
 X 6 i-cexten.ads
-37K22*Extensions 468e28 10|6w19 305r24 327r36 348r35 394r61 409r130 430r91
+37K22*Extensions 476e28 10|6w19 305r24 327r36 348r35 394r61 409r130 430r91
 . 482r106 488r101 491r125 494r100 524r77 551r74
 59B9*bool<boolean> 10|305r35 327r47 348r46 394r72 409r141 430r102 482r117
 . 488r112 491r136 494r111 524r88 551r85
@@ -553,7 +554,7 @@ X 11 soundio.adb
 19p7 Sample_Access{14P12} 24m7 26r7
 38p7 Area_Ptr{10|262P12} 40r14
 X 12 system.ads
-37K9*System 10|5w6 172r8 173r10 173r35 276r18 317r28 340r18 11|16r20 12|200e11
+37K9*System 10|5w6 172r8 173r10 173r35 276r18 317r28 340r18 11|16r20 12|156e11
 67M9*Address 10|276r25 317r35 340r25 11|16r27
 91E9*Bit_Order 10|173r17 12|91e57
 91n41*Low_Order_First{91E9} 10|178r16 181r16 184r16 187r16 190r16 193r16

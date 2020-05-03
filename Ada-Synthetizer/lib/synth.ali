@@ -1,4 +1,5 @@
-V "GNAT Lib v2018"
+V "GNAT Lib v9"
+A -O3
 A -gnatA
 A -g
 A -gnato
@@ -7,26 +8,6 @@ A -gnata
 A -gnatQ
 A -gnat12
 A -fstack-check=specific
-A -gnatya
-A -gnatyA
-A -gnatyb
-A -gnatyB
-A -gnatyc
-A -gnatye
-A -gnatyf
-A -gnatyh
-A -gnatyi
-A -gnatyI
-A -gnatyk
-A -gnatyl
-A -gnatyn
-A -gnatyp
-A -gnatyr
-A -gnatyS
-A -gnatym
-A -gnatyt
-A -gnatyu
-A -gnatyx
 A -mtune=generic
 A -march=x86-64
 P ZX
@@ -40,12 +21,13 @@ RV NO_IO
 RV NO_IMPLICIT_CONDITIONALS
 RV NO_SECONDARY_STACK
 RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
 RV NO_DYNAMIC_SIZED_OBJECTS
 RV NO_IMPLEMENTATION_PRAGMAS
 RV NO_ELABORATION_CODE
 RV SPARK_05
 
-U synth%b		synth.adb		a1a6c50a NE OO PK
+U synth%b		synth.adb		01bf7475 NE OO PK
 W ada%s			ada.ads			ada.ali
 Z ada.exceptions%s	a-except.adb		a-except.ali
 W ada.numerics%s	a-numeri.ads		a-numeri.ali
@@ -57,74 +39,74 @@ W gnat%s		gnat.ads		gnat.ali
 W gnat.traceback%s	g-traceb.adb		g-traceb.ali
 W gnat.traceback.symbolic%s  g-trasym.ads	g-trasym.ali
 Z system.assertions%s	s-assert.adb		s-assert.ali
-Z system.concat_2%s	s-conca2.adb		s-conca2.ali
 Z system.exn_llf%s	s-exnllf.adb		s-exnllf.ali
 Z system.fat_flt%s	s-fatflt.ads		s-fatflt.ali
 Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
 
-U synth%s		synth.ads		83fee50c EE OO PK
+U synth%s		synth.ads		cc143751 EE OO PK
 W ada%s			ada.ads			ada.ali
 W ada.exceptions%s	a-except.adb		a-except.ali
 W ada.real_time%s	a-reatim.adb		a-reatim.ali
 Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.unchecked_deallocation%s
 
-D ada.ads		20180524051736 76789da1 ada%s
-D a-except.ads		20180524051736 291912d5 ada.exceptions%s
-D a-exctra.ads		20180524051738 0966bad0 ada.exceptions.traceback%s
-D a-ioexce.ads		20180524051736 e4a01f64 ada.io_exceptions%s
-D a-numeri.ads		20180524051736 bb51c45a ada.numerics%s
-D a-numaux.ads		20180524051736 243fe0b7 ada.numerics.aux%s
-D a-ngelfu.ads		20180524051738 55716239 ada.numerics.generic_elementary_functions%s
-D a-ngelfu.adb		20180524051736 a9022048 ada.numerics.generic_elementary_functions%b
-D a-reatim.ads		20180524051738 0240fc73 ada.real_time%s
-D a-stream.ads		20180524051736 119b8fb3 ada.streams%s
-D a-tags.ads		20180524051738 491b781d ada.tags%s
-D a-textio.ads		20180524051738 881db35a ada.text_io%s
-D a-unccon.ads		20180524051738 0e9b276f ada.unchecked_conversion%s
-D gnat.ads		20180524051738 fd2ad2f1 gnat%s
-D g-traceb.ads		20180524051736 dee80ba3 gnat.traceback%s
-D g-trasym.ads		20180524051736 f121a8ad gnat.traceback.symbolic%s
-D interfac.ads		20180524051736 5ab55268 interfaces%s
-D i-c.ads		20180524051736 5421119b interfaces.c%s
-D i-cstrin.ads		20180524051736 341d0ddf interfaces.c.strings%s
-D i-cstrea.ads		20180524051736 e53d8b8e interfaces.c_streams%s
-D synth.ads		20191207182936 a8a70baa synth%s
-D synth.adb		20191019133020 254cb76e synth%b
-D system.ads		20180524051738 32a08138 system%s
-D s-atacco.ads		20180524051738 4c36d12f system.address_to_access_conversions%s
-D s-assert.ads		20180524051738 cd8d2c94 system.assertions%s
-D s-conca2.ads		20180524051736 02a0d7d0 system.concat_2%s
-D s-crtl.ads		20180524051736 0ebbdb71 system.crtl%s
-D s-exctab.ads		20180524051738 54135002 system.exception_table%s
-D s-exnllf.ads		20180524051738 bc7ebbdc system.exn_llf%s
-D s-fatflt.ads		20180524051736 11beb392 system.fat_flt%s
-D s-fatgen.ads		20180524051738 49cbaf86 system.fat_gen%s
-D s-ficobl.ads		20180524051738 078245e4 system.file_control_block%s
-D s-multip.ads		20180524051736 38ac9f73 system.multiprocessors%s
-D s-osinte.ads		20180524051738 2e5b26a9 system.os_interface%s
-D s-parame.ads		20180524051738 48ec542b system.parameters%s
-D s-secsta.ads		20180524051738 20bbe636 system.secondary_stack%s
-D s-soflin.ads		20180524051736 a7318a92 system.soft_links%s
-D s-stache.ads		20180524051738 a37c21ec system.stack_checking%s
-D s-stausa.ads		20180524051736 017a0a05 system.stack_usage%s
-D s-stalib.ads		20180524051738 09bd3940 system.standard_library%s
-D s-stoele.ads		20180524051738 2dc34a04 system.storage_elements%s
-D s-tasinf.ads		20180524051738 601f6b72 system.task_info%s
-D s-taspri.ads		20180524051738 6c1d93d4 system.task_primitives%s
-D s-taprop.ads		20180524051738 1dd2e1b6 system.task_primitives.operations%s
-D s-taskin.ads		20180524051738 1d8c1ccb system.tasking%s
-D s-traceb.ads		20180524051738 5e7928b4 system.traceback%s
-D s-trasym.ads		20180524051738 bf205bb0 system.traceback.symbolic%s
-D s-traent.ads		20180524051736 005bf670 system.traceback_entries%s
-D s-unstyp.ads		20180524051736 34867c83 system.unsigned_types%s
-D s-wchcon.ads		20180524051738 1b7d22d2 system.wch_con%s
-D s-win32.ads		20180524051736 b7f96285 system.win32%s
+D ada.ads		20200312110721 76789da1 ada%s
+D a-except.ads		20200312110721 291912d5 ada.exceptions%s
+D a-exctra.ads		20200312110721 0966bad0 ada.exceptions.traceback%s
+D a-ioexce.ads		20200312110721 e4a01f64 ada.io_exceptions%s
+D a-numeri.ads		20200312110721 bb51c45a ada.numerics%s
+D a-numaux.ads		20200312110721 243fe0b7 ada.numerics.aux%s
+D a-ngelfu.ads		20200312110721 55716239 ada.numerics.generic_elementary_functions%s
+D a-ngelfu.adb		20200312110721 a9022048 ada.numerics.generic_elementary_functions%b
+D a-reatim.ads		20200312110721 0240fc73 ada.real_time%s
+D a-stream.ads		20200312110721 119b8fb3 ada.streams%s
+D a-tags.ads		20200312110721 491b781d ada.tags%s
+D a-textio.ads		20200312110721 881db35a ada.text_io%s
+D a-unccon.ads		20200312110721 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20200312110721 eff36322 ada.unchecked_deallocation%s
+D gnat.ads		20200312110721 b5988c27 gnat%s
+D g-traceb.ads		20200312110721 dee80ba3 gnat.traceback%s
+D g-trasym.ads		20200312110721 f121a8ad gnat.traceback.symbolic%s
+D interfac.ads		20200312110721 5ab55268 interfaces%s
+D i-c.ads		20200312110721 5421119b interfaces.c%s
+D i-cstrea.ads		20200312110721 e53d8b8e interfaces.c_streams%s
+D synth.ads		20200503084939 08bebad5 synth%s
+D synth.adb		20200503084939 254cb76e synth%b
+D system.ads		20200312110721 4635ec04 system%s
+D s-atacco.ads		20200312110721 4c36d12f system.address_to_access_conversions%s
+D s-assert.ads		20200312110721 cd8d2c94 system.assertions%s
+D s-crtl.ads		20200312110721 0ebbdb71 system.crtl%s
+D s-exctab.ads		20200312110721 54135002 system.exception_table%s
+D s-exnllf.ads		20200312110721 bc7ebbdc system.exn_llf%s
+D s-fatflt.ads		20200312110721 11beb392 system.fat_flt%s
+D s-fatgen.ads		20200312110721 49cbaf86 system.fat_gen%s
+D s-ficobl.ads		20200312110721 078245e4 system.file_control_block%s
+D s-linux.ads		20200312110721 ed0b8aee system.linux%s
+D s-multip.ads		20200312110721 38ac9f73 system.multiprocessors%s
+D s-oscons.ads		20200409103809 0b994636 system.os_constants%s
+D s-osinte.ads		20200312110721 710cf8c6 system.os_interface%s
+D s-parame.ads		20200312110721 48ec542b system.parameters%s
+D s-secsta.ads		20200312110721 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20200312110721 a7318a92 system.soft_links%s
+D s-stache.ads		20200312110721 a37c21ec system.stack_checking%s
+D s-stausa.ads		20200312110721 017a0a05 system.stack_usage%s
+D s-stalib.ads		20200312110721 09bd3940 system.standard_library%s
+D s-stoele.ads		20200312110721 2dc34a04 system.storage_elements%s
+D s-tasinf.ads		20200312110721 2b3f8252 system.task_info%s
+D s-taspri.ads		20200312110721 f40ac08d system.task_primitives%s
+D s-taprop.ads		20200312110721 1dd2e1b6 system.task_primitives.operations%s
+D s-taskin.ads		20200312110721 b9d612e2 system.tasking%s
+D s-traceb.ads		20200312110721 5e7928b4 system.traceback%s
+D s-trasym.ads		20200312110721 bf205bb0 system.traceback.symbolic%s
+D s-traent.ads		20200312110721 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20200312110721 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20200312110721 1b7d22d2 system.wch_con%s
 X 1 ada.ads
-16K9*Ada 20e8 21|24r6 25r6 25r25 89r33 22|23r6 25r6 25r23 57r10 87r33 97r21
-. 101r21
+16K9*Ada 20e8 21|24r6 25r6 25r25 26r6 45r10 95r33 22|23r6 25r6 25r23 57r10
+. 87r33 97r21 101r21
 X 2 a-except.ads
-54K13*Exceptions 349e19 21|24w10 89r37 22|87r37 97r25 101r25
-63R9*Exception_Occurrence 317e14 21|89r48 22|87r48
+54K13*Exceptions 349e19 21|24w10 95r37 22|87r37 97r25 101r25
+63R9*Exception_Occurrence 317e14 21|95r48 22|87r48
 72V13*Exception_Name{string} 22|97s36
 94V13*Exception_Message{string} 22|101s36
 X 5 a-numeri.ads
@@ -135,7 +117,7 @@ X 7 a-ngelfu.ads
 86V14*"**"{float} 22|69s17[56]
 X 9 a-reatim.ads
 39K13*Real_Time 185e18 21|25w10 25r29
-54O9*Time_Span<duration> 21|37r66 22|77r66
+54O9*Time_Span<duration> 21|32r32 40r66 22|77r66
 117V13*Microseconds{54O9} 22|80s14
 X 12 a-textio.ads
 49K13*Text_IO 471e16 22|25w10 25r27
@@ -143,53 +125,59 @@ X 12 a-textio.ads
 119V13*Standard_Error{52P9} 22|89s19 91s19 95s19 99s19 102s26 104s19
 165U14*New_Line 22|89s9
 259U14*Put_Line 22|90s16 94s16 98s16 102s16 103s16
-X 14 gnat.ads
-34K9*GNAT 37e9 22|26r6 105r19
-X 15 g-traceb.ads
+X 14 a-uncdea.ads
+17+9 Object 21|45r38
+18P9 Name(17+9) 21|46r38
+20u15*Unchecked_Deallocation 21|26w10 45r14
+X 15 gnat.ads
+34K9*GNAT 57e9 22|26r6 105r19
+X 16 g-traceb.ads
 80K14*Traceback 101e19 22|26r11 105r24
-X 16 g-trasym.ads
+X 17 g-trasym.ads
 37K24*Symbolic=37:58 22|26w21 105r34
 X 21 synth.ads
-27K9*Synth 91l5 91e10 22|28b14 109l5 109t10
-31F12*Frame{float} 33r60
-33A9*Frame_Array(31F12)<integer> 34r42 84r34 22|34r34
-34P9*Frame_Array_Access(33A9) 51r19
-35F12*Frequency_Type{float} 37r43 39r64 47r19 49r24 22|65r43 70r11 77r43
-37V13*Frequency_Period{9|54O9} 37>31 22|77b13 81l8 81t24
-37f31 Frequency{35F12} 22|77b31 78r58
-39V13*MIDICode_To_Frequency{35F12} 39>36 22|64b13 71l8 71t29
-39i36 Midi_Code{natural} 22|64b36 69r27
-45R9*SoundSample 45d22 65e14 67r33 68r6
-45b22*HasLoop{boolean} 57r12 68m19
-47f7*Frequency{35F12} 69m19
-49f7*Note_Frequency{35F12} 70m19
-51p7*Mono_Data{34P9} 71m19
-55b7*Cant_Stop{boolean} 72m19
-59i13*Loop_Start{natural}
-60i13*Loop_End{natural}
-67r4*Null_Sound_Sample{45R9}
-75I9*PCM_Frame<short_integer> 77r8 80r40 81r64 22|42r17 44r18
-80P9*PCM_Frame_Access(75I9)
-81A9*PCM_Frame_Array(75I9)<integer> 82r46 84r54 22|34r54 35r11
-82P9*PCM_Frame_Array_Access(81A9)
-84V13*To_Frame_Array{81A9} 84>29 22|34b13 50l8 50t22
-84a29 FA{33A9} 22|34b29 35r28 37r16 38r25 39r25 41r57
-87F12*Play_Second{long_float}
-89U14*DumpException 89>29 22|87b14 107l8 107t21
-89r29 E{2|63R9} 22|87b29 97r52 101r55 105r63
+28K9*Synth 97l5 97e10 22|28b14 109l5 109t10
+32O12*Synthetizer_Time{9|54O9}
+34F12*Frame{float} 36r60
+36A9*Frame_Array(34F12)<integer> 37r42 45r48 90r34 22|34r34
+37P9*Frame_Array_Access(36A9) 46r48 57r19
+38F12*Frequency_Type{float} 40r43 42r64 53r19 55r24 22|65r43 70r11 77r43
+40V13*Frequency_Period{9|54O9} 40>31 22|77b13 81l8 81t24
+40f31 Frequency{38F12} 22|77b31 78r58
+42V13*MIDICode_To_Frequency{38F12} 42>36 22|64b13 71l8 71t29
+42i36 Midi_Code{natural} 22|64b36 69r27
+44U14*Free_Frame_Array[14|20]
+51R9*SoundSample 51d22 71e14 73r33 74r6
+51b22*HasLoop{boolean} 63r12 74m19
+53f7*Frequency{38F12} 75m19
+55f7*Note_Frequency{38F12} 76m19
+57p7*Mono_Data{37P9} 77m19
+61b7*Cant_Stop{boolean} 78m19
+65i13*Loop_Start{natural}
+66i13*Loop_End{natural}
+73r4*Null_Sound_Sample{51R9}
+81I9*PCM_Frame<short_integer> 83r8 86r40 87r64 22|42r17 44r18
+86P9*PCM_Frame_Access(81I9)
+87A9*PCM_Frame_Array(81I9)<integer> 88r46 90r54 22|34r54 35r11
+88P9*PCM_Frame_Array_Access(87A9)
+90V13*To_Frame_Array{87A9} 90>29 22|34b13 50l8 50t22
+90a29 FA{36A9} 22|34b29 35r28 37r16 38r25 39r25 41r57
+93F12*Play_Second{long_float}
+95U14*DumpException 95>29 22|87b14 107l8 107t21
+95r29 E{2|63R9} 22|87b29 97r52 101r55 105r63
 X 22 synth.adb
-35a7 R{21|81A9} 45m13 49r14
+35a7 R{21|87A9} 45m13 49r14
 37i11 i{integer} 38r29 39r29 41r61 45r16
 41f13 F{float} 44r29
-42i13 P{21|75I9} 44m13 45r22
+42i13 P{21|81I9} 44m13 45r22
 56K12 Float_Gen[7|39] 67r11
 66i7 LA_440_MIDICODE{natural} 69r39
 78i7 Micro{integer} 80r28
-X 39 s-stausa.ads
+X 40 s-stausa.ads
 203U14*Initialize 204i<c,__gnat_stack_usage_initialize>22
 268U14*Output_Results 272i<c,__gnat_stack_usage_output_results>22
-X 46 s-traceb.ads
+X 47 s-traceb.ads
 81V13*C_Call_Chain{natural} 84i<c,system__traceback__c_call_chain>22
-X 47 s-trasym.ads
-96V13*Symbolic_Traceback{string} 22|105s43
+X 48 s-trasym.ads
+92V13*Symbolic_Traceback{string} 22|105s43
 
