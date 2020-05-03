@@ -23,11 +23,7 @@
 pragma Ada_2012;
 
 with Ada;
-with Ada.Real_Time; use Ada.Real_Time;
--- with Ada.Text_IO; use Ada.Text_IO;
-
 With Sound;
-with System;
 
 ------------------------
 -- Synth.Driver.Win32 --
@@ -43,9 +39,9 @@ package body Synth.Driver.Alsa is
    procedure Open (Driver : out Sound_Driver_Access;
 	   Frequency: Frequency_Type := 44100.0) is
 
-       ALSADriver : ALSA_Driver_Access := new ALSA_Driver;
-       Buffer_Size : Duration := 0.5;
-       Period      : Duration := 0.1;
+      ALSADriver : constant ALSA_Driver_Access := new ALSA_Driver;
+       Buffer_Size : Duration := 0.2;
+       Period      : Duration := 0.05;
        Resolution  : Sound.Sample_Frequency := 
 	       Sound.Sample_Frequency(Frequency);
    begin
@@ -90,7 +86,7 @@ package body Synth.Driver.Alsa is
 
       AlsaBuffer : Sound.Mono.Frame_Array(Buffer'Range);
       Last : Integer;
-      pragma Unreferenced (Last);
+      ToWrite : Integer;
    begin
 
       Driver.Current_Buffer_Start_Time := Play_Reference_Buffer_Start_Time;
@@ -100,11 +96,16 @@ package body Synth.Driver.Alsa is
          AlsaBuffer(I) := Sound.Mono.Frame(Buffer(I) );
       end loop;
 
-      
+      ToWrite := AlsaBuffer'First;
+      Last := AlsaBuffer'Last;
 
-      Sound.Mono.Write(Line => Driver.Speakers,
-                         Item => AlsaBuffer,
-                       Last => Last);
+      while (ToWrite < AlsaBuffer'Last) loop
+         Sound.Mono.Write(Line => Driver.Speakers,
+                          Item => AlsaBuffer(ToWrite .. Last),
+                          Last => ToWrite);
+      end loop;
+      
+      
 
 
 
