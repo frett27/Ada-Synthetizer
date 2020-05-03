@@ -25,6 +25,9 @@ jobs:
       run: git submodule update --init --recursive
 
     - name: install dependencies
+      run: sudo apt-get update
+
+    - name: install dependencies
       run: sudo apt-get install gnat-9 libasound-dev gprbuild
 
 #    - name: Upload logs (if failed)
