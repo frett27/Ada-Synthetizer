@@ -31,7 +31,7 @@ jobs:
       run: sudo apt-get install gnat libasound-dev gprbuild  build-essential
       
     - name: prepare alsa binding
-      working-directory: Ada-Synthetizer/Ada-Synthetizer/drivers/alsa-binding
+      working-directory: Ada-Synthetizer/drivers/alsa-binding
       run: make  
       
     - name: compile midi player
