@@ -2,6 +2,8 @@
 
 *Patrice Freydiere - April 2020*
 
+![CI](https://github.com/frett27/Ada-Synthetizer/workflows/CI/badge.svg)
+
 This **repository** provides a **synthetizer library implementation** for making music from samples (.wav files). A similar larger project is for example : timidity, fluidsynth. This library has been setted up to be able to handle Highly Polyphonic rendering. 
 
 The Synthetizer takes on one side the samples, and on the other side the Notes to play. Each Wav can be reused for multiple play. 
