@@ -138,13 +138,12 @@ package body Synth.Synthetizer is
    --  Compute a buffer time
    function Get_Buffer_Time
      (Synth : Synthetizer_Type) return Synthetizer_Time is
-      Drv : Driver.Sound_Driver_Access := Synth.D;
+      Drv : constant Driver.Sound_Driver_Access := Synth.D;
    begin
-      return Milliseconds( Integer( 1000.0 * Float(Synth.BR.Buffer_Length) *
-                             Float(1.0) / Float(Driver.Get_Frequency(Drv.all))));
-   end;
-
-
+      return Milliseconds (Integer (1000.0 * Float(Synth.BR.Buffer_Length) *
+                             Float (1.0) /
+                             Float (Driver.Get_Frequency (Drv.all))));
+   end Get_Buffer_Time;
 
    ----------
    -- Stop --
@@ -190,7 +189,6 @@ package body Synth.Synthetizer is
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second);
 
-
    -----------------
    -- Buffer_Ring --
    -----------------
@@ -222,12 +220,13 @@ package body Synth.Synthetizer is
       -- Consume_Buffer --
       --------------------
 
-      entry Consume_Buffer (T: out Synthetizer_Time; Buffer : out PCM_Frame_Array_Access)
+      entry Consume_Buffer (T : out Synthetizer_Time;
+                            Buffer : out PCM_Frame_Array_Access)
         when Available_For_Consume (Current_Consume) is
       begin
 
          Buffer := Buffers (Current_Consume).BP;
-         T := Buffers(Current_Consume).Buffer_Start_Time;
+         T := Buffers (Current_Consume).Buffer_Start_Time;
 
          Available_For_Consume (Current_Consume) := False; -- has been consumed
 
@@ -264,7 +263,7 @@ package body Synth.Synthetizer is
                         and then Available_For_Consume (Search_Index) = False);
 
          Buffer := Buffers (Search_Index).BF;
-         Buffers(Search_Index).Buffer_Start_Time := T;
+         Buffers (Search_Index).Buffer_Start_Time := T;
          Outed_Frame_Buffer (Search_Index) := True;
          Free_Buffers := Free_Buffers - 1;
 
@@ -312,6 +311,7 @@ package body Synth.Synthetizer is
 
       --  time to send to the sound driver the buffer
       Task_Last_Play_Time_Span : Time_Span;
+      pragma Unreferenced (Task_Last_Play_Time_Span);
    begin
 
       accept Start (TheDriver : Driver.Sound_Driver_Access;
@@ -338,11 +338,11 @@ package body Synth.Synthetizer is
                   Task_BR.Consume_Buffer (Buffer_Start_Time, Buffer);
                   --           Put_Line("Play Task buffer consummed");
 
-                  -- this transfert the sound to driver
-                  -- might be blocking until the transfert is done, or
-                  -- driver buffer is full
+                  --  this transfert the sound to driver
+                  --  might be blocking until the transfert is done, or
+                  --  driver buffer is full
                   --
-                  -- can be triky to have the play time
+                  --  can be triky to have the play time
                   Start_Time := Clock;
                   Synth.Driver.Play (Driver => Task_Driver.all,
                                      Buffer => Buffer,
@@ -380,6 +380,7 @@ package body Synth.Synthetizer is
 
       Counter : Integer := 0;
       Processed_Voices : Natural := 0;
+      pragma Unreferenced (Processed_Voices);
 
       Current_Buffer_Start_Time : Synthetizer_Time :=
         To_Time_Span (Duration (0.0));
@@ -439,23 +440,22 @@ package body Synth.Synthetizer is
                  Current_Buffer_Start_Time +
                    Driver_Frequency_Period * (Preparing_Buffer.all'Length + 1);
 
-
                --  call back, to populate the new buffer, commit all events before
 
                if Task_Audit_Interface_Access /= null then
                   --  call the audit interface to fill the next buffer
                   begin
-                  -- Ada.Text_IO.Put_Line("Call from Ada");
+                  --  Ada.Text_IO.Put_Line("Call from Ada");
 
-                  Ready_To_Prepare (Task_Audit_Interface_Access.all,
+                     Ready_To_Prepare (Task_Audit_Interface_Access.all,
                                     --  give the next buffer to prepare start
                                     Current_Buffer_Start_Time,
                                     --  give the next buffer end time
                                     Next_Buffer_Last_Time);
-                  -- Ada.Text_IO.Put_Line("End Call from Ada");
+                  --  Ada.Text_IO.Put_Line("End Call from Ada");
                   exception
-                     when e:others =>
-                        DumpException(E => e);
+                     when e : others =>
+                        DumpException (E => e);
                   end;
                end if;
 
@@ -482,7 +482,7 @@ package body Synth.Synthetizer is
                         then -- and not Terminated
                            Number_Of_Processed_Voices := Natural'Succ (Number_Of_Processed_Voices);
 
-                           -- process the voice
+                           --  process the voice
                            Process_Buffer (VSA           => V.VSA,
                                            Buffer        =>  Preparing_Buffer,
                                            Start_Buffer_Time  => Current_Buffer_Start_Time,
@@ -512,7 +512,7 @@ package body Synth.Synthetizer is
                   Counter := Integer'Succ (Counter);
                   if (Counter mod 100) = 0 then
                      --  report elements for statistics
-                     -- Ada.Text_IO.Put_Line ("Max Elapse time :"
+                     --  Ada.Text_IO.Put_Line ("Max Elapse time :"
                      --                       & Duration'Image (To_Duration (Reporting_Max_Elapse_Time))
                      --                       & " Processed Voices :"
                      --                       & Natural'Image (Processed_Voices));
@@ -757,8 +757,6 @@ package body Synth.Synthetizer is
    -- Synthetizer_Structure_Type --
    --------------------------------
 
-
-
    ----------
    -- Init --
    ----------
@@ -798,7 +796,7 @@ package body Synth.Synthetizer is
    -- Close --
    -----------
 
-   procedure Close(SST : in out Synthetizer_Structure_Type) is
+   procedure Close (SST : in out Synthetizer_Structure_Type) is
    begin
       SST.Play_Task.Stop;
 
@@ -812,7 +810,7 @@ package body Synth.Synthetizer is
          end;
       end loop;
 
-      -- stop the prepare buffer
+      --  stop the prepare buffer
       SST.Prepare_Task.Stop;
 
       --  consume remaining buffers for not blocking the preparing task
@@ -930,7 +928,7 @@ package body Synth.Synthetizer is
    -- Stop --
    ----------
 
-   procedure Stop (SST : Synthetizer_Structure_Type;V : Voice) is
+   procedure Stop (SST : Synthetizer_Structure_Type; V : Voice) is
    begin
       if not SST.Inited then
          raise Synthetizer_Not_Inited;
@@ -973,12 +971,11 @@ package body Synth.Synthetizer is
    --  Get_Synthetizer_Time --
    ---------------------------
 
-   function Get_Synthetizer_Time(SST : Synthetizer_Structure_Type) return Synthetizer_Time is
+   function Get_Synthetizer_Time (SST : Synthetizer_Structure_Type) return Synthetizer_Time is
       Current_Clock : constant Time := Clock;
    begin
       return Synthetizer_Time (Current_Clock - SST.Ref_Time);
    end Get_Synthetizer_Time;
-
 
    ------------------------
    --  Get_Driver_Access --
@@ -987,16 +984,13 @@ package body Synth.Synthetizer is
    function Get_Driver_Access (Synt : Synthetizer_Type) return Synth.Driver.Sound_Driver_Access is
    begin
       return Synt.D;
-   end;
-
-
+   end Get_Driver_Access;
 
    ---------------------------
    --  Get_Allocated_Voices --
    ---------------------------
 
-
-   function Get_Allocated_Voices(SST: Synthetizer_Structure_Type) return Natural is
+   function Get_Allocated_Voices (SST : Synthetizer_Structure_Type) return Natural is
       VPSA : constant Voice_Play_Structure_Array :=
         SST.Voices.Get_All_Opened_Voices_Play_Structure;
       N : Natural := 0;

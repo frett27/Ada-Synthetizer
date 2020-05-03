@@ -56,7 +56,8 @@ package body Midi.Player is
    Sound : Synth.SoundSample;
    
    --  opened voices
-   Opened_Voices : array (0 .. 127) of Synth.Synthetizer.Voice := (others => Synth.Synthetizer.No_Voice);
+   Opened_Voices : array (0 .. 127) of Synth.Synthetizer.Voice := 
+     (others => Synth.Synthetizer.No_Voice);
 
    ----------
    -- Init --

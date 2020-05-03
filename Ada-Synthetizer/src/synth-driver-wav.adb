@@ -24,9 +24,6 @@
 with Synth.Wav;
 use Synth.Wav;
 
-with Ada.Real_Time;
-use Ada.Real_Time;
-
 package body Synth.Driver.Wav is
 
    ----------
@@ -96,17 +93,14 @@ package body Synth.Driver.Wav is
       return Driver.Frequency;
    end Get_Frequency;
 
-
    ---------------------------
    -- Get_Current_Play_Time --
    ---------------------------
 
-   overriding function Get_Current_Play_Time(Driver: WAV_Driver)
+   overriding function Get_Current_Play_Time (Driver: WAV_Driver)
                                   return Synthetizer_Time is
    begin
       return Driver.Current_Buffer_Start_Time;
    end Get_Current_Play_Time;
-
-
 
 end Synth.Driver.Wav;

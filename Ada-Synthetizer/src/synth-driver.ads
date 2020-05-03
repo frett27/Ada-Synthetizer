@@ -62,13 +62,11 @@ package Synth.Driver is
    function Get_Frequency (Driver : Sound_Driver)
    return Frequency_Type is abstract;
 
-
    ---------------------------
    -- Get_Current_Play_Time --
    ---------------------------
 
-   function Get_Current_Play_Time(Driver: Sound_Driver)
+   function Get_Current_Play_Time (Driver : Sound_Driver)
                                   return Synthetizer_Time is abstract;
-
 
 end Synth.Driver;

@@ -47,7 +47,7 @@ package Synth.Synthetizer is
    type Synthetizer_Audit is interface;
    type Synthetizer_Audit_Access is access all Synthetizer_Audit'Class;
 
-   -- procedure associated to Audit Interface
+   --  procedure associated to Audit Interface
    procedure Ready_To_Prepare (Synth_Audit : in out Synthetizer_Audit;
                                Current_Buffer_Time,
                                Next_Buffer_Time : Synthetizer_Time) is abstract;
@@ -102,7 +102,7 @@ package Synth.Synthetizer is
       Channel : Positive := 1;
       Opened_Voice :    out Voice);
 
-   -- Get synth internal time
+   --  Get synth internal time
    function Get_Time
      (Synth : Synthetizer_Type) return Synthetizer_Time;
 
@@ -124,7 +124,7 @@ package Synth.Synthetizer is
 
    function Get_Opened_Voices (Synt : Synthetizer_Type) return Natural;
 
-   -- Accessor for getting underlying associated driver
+   --  Accessor for getting underlying associated driver
    function Get_Driver_Access (Synt : Synthetizer_Type) return Synth.Driver.Sound_Driver_Access;
 
    Synthetizer_Not_Inited : exception;
@@ -173,8 +173,7 @@ private
 
    MAX_VOICES_INDICE : constant Voice := Voice (MAX_VOICES);
 
-
-   -- buffer for preparing the sound output
+   --  buffer for preparing the sound output
    type Buffer_Type is record
       Buffer_Start_Time : Synthetizer_Time; -- buffer start synthetizer time
       BP : PCM_Frame_Array_Access;
@@ -196,10 +195,10 @@ private
 
       procedure Init;
 
-      entry Consume_Buffer (T: out Synthetizer_Time; Buffer : out PCM_Frame_Array_Access);
+      entry Consume_Buffer (T : out Synthetizer_Time; Buffer : out PCM_Frame_Array_Access);
 
-      -- this allocate the buffer
-      entry Freeze_New_Buffer (T: Synthetizer_Time; Buffer : out Frame_Array_Access);
+      --  this allocate the buffer
+      entry Freeze_New_Buffer (T : Synthetizer_Time; Buffer : out Frame_Array_Access);
 
       entry UnFreeze_New_Buffer (Buffer : Frame_Array_Access);
 
@@ -208,7 +207,7 @@ private
    private
 
       --  buffers (frame and compiled ones)
-      Buffers : Buffers_Type (1 .. NBBuffer) := (others => Buffer_Type'(To_Time_Span (Duration (0.0)),null,null));
+      Buffers : Buffers_Type (1 .. NBBuffer) := (others => Buffer_Type'(To_Time_Span (Duration (0.0)), null,null));
 
       --  buffers that can be consumed
       Available_For_Consume : Boolean_Array (1 .. NBBuffer) :=
@@ -385,11 +384,10 @@ private
       procedure Stop (SST : Synthetizer_Structure_Type; V : Voice;
                       Stop_Time : Synthetizer_Time);
 
-      procedure Close(SST : in out Synthetizer_Structure_Type);
+      procedure Close (SST : in out Synthetizer_Structure_Type);
 
-      function Get_Synthetizer_Time(SST : Synthetizer_Structure_Type) return Synthetizer_Time;
-      function Get_Allocated_Voices(SST : Synthetizer_Structure_Type) return Natural;
-
+      function Get_Synthetizer_Time (SST : Synthetizer_Structure_Type) return Synthetizer_Time;
+      function Get_Allocated_Voices (SST : Synthetizer_Structure_Type) return Natural;
 
    type Synthetizer_Type is access Synthetizer_Structure_Type;
 
