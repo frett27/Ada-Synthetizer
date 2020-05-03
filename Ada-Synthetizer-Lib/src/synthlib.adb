@@ -55,7 +55,7 @@ package body SynthLib is
 
       begin
          Synth.Driver.Open(Driver    => D,
-                           Frequency => 44_100.0);
+                           Frequency => 48_000.0);
       exception
          when E: others =>
             return E_INIT_DRIVER;
