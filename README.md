@@ -145,7 +145,7 @@ The synthetizer behave nicely, there are no large amount or synchro between comp
 
 ## Version changes
 
-The current version is 1.2, see [ChangeLog](CHANGELOG.md) for more informations about updates, and current improvments.
+The current version is 0.2, see [ChangeLog](CHANGELOG.md) for more informations about updates, and current improvments.
 
 
 
