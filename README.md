@@ -14,7 +14,7 @@ The Synthetizer takes on one side the samples, and on the other side the Notes t
 
 
 
-[Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Nota : The record made is not as good as the real time rendering)
+[Example of rendering Here](http://www.barrel-organ-discovery.org/work/Record_Synth_Test_LowBandWidth_Applied.wav)  (Note : The record made is not as good as the real time rendering)
 
 [An other example Here, using highly polyphonic use and ahead of time play'in.(since v0.1.5)](http://www.barrel-organ-discovery.org/work/2019-10_dacquin.wav)
 
@@ -47,7 +47,7 @@ Implementing your own file format reading is possible in populating the **SoundS
 #### Synthetizer capabilities 
 
 - Real Time Playing and Offline Playing
-- The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the **MAX_VOICES** constant, and see whether it match the requierments. (As the number of polyphonie is increased, the processing may be heavier and can lead to increase the jitter and buffer sizes).
+- The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the **MAX_VOICES** constant, and see whether it match the requirements. (As the number of polyphony is increased, the processing may be heavier and can lead to increase the jitter and buffer sizes).
 - Parametrized volume for each playing sound.
 - Variable Output frequency, permit to adjust CPU consumption (default 44 100 Khz)
 
@@ -56,7 +56,7 @@ Implementing your own file format reading is possible in populating the **SoundS
 - Win32 SoundDriver (x86), x64 supported using soundio
 - Alsa SoundDriver (*nix platforms)
 - soundio Library (for supporting 64 bits sound rendering on windows, and open the use for MacOs X)
-- PCM 16 bit Wav Output (all plateforms)
+- PCM 16 bit Wav Output (all platforms)
 
 
 Can be extended outside the library, depending on needs. Theses drivers show how to implement one.
