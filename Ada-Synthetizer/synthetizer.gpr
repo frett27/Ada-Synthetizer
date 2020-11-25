@@ -14,7 +14,7 @@ aggregate library project Synthetizer is
       when "GNU/Linux" =>
          for Project_Files use ("synthetizer_linux.gpr");
       when "Any" => 
-         for Project_Files use ("synthetizer_linux.gpr");
+         for Project_Files use ("synthetizer_soundio.gpr");
    end case;
 
 
