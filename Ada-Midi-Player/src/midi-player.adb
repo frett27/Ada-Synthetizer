@@ -405,6 +405,7 @@ package body Midi.Player is
       -- Ada.Text_IO.Put_Line ("Event Count : "
       --                       & Ada.Containers.Count_Type'Image (Event_Vector.Length (FileEvents)));
 
+      Ada.Text_IO.Put_Line("Opening Sound Driver ..");
       if Parameters.WavOutput /= null then
          Synth.Driver.Wav.Open(Driver    => D,
                                Frequency => Synth.Frequency_Type(44_100),
@@ -418,6 +419,7 @@ package body Midi.Player is
       
       
      
+      Ada.Text_IO.Put_Line("Sound Driver opened playin ..");
       --  play the events
       declare
          use Synth.Synthetizer;
