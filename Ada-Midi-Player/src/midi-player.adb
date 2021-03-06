@@ -455,9 +455,11 @@ package body Midi.Player is
 
       end;
       
-
       Synth.Driver.Close(S => D.all);
-
+      
+   exception
+      when e:others =>
+         DisplayException(e);
    end Play;
 
 end Midi.Player;

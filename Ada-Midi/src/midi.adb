@@ -319,10 +319,25 @@ package body Midi is
                end;
                I := I + 2;
 
-            when 16#F0# .. 16#FE# =>
+            when 16#F0# =>
+               --  SysEx
+               declare
+                  Next : Byte := C.Data (I);
+               begin
+                  --  real time sysex
+                  while C.Data (I) /= 16#F7# loop
+                     I := I + 1;
+                  end loop;
+                  I := I + 1;
+               end;
+
+            when 16#F1# .. 16#FE# =>
                --               Text_IO.Put ("Function Not supported :" &
                --                           Byte'Image (Runningstatus));
-               raise Event_Not_Supported;
+
+               raise Event_Not_Supported with "Meta event "
+                 &  Byte'Image (Runningstatus)
+                 & " Unsupported";
 
             when 16#FF# => -- FF <Type> <Length>
                Runningstatus := 0;
