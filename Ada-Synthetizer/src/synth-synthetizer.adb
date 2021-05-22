@@ -48,6 +48,11 @@ package body Synth.Synthetizer is
             T => Start_Time,
             Audit => Audit);
 
+      if Audit /= null then
+         Audit.SynthAccess := Synt'Unrestricted_Access;
+      end if;
+
+
    exception
       when E : others =>
          DumpException (E);
@@ -150,7 +155,7 @@ package body Synth.Synthetizer is
    ----------
 
    procedure Stop (Synt         : Synthetizer_Type;
-                   Opened_Voice : Voice) is
+                   Opened_Voice : in out Voice) is
    begin
       Stop (Synt.all, Opened_Voice);
    exception
@@ -163,7 +168,7 @@ package body Synth.Synthetizer is
    ----------
 
    procedure Stop (Synt         : Synthetizer_Type;
-                   Opened_Voice : Voice;
+                   Opened_Voice : in out Voice;
                    Stop_Time : Synthetizer_Time) is
    begin
       Stop (Synt.all, Opened_Voice, Stop_Time);
@@ -928,10 +933,14 @@ package body Synth.Synthetizer is
    -- Stop --
    ----------
 
-   procedure Stop (SST : Synthetizer_Structure_Type; V : Voice) is
+   procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice) is
    begin
       if not SST.Inited then
          raise Synthetizer_Not_Inited;
+      end if;
+
+      if V = No_Voice then
+         return;
       end if;
 
       if not SST.Voices.Can_Be_Stopped (V)
@@ -943,16 +952,22 @@ package body Synth.Synthetizer is
       if SST.Voices.Is_Voice_Opened (V) then
          SST.Voices.Close_Voice (V);
       end if;
+
+      V := No_Voice;
    end Stop;
 
    ----------
    -- Stop --
    ----------
 
-   procedure Stop (SST : Synthetizer_Structure_Type; V : Voice; Stop_Time : Synthetizer_Time) is
+   procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice; Stop_Time : Synthetizer_Time) is
    begin
       if not SST.Inited then
          raise Synthetizer_Not_Inited;
+      end if;
+
+      if V = No_Voice then
+         return;
       end if;
 
       if not SST.Voices.Can_Be_Stopped (V)
@@ -964,6 +979,8 @@ package body Synth.Synthetizer is
       if SST.Voices.Is_Voice_Opened (V) then
          SST.Voices.Close_Voice (V, Stop_Time);
       end if;
+
+      V := No_Voice;
 
    end Stop;
 

@@ -27,7 +27,6 @@ with Zip_Streams; use Zip_Streams;
 with Ada.Streams; use Ada.Streams;
 with Ada.Text_IO;use Ada.Text_IO;
 with Gnat.Regpat;
-with Ada.Strings.Unbounded;use Ada.Strings.Unbounded;
 
 with Synth.Wav; use Synth.Wav;
 
@@ -86,18 +85,20 @@ package body Synth.SoundBank is
       Wavs.S := ZipStream;
    end;
    
+    
+   
    ----------
    -- Read --
    ----------
    
    function Read(FileName: String) return SoundBank_Access is
       
-      use type Zip_Streams.File_Mode;
+      -- use type Zip_Streams.File_Mode;
       
       package Pat renames Gnat.Regpat;
       -- example : DEFAULT_48_63_3137373934385F5F7562696B70686F6E696B5F5F63312E61696666_-1_-1_60.wav
       Pattern : constant Pat.Pattern_Matcher := 
-        Pat.Compile(Expression => "([0-9]{1,3})_([0-9]{1,3})_(.*)_([0-9]{1,3}).wav");
+        Pat.Compile(Expression => "^([A-Z0-9\-]+)_([0-9]{1,3})_([0-9]{1,3})_(.*)_([0-9]{1,3}).wav");
       
       type Decoded_Sound_Name is record
          RegisterSet: Unbounded_String;
@@ -108,16 +109,23 @@ package body Synth.SoundBank is
       
       
       ZI : Zip_info;
+      
       Input_Stream : aliased Zip_Streams.File_Zipstream;
+      
       SoundSampleNumber: Natural := 0;
-      NoteMapping : Note_Sound_Sample_Mapping_Array;
+      
+      
       SSA : SoundSample_Array (1..500);
+      
       WavS: aliased Wav_Stream_From_Stream;
+      
       SoundBank_Result : SoundBank_Access := null;
       
-      procedure Decode_Name(FileName : String; 
-                            isCorrect: out boolean;
-                            Decoded: out Decoded_Sound_Name) is
+      Bank_Head : Bank_Access := null;
+      
+      procedure Decode_File_Name(FileName : String; 
+                                 isCorrect: out boolean;
+                                 Decoded: out Decoded_Sound_Name) is
          Result : Pat.Match_Array(0..Pat.Paren_Count(Pattern));
          use type Pat.Match_Location;
       begin
@@ -132,14 +140,44 @@ package body Synth.SoundBank is
          
          -- Ada.Text_IO.Put_Line(FileName);
          
-         pragma Assert(Result'Length >= 5);
-         Decoded.RootKey := Natural'Value(Filename(Result(4).First..Result(4).Last));           
+         pragma Assert(Result'Length >= 6);
+         Decoded.RootKey := Natural'Value(Filename(Result(5).First..Result(5).Last));           
          --  Ada.Text_IO.Put_Line(Natural'Image(Decoded.RootKey));
-         Decoded.From := Natural'Value(Filename(Result(1).First..Result(1).Last));
-         Decoded.To := Natural'Value(Filename(Result(2).First..Result(2).Last));
-                               
+         Decoded.From := Natural'Value(Filename(Result(2).First..Result(2).Last));
+         Decoded.To := Natural'Value(Filename(Result(3).First..Result(3).Last));
+         
+         Decoded.RegisterSet := To_Unbounded_String(FileName(Result(1).First..
+                                                      Result(1).Last));
+                                                    
+         --  Ada.Text_IO.Put_Line("Decoded :" & To_String(Decoded.RegisterSet));
          isCorrect := True;
-      end Decode_Name;
+      end Decode_File_Name;
+      
+      -- Find or create the bank pointer
+      function Find_Bank(Bank_Name: Unbounded_String) return Bank_Access is
+         Current : Bank_Access := Bank_Head;
+      begin
+        
+         while Current /= null and then Current.Name /= Bank_Name loop
+            Current := Current.Next;
+         end loop;
+         
+        
+         if Current = null then
+            Ada.Text_IO.Put_Line("Not Found " & To_String(Bank_Name) & " Create It");
+            Current := new Bank_Type'(Name         => Bank_Name,
+                                      Note_Mapping => (others => No_Mapping),
+                                      Next         => Bank_Head);
+            Bank_Head := Current;
+         end if;
+         
+         pragma Assert(Current /= null);
+         
+         return Current;
+         
+      end Find_Bank;
+      
+         
       
       
       procedure Process(name : String) is 
@@ -175,11 +213,11 @@ package body Synth.SoundBank is
                R : Decoded_Sound_Name;
                isCorrect : Boolean;
             begin
-               Decode_Name(FileName => name, 
-                           isCorrect => isCorrect,
-                           Decoded => R);
+               Decode_File_Name(FileName => name, 
+                                isCorrect => isCorrect,
+                                Decoded => R);
                if isCorrect then 
-            
+                  
                   -- get the stream
                   FromZipStream(ZipStream    => S,
                                 Size_To_Read => uncomp_size,
@@ -187,6 +225,7 @@ package body Synth.SoundBank is
             
                   -- pre increment
                   SoundSampleNumber := Natural'Succ(SoundSampleNumber);
+                  
                   -- load Wav from Stream
                   Synth.Wav.Load(Wav_Stream_Access => WavS'Unchecked_Access,
                                  Sample            => SSA(SoundSampleNumber));
@@ -194,15 +233,23 @@ package body Synth.SoundBank is
                
                   SSA(SoundSampleNumber).Note_Frequency := 
                     MIDICode_To_Frequency(R.RootKey);
-                  SSA(SoundSampleNumber).Cant_Stop := True;
-                     
-                  for I in R.From..R.To loop
-                     NoteMapping(I) := SoundSampleNumber;
-                  end loop;
+                  
+                  
+                  SSA(SoundSampleNumber).Cant_Stop := false;
+                  
+                  -- find the bank
+                  declare 
+                     B : constant Bank_Access := Find_Bank(R.RegisterSet);
+                  begin
+                     -- others
+                     for I in R.From..R.To loop
+                        B.Note_Mapping(I) := SoundSampleNumber;
+                     end loop;                        
+                  end;
+                  
                else
                   raise Program_Error with "bad name " & name;
                end if;
-               
             end;
         
          end if; 
@@ -220,26 +267,58 @@ package body Synth.SoundBank is
       ExploreZip(ZI);
       
       SoundBank_Result := new SoundBank_Type(SoundSampleNumber);
-      SoundBank_Result.Samples(1..SoundSampleNumber) := SSA(1..SoundSampleNumber);
-      SoundBank_Result.Note_Mapping := NoteMapping;
+      SoundBank_Result.Samples(1..SoundSampleNumber) := SSA(1..SoundSampleNumber); 
+      SoundBank_Result.Banks := Bank_Head;
+      
+      declare 
+         C : Bank_Access := SoundBank_Result.Banks;
+      begin
+         Ada.text_IO.put_line("List Sound Bank ====");
+         while c /= null loop
+            Ada.text_IO.put_line("Sound Bank :" & To_String(c.Name));
+            C := C.Next;
+         end loop;
+      end;
+      
         
       return SoundBank_Result;
    end Read;
    
-      
-   
    function GetSoundSample(S: SoundBank_Type; Midi_Note: Natural) 
-                        return SoundSample is
-      SoundMapping : constant Natural := S.Note_Mapping(Midi_Note);
+                           return SoundSample is
+
    begin
-      if SoundMapping = No_Mapping then
-         return Null_Sound_Sample;
-      else
-         return S.Samples(SoundMapping);
-      end if;
+      return GetSoundSample(s         => s,
+                            Bank_Name => To_Unbounded_String("DEFAULT"),
+                            Midi_Note => Midi_Note);
    end GetSoundSample;
      
    
-   
+   function GetSoundSample(s: SoundBank_Type; Bank_Name: Unbounded_String; Midi_Note:Natural)
+                           return SoundSample is
+   begin
+      declare
+         B: Bank_Access := S.Banks;
+      begin
+         while B/=null and then B.Name /= Bank_name loop
+            B := B.Next;
+         end loop;
+         
+         if B = null then
+            Ada.Text_IO.Put_Line("Sound bank " & To_String(Bank_Name) & " Not Found");
+            return Null_Sound_Sample;
+         else
+            declare 
+               SoundMapping : constant Natural := B.Note_Mapping(Midi_Note);
+            begin
+               if SoundMapping = No_Mapping then
+                  return Null_Sound_Sample;
+               end if;
+               
 
-end Synth.SoundBank;
+               return S.Samples(SoundMapping);
+            end;         
+         end if;
+         end;
+      end GetSoundSample;
+   end Synth.SoundBank;

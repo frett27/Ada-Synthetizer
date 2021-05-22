@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                             Ada Midi Player                              --
 --                                                                          --
---                         Copyright (C) 2018-2019                          --
+--                         Copyright (C) 2018-2021                          --
 --                                                                          --
 --  Authors: Patrice Freydiere                                              --
 --                                                                          --
@@ -20,22 +20,47 @@
 --  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.          --
 --                                                                          --
 ------------------------------------------------------------------------------
-with GNAT.Strings;use GNAT.Strings;
-With Synth.SoundBank; use Synth.SoundBank;
+with GNAT.Strings; use GNAT.Strings;
+with Synth.Driver;
+with Synth.SoundBank; use Synth.SoundBank;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 package Midi.Player is
 
-   type MidiPlayerParameters is record
-      FileName : String_Access;
-      TempoFactor : Float;
-      BankName: String_Access;
-      WavOutput: String_Access;
-   end record;
 
-   procedure Init;
-   procedure ReadCommandLineParameters(Parameters : out MidiPlayerParameters);
-   procedure Play (Parameters : MidiPlayerParameters;   Sounds: SoundBank_Access);
+   --  Init the bam_engine
+   procedure Init (SoundDriver : Synth.Driver.Sound_Driver_Access);
+
+   --  define the sound bank playing
+   procedure Define_SoundBank (S : Synth.SoundBank.SoundBank_Access);
+
+   --  play the given midi filename
+   procedure Play (FileName : String);
+
+--
+--     -- get all file time
+--     function Get_TimeLength() return ...
+--
+--     -- set current file time
+--     procedure Set_Current_Time()
+--
+--
+
+   procedure Change_Tempo_Factor (Tempo_Factor : Float);
+
+   procedure Activate_Bank (Bank_Name : String);
+
+   procedure Deactivate_Bank (Bank_Name : String);
 
 
+
+   --  is it playing ?
+   function IsPlaying return Boolean;
+
+   --  stop the play, release
+   procedure Stop;
+
+   --  dumping a raised exception
    procedure DumpException (E : Ada.Exceptions.Exception_Occurrence);
+
 
 end Midi.Player;

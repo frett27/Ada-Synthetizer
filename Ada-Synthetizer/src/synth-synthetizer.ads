@@ -44,7 +44,10 @@ package Synth.Synthetizer is
    --  synth audit interface
    ------------------------------
 
-   type Synthetizer_Audit is interface;
+   type Synthetizer_Audit is abstract tagged record
+      SynthAccess : Synthetizer_Access;
+   end record;
+
    type Synthetizer_Audit_Access is access all Synthetizer_Audit'Class;
 
    --  procedure associated to Audit Interface
@@ -116,11 +119,15 @@ package Synth.Synthetizer is
    --  stop the voice (or the sound associated to it)
 
    procedure Stop (Synt         : Synthetizer_Type;
-                   Opened_Voice : Voice);
+                   Opened_Voice : in out Voice);
 
    procedure Stop (Synt         : Synthetizer_Type;
-                   Opened_Voice : Voice;
+                   Opened_Voice : in out Voice;
                    Stop_Time     : Synthetizer_Time);
+
+   -----------------------
+   -- Get_Opened_Voices --
+   -----------------------
 
    function Get_Opened_Voices (Synt : Synthetizer_Type) return Natural;
 
@@ -193,6 +200,7 @@ private
    protected type Buffer_Ring (NBBuffer : Positive;
                                Buffer_Length : Positive) is
 
+      --  Init the Buffer Ring
       procedure Init;
 
       entry Consume_Buffer (T : out Synthetizer_Time; Buffer : out PCM_Frame_Array_Access);
@@ -200,8 +208,10 @@ private
       --  this allocate the buffer
       entry Freeze_New_Buffer (T : Synthetizer_Time; Buffer : out Frame_Array_Access);
 
+      --  Release the buffer
       entry UnFreeze_New_Buffer (Buffer : Frame_Array_Access);
 
+      --  Available buffers
       function Available_Buffer_For_Consume return Boolean;
 
    private
@@ -232,7 +242,7 @@ private
    task type Buffer_Play_Task_Type is
 
       pragma Priority (System.Priority'Last);
-      --  start the play task
+      --  start the play task, with the given ring buffer
       entry Start (TheDriver : Driver.Sound_Driver_Access;
                    BufferRing : Buffer_Ring_Access);
 
@@ -240,6 +250,7 @@ private
 
    end Buffer_Play_Task_Type;
 
+   --  pointer to the play task
    type Buffer_Play_Task_Access is access Buffer_Play_Task_Type;
 
    --  constant null Voice Structure
@@ -380,8 +391,8 @@ private
          Channel : Positive := 1;
          Opened_Voice :    out Voice);
 
-      procedure Stop (SST : Synthetizer_Structure_Type; V : Voice);
-      procedure Stop (SST : Synthetizer_Structure_Type; V : Voice;
+      procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice);
+      procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice;
                       Stop_Time : Synthetizer_Time);
 
       procedure Close (SST : in out Synthetizer_Structure_Type);

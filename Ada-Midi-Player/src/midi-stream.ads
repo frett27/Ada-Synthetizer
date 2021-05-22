@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                             Ada Midi Player                              --
 --                                                                          --
---                         Copyright (C) 2018-2019                          --
+--                         Copyright (C) 2018-2021                          --
 --                                                                          --
 --  Authors: Patrice Freydiere                                              --
 --                                                                          --
@@ -21,45 +21,31 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO; use Ada.Text_IO;
--- with Ada.Command_Line; use Ada.Command_Line;
-with GNAT.Command_Line; use GNAT.Command_Line;
 
-with GNAT.Strings; use GNAT.Strings;
+with Ada.Containers.Vectors;
+use Ada.Containers;
 
-with Midi.Player;
-with Synth.SoundBank; use Synth.SoundBank;
+package Midi.Stream is
 
-with Ada.Exceptions;
+   type TimeStampedEvent is record
+      T : Long_Float;
+      isOn : Boolean;
+      Note : Natural;
+   end record;
 
-procedure Main is
-   p: Midi.Player.MidiPlayerParameters;
-   S: SoundBank_Access;
+   function "=" (Left, Right : TimeStampedEvent) return Boolean;
+   function "<" (Left, Right : TimeStampedEvent) return Boolean;
 
-begin
+   package Event_Vector is new Vectors (Index_Type   => Natural,
+                                        Element_Type => TimeStampedEvent,
+                                        "=" => "=");
 
-   Midi.Player.ReadCommandLineParameters(p);
+   package Event_Sorted is new Event_Vector.Generic_Sorting ("<" => "<");
 
-   if p.FileName = null then
-      Put_Line("Filename must be specified");
-      return;
-   end if;
+   type Midi_Event_Stream is record
+      Events : Event_Vector.Vector;
+   end record;
 
+   procedure Read_Midi_File (FileName : String; MES : out Midi_Event_Stream);
 
-   Put_Line("Start MusicBox Midi Player and play :" & p.FileName.all);
-   Midi.Player.Init;
-   if p.BankName /= null then
-      Put_Line("Read Soundbank");
-      S := Synth.SoundBank.Read(FileName => p.BankName.all);
-   end if;
-
-   Midi.Player.Play (Parameters => p,
-                     Sounds => S);
-
-   Put_Line("End Of Play");
-exception
-   when e : Program_Error =>
-      Midi.Player.DumpException(e);
-   when Gnat.Command_Line.Exit_From_Command_Line =>
-      return;
-end Main;
+end Midi.Stream;

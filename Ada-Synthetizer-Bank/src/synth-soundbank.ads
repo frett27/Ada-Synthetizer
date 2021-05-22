@@ -22,6 +22,7 @@
 ------------------------------------------------------------------------------
 
 with Synth;use Synth;
+with Ada.Strings.Unbounded;use Ada.Strings.Unbounded;
 
 package Synth.SoundBank is
    
@@ -35,7 +36,19 @@ package Synth.SoundBank is
    
    -- get sound sample associated to midi note, 
    -- return null_soundsample if no mapping associated
-   function GetSoundSample(s: SoundBank_Type; Midi_Note: Natural) return SoundSample;
+   function GetSoundSample(s: SoundBank_Type; Midi_Note: Natural) 
+                           return SoundSample;
+   
+   function GetSoundSample(s: SoundBank_Type; Bank_Name: Unbounded_String; Midi_Note:Natural)
+     return SoundSample;
+   
+  --- function GetSoundSample(s: SoundBank_Type; 
+  ---                         Bank_Name: String; 
+  ---                         Midi_Note:Natural)
+  ---                         return SoundSample;
+   
+   -- function GetSoundSampleBanks(S: SoundBank_Type) 
+   --                             return Array(<> of String_Access);
       
    No_Mapping: Natural := Natural'Last;
    
@@ -45,12 +58,24 @@ private
    
    type SoundSample_Array is array(Natural range <>) of SoundSample;
    
-   -- reference by note, the soundsample indice
+   -- reference by note, the soundsample indice in the array
    type Note_Sound_Sample_Mapping_Array is array(Natural range 0..127) of Natural;
    
+   type Bank_Type;
+   type Bank_Access is access Bank_Type;
+   
+   type Bank_Type is record
+      -- linked list of the other sound organized by bank name
+      Name: Unbounded_String;
+      Note_Mapping : Note_Sound_Sample_Mapping_Array := (others => No_Mapping);
+      Next : Bank_Access;
+   end record;
+   
    type SoundBank_Type(Number: Natural) is record
+      -- Samples
       Samples: SoundSample_Array(1..Number) := (others => Null_Sound_Sample); 
-      Note_Mapping: Note_Sound_Sample_Mapping_Array := (others => No_Mapping);
+      -- other banks
+      Banks: Bank_Access := null; 
    end record; 
    
 
