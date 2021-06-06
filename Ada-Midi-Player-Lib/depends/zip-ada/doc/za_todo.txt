@@ -1,0 +1,59 @@
+- Support the Zip_64 format - see ZIP64 in appnote.txt and
+     Zip_archive_format_type in zip.ads .
+
+- LZ77: add a 3rd procedure that sends a list of possible DL codes instead
+     of a single DL code (BT4 can do that),
+     letting LZMA.Encoding choose the most predicted-probable one.
+     Alternatively (to avoid complicating the LZ77 interface), hash
+     the distance-length pairs, use the hash for a frequency index
+     and give a preference to the most frequent pairs.
+
+- LZMA.Encoding & Zip.Compress.LZMA_E: tune performance with well
+     placed Inline pragmata
+
+- Zip.Compress.Deflate, LZMA.Encoding and LZ77:
+     see also specific "to do"'s in packages' bodies.
+
+- tools: comp_zip: optionally, check only CRC
+- tools: comp_zip: optionally or not, compare the compression sizes
+
+- tools: a Freshen_Zip tool that freshen files from an archive, or files
+      to an archive, or both (i.e. like "zip -f" and/or "unzip -f" combined);
+      possible with Zip.Create's Add_Compressed_Stream.
+      NB: AZip does the archive update part; so a command-line invocation
+      of AZip would fit this need.
+
+- Make a standalone & generic Deflate, Deflate.Decoding, Deflate.Encoding,
+      structured after the already existing LZMA, LZMA.Decoding, LZMA.Encoding.
+      This could be used by at least two projects: the Zip-Ada project and
+      the Zada project (an implementation of zlib fully in Ada).
+
+- Port PPMd variant I (see attempts in /extras/ppmd_sandbox) or reprogram it
+      from scratch (both are tough!), in order to have a complete coverage
+      of the Zip format and of compression methods in general.
+      A clean reprogramming could cover many algorithms of the PPM family.
+
+- more profiling - see prof_za.cmd and test/prof.cmd
+
+- tools: zipada: outputs sometimes progress like this:
+
+    Adding ...xxxxxxxxxxxxxxxxx.mht [........] Deflate  , to  44.88%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.mht [........] Deflate  , to  30.22%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.png ...][........] Deflate  , to  99.79%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.mp3 [........][........] Deflate  , to  97.16%, do
+    Adding ...xxxxxxxxxxxxxxxxx.doc [........] Deflate  , to  16.46%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.ppt .......][........] Deflate  , to  97.89%, done
+    Adding ...xxxxxxxxxxxxxxxxx.wma .....][........] Deflate  , to  97.72%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.wma ....][........] Deflate  , to  97.67%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.wma .][........] Deflate  , to  97.62%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.wma [........] Deflate  , to  97.56%, done.
+    Adding ...xxxxxxxxxxxxxxxx.tiff ......][........] Deflate  , to  98.46%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.pdf [........] Deflate  , to  90.50%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.xls [........] Deflate  , to  29.10%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.doc [........] Deflate  , to  24.14%, done.
+    Adding ...xxxxxxxxxxxxxxxxx.doc [........] Deflate  , to  17.86%, done.
+
+  * Would be normal when defaulting to store, but Deflate seems to be chosen in the end.
+  * Seems to occurr with data difficult to compress.
+  * Compressed archive is OK, only the display is strange.
+

@@ -1,0 +1,11 @@
+[LIBRARY PATH]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-LibC/lib/libmidiplayerlibc.so
+[OBJECT FILES]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-LibC/obj/midiplayerlib.o
+20210606153649
+[GENERATED SOURCE FILES]
+b__midiplayerlibc.ads
+b__midiplayerlibc.adb
+b__midiplayerlibc.ali
+[GENERATED OBJECT FILES]
+b__midiplayerlibc.o

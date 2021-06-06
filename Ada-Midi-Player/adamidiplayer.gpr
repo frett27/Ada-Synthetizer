@@ -1,13 +1,11 @@
-with "../Ada-Midi/adamidi.gpr";
-with "../Ada-Synthetizer/synthetizer.gpr";
-with "../Ada-Synthetizer-Bank/synthetizer_bank.gpr";
+with "../Ada-Midi-Player-Lib/libadamidiplayer.gpr";
 
 project AdaMidiPlayer is
 
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   type Build_Kind is
-      ("default", "relocatable");
+   --type Build_Kind is
+   --   ("default", "relocatable");
    type Os_Type is
       ("Any", "GNU/Linux", "Windows");
 
@@ -29,7 +27,7 @@ project AdaMidiPlayer is
    end Linker;
 
    package Binder is
-      for Switches ("ada") use ("-E", "-r");
+      for Switches ("ada") use ("-E");
    end Binder;
 
 end AdaMidiPlayer;

@@ -1,0 +1,35 @@
+with "../Ada-Midi/adamidi.gpr";
+with "../Ada-Synthetizer/synthetizer_linux.gpr";
+-- with "../Ada-Synthetizer-Bank/synthetizer_bank.gpr";
+
+library project LibAdaMidiPlayer is
+
+   for Object_Dir use "obj";
+   for Exec_Dir use ".";
+
+   for Source_Dirs use ("src", "tests", "depends/zip-ada/zip_lib");
+
+   for Library_Name use "adamidiplayer";
+   for Library_Dir use "lib";
+
+
+   -- on linux , gnat 4.6 - 4.8 does not support OS env variable
+   -- type Os_Type is
+   --   ("GNU/Linux", "Windows_NT");
+   -- Os : Os_Type := external ("OS");
+
+   package Compiler is
+      --  no styles :  "-gnaty"
+      for Switches ("ada") use ("-g", "-gnatn", "-O3", "-gnatf");
+   end Compiler;
+
+   package Linker is
+     -- for Switches ("ada") use ();
+   end Linker;
+
+   package Binder is
+      for Switches ("ada") use ("-E");
+   end Binder;
+
+end LibAdaMidiPlayer;
+

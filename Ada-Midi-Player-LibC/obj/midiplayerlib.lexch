@@ -1,0 +1,60 @@
+[OBJECT FILES]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/obj/midiplayerlib.o
+[LIBRARY NAME]
+midiplayerlib
+[LIBRARY DIRECTORY]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/lib/
+[PROJECT DIRECTORY]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/
+[OBJECT DIRECTORY]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/obj/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/drivers/alsa-binding/obj/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/obj/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/obj/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/obj/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/lib/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/lib/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/lib/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/lib/
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/lib/
+[COMPILERS]
+ada
+/usr/bin/gnatgcc
+[COMPILER LEADING SWITCHES]
+language=ada
+-c
+-x
+ada
+-gnatA
+[COMPILER TRAILING SWITCHES]
+[PARTIAL LINKER]
+/usr/bin/gnatgcc
+-nostdlib
+-Wl,-r
+-o
+[STATIC]
+[ARCHIVE BUILDER]
+/usr/bin/ar
+cr
+[ARCHIVE BUILDER APPEND OPTION]
+q
+[ARCHIVE SUFFIX]
+.a
+[ARCHIVE INDEXER]
+/usr/bin/ranlib
+[DEPENDENCY FILES]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/obj/midiplayerlib.ali
+[MAPPING FILE]
+/tmp/GNAT-TEMP-000005.TMP
+[TOOLCHAIN VERSION]
+ada
+GNAT 9
+[AUTO INIT]
+[INTERFACE DEP FILES]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/obj/midiplayerlib.ali
+[STANDALONE MODE]
+STANDARD
+[MAX COMMAND LINE LENGTH]
+ 8192
+[RESPONSE FILE FORMAT]
+GCC_GNU

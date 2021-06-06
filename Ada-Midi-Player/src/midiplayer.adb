@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                             Ada Midi Player                              --
 --                                                                          --
---                         Copyright (C) 2018-2019                          --
+--                         Copyright (C) 2018-2021                        --
 --                                                                          --
 --  Authors: Patrice Freydiere                                              --
 --                                                                          --
@@ -51,7 +51,6 @@ procedure MidiPlayer is
    s : Synth.SoundBank.SoundBank_Access := null;
 
    MustSpecifyASoundbank : exception;
-
 
    Config : Command_Line_Configuration;
 
@@ -114,7 +113,6 @@ procedure MidiPlayer is
 
    end ReadCommandLineParameters;
 
-
    D : Synth.Driver.Sound_Driver_Access;
 
 begin
@@ -143,7 +141,9 @@ begin
    Midi.Player.Init (D);
    if Read_Parameters.BankName /= null then
       Print ("Read SoundBank " & Read_Parameters.BankName.all);
-      s := Synth.SoundBank.Read (FileName => Read_Parameters.BankName.all);
+      s := Synth.SoundBank.Read (FileName => Read_Parameters.BankName.all,
+                                 Force_No_Stop_For_Sounds => Read_Parameters.MusicBoxBehaviour);
+
       Midi.Player.Define_SoundBank (S => s);
    else
       raise MustSpecifyASoundbank with "Must Specify a soundbank";

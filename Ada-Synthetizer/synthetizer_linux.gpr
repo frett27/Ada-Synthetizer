@@ -1,16 +1,19 @@
-with "./drivers/alsa-binding/alsa_binding.gpr";
+with "./drivers/alsa-binding/lib_alsa_binding.gpr";
 -- with "./drivers/ada-soundio/soundio.gpr";
 
-project Synthetizer_Linux is
+library project Synthetizer_Linux is
 
    for Source_Dirs use ("src", "src_linux", "src_linux/alsa");
 
-   for Object_Dir use "obj";
+   for Object_Dir use "objlinux";
 
    for Languages use ("Ada");
 
+   for Library_Name use "synthetizerlinux";
+   for Library_Dir use "liblinux";
+
    package Linker is
-      for Linker_Options use ("-lasound");
+     for Linker_Options use ("-lasound");
    end Linker;
 
 

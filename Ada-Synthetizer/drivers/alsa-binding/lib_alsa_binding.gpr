@@ -13,11 +13,11 @@ library project Lib_ALSA_Binding is
  
 
    package Linker is
-      for Default_Switches ("ada") use ("-lasound");
+      -- for Default_Switches ("ada") use ("-lasound");
    end Linker;
 
-   for Object_Dir use "obj/";
-   for Exec_Dir   use "bin/";
-   for Library_Dir   use "lib/";
+   for Object_Dir use "obj";
+   for Exec_Dir   use "bin";
+   for Library_Dir   use "lib";
 
 end Lib_ALSA_Binding;
