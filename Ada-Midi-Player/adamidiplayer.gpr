@@ -1,18 +1,16 @@
-with "../Ada-Midi/adamidi.gpr";
-with "../Ada-Synthetizer/synthetizer.gpr";
-with "../Ada-Synthetizer-Bank/synthetizer_bank.gpr";
+with "../Ada-Midi-Player-Lib/libadamidiplayer.gpr";
 
 project AdaMidiPlayer is
 
    for Object_Dir use "obj";
    for Exec_Dir use ".";
-   type Build_Kind is
-      ("default", "relocatable");
+   --type Build_Kind is
+   --   ("default", "relocatable");
    type Os_Type is
       ("Any", "GNU/Linux", "Windows");
 
    for Source_Dirs use ("src", "tests");
-   for Main use ("main.adb");
+   for Main use ("midiplayer.adb");
 
 
    -- on linux , gnat 4.6 - 4.8 does not support OS env variable
@@ -21,7 +19,7 @@ project AdaMidiPlayer is
    -- Os : Os_Type := external ("OS");
 
    package Compiler is
-      for Switches ("ada") use ("-g", "-funroll-loops", "-gnatn", "-O3", "-gnatf");
+      for Switches ("ada") use ("-g", "-funroll-loops", "-gnatn", "-O3", "-gnatf", "-gnaty");
    end Compiler;
 
    package Linker is
@@ -29,7 +27,7 @@ project AdaMidiPlayer is
    end Linker;
 
    package Binder is
-      for Switches ("ada") use ("-E", "-r");
+      for Switches ("ada") use ("-E");
    end Binder;
 
 end AdaMidiPlayer;

@@ -1,0 +1,15 @@
+[LIBRARY PATH]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/lib/libsynthetizer.a
+[OBJECT FILES]
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/objlinux/synth-driver-alsa.o
+20210606131959
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/objlinux/synth-driver-wav.o
+20210606132000
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/objlinux/synth-driver.o
+20210606131959
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/objlinux/synth-synthetizer.o
+20210606132000
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/objlinux/synth-wav.o
+20210606132000
+/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/objlinux/synth.o
+20210606132000

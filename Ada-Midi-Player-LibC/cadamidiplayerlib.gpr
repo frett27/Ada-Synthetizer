@@ -1,0 +1,36 @@
+with "../Ada-Midi-Player-Lib/libadamidiplayer.gpr";
+
+library project CAdaMidiPlayerLib is
+
+   for Languages use ("Ada");
+
+   for Library_Name use "midiplayerlibc";
+   for Library_Dir use "lib";
+   for Library_Interface use ("midiplayerlib");
+   for Object_Dir use "obj";
+
+   for Library_Kind use "relocatable";
+   for Library_Standalone use "encapsulated";
+
+   for Source_Dirs use ("src", "tests");
+
+   package Builder is
+      for Global_Compilation_Switches("Ada") use ("-fPIC");
+   end Builder;
+
+
+   package Compiler is
+      for Switches ("Ada") use ("-g","-gnatn", "-gnatf", "-O3");
+
+   end Compiler;
+
+   package Binder is
+      -- for Switches ("Ada") use ("-E");
+   end Binder;
+
+   package Linker is
+      -- for Linker_Options use ("-LC:\projects\2018_Synthetiseur\Ada-Synthetizer\Ada-Synthetizer-Lib", "-lsoundio");
+   end Linker;
+
+end CAdaMidiPlayerLib;
+

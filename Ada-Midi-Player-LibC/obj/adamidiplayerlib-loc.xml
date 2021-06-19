@@ -1,0 +1,805 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project >
+    <file_marker column=" 9" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 16" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 16" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 19" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 24" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 8" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 5" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 22" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 34" line=" 9" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib</vfs_file>
+    </file_marker>
+    <file_marker column=" 34" line=" 9" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 18" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 33" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 48" line=" 9" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 33" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 10" line=" 22" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 41" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midiplayer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 28" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 32" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/drivers/alsa-binding/alsa_binding.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer_linux.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/adamidi.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/drivers/alsa-binding/alsa_binding.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 41" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 46" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 8" line=" 33" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 48" line=" 9" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 8" line=" 33" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 70" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 32" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 19" line=" 113" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 32" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 13" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 12" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 34" line=" 9" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 7" line=" 9" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 5" line=" 69" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/depends/zip-ada/zip_lib/unzip-streams.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 6" line=" 2" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 8" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 32" line=" 6" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 3" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 22" line=" 2" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 10" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 6" line=" 2" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 6" line=" 2" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/tests/testreadsoundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 15" line=" 158" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 80" line=" 160" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 78" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 51" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 28" line=" 44" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 46" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 58" line=" 44" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 37" line=" 46" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 31" line=" 47" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 48" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 61" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 50" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 62" line=" 59" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 74" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 50" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 73" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 74" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 59" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 43" line=" 120" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 50" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 39" line=" 50" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 27" line=" 25" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 50" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 16" line=" 26" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 59" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 73" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 30" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 59" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 74" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 59" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 73" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 24" line=" 34" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 69" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 59" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 66" line=" 50" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 9" line=" 34" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 16" line=" 59" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 27" line=" 51" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 43" line=" 31" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 32" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 10" line=" 31" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 22" line=" 29" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 10" line=" 31" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 26" line=" 31" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 12" line=" 24" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 16" line=" 31" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midiplayer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 19" line=" 29" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 38" line=" 44" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 11" line=" 37" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 20" line=" 67" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 95" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 23" line=" 77" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 71" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 88" line=" 99" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 21" line=" 45" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 14" line=" 33" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 54" line=" 109" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 64" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 13" line=" 109" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midiplayer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midiplayer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/src/synth-soundbank.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 46" line=" 32" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/src/synth-soundbank.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/src/synth-soundbank.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/src/synth-soundbank.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 57" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 4" line=" 58" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midiplayer.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 40" line=" 55" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 30" line=" 56" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/src/midiplayerlib.ads</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 15" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/adamidi.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/adamidi.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/Makefile</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 3" >
+      <vfs_project />
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer_linux.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer_linux.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 29" line=" 8" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer_linux.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer/synthetizer_linux.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 15" line=" 158" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player-Lib/adamidiplayerlib.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/adamidi.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/adamidi.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 13" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/adamidi.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi/adamidi.gpr</vfs_file>
+    </file_marker>
+    <file_marker column=" 15" line=" 158" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/src/midi-player.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Synthetizer-Bank/synthetizer_bank.gpr</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1" >
+      <vfs_project>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_project>
+      <vfs_file>/home/use/projets/2021-04_bam/Ada-Synthetizer/Ada-Midi-Player/adamidiplayer.gpr</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>

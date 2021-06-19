@@ -1,5 +1,5 @@
 
-Library project Adamidi is
+library project Adamidi is
 
    type Os_Type is
       ("Any", "GNU/Linux","Windows");
@@ -11,8 +11,8 @@ Library project Adamidi is
    for library_dir use "lib";
    for library_name use "adamidi";
 
-   for Object_Dir use "build";
-   for library_kind use "static";
+   for Object_Dir use "obj";
+   -- for library_kind use "static";
    for Languages use ("Ada");
 
    Version := "1";

@@ -170,11 +170,21 @@ package Sound.ALSA is
       mode   : in     Interfaces.C.int) return Interfaces.C.int;
    pragma Import (C, snd_pcm_open);
 
+   function snd_strerror (errCode : Interfaces.C.int)
+                          return Interfaces.C.Strings.chars_ptr;
+   pragma Import (C, snd_strerror);
+
    function snd_pcm_close (pcm : in     snd_pcm_t_ptr) return Interfaces.C.int;
    pragma Import (C, snd_pcm_close);
 
    function snd_pcm_state (pcm : in     snd_pcm_t_ptr) return snd_pcm_state_t;
    pragma Import (C, snd_pcm_state);
+
+   type Params_Access is access all snd_pcm_hw_params_t;
+
+   function snd_pcm_hw_params_malloc
+     (params : access Params_Access) return Interfaces.C.int;
+   pragma Import (C, snd_pcm_hw_params_malloc);
 
    function snd_pcm_hw_params_any
      (pcm    : in     snd_pcm_t_ptr;
