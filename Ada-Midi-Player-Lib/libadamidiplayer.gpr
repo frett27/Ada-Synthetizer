@@ -20,8 +20,12 @@ library project LibAdaMidiPlayer is
 
    package Compiler is
       --  no styles : "-gnaty",
-      for Switches ("ada") use ("-g", "-gnatn", "-O3", "-gnatf",
+      for Default_Switches ("ada") use ("-g", "-gnatn", "-O3", "-gnatf");
+      for Switches ("midi*") use (
                                 "-gnatyaAbBcefhiIklnprSmtux");
+      for Switches ("synth*") use (
+                                "-gnatyaAbBcefhiIklnprSmtux");
+
    end Compiler;
 
    package Linker is
