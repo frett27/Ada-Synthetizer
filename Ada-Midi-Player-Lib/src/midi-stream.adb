@@ -88,11 +88,11 @@ package body Midi.Stream is
 
       Divisions : Natural;
 
-      TicksPerBeat : Long_Float;
+      TicksPerBeat : Long_Long_Float;
 
-      CurrentTime : Long_Float := 0.0;
+      CurrentTime : Long_Long_Float := 0.0;
 
-      DelayPerTick : Long_Float := 1_000_000.0 / (24.0 * 100.0);
+      DelayPerTick : Long_Long_Float := 1_000_000.0 / (24.0 * 100.0);
 
 
       QuarterNotePerMinutes : Long_Float := 120.0;
@@ -102,7 +102,7 @@ package body Midi.Stream is
       begin
          --  Dump (Ev);
 
-         CurrentTime := CurrentTime + DelayPerTick * Long_Float (Ev.Ticks);
+         CurrentTime := CurrentTime + DelayPerTick * Long_Long_Float (Ev.Ticks);
 
          case Ev.ET is
 
@@ -122,8 +122,8 @@ package body Midi.Stream is
                   QuarterNotePerMinutes :=
                     60_000_000.0 / Long_Float (TempoValue);
 
-                  DelayPerTick := Long_Float (TempoValue)
-                    / Long_Float (Divisions) / 1_000_000.0;
+                  DelayPerTick := Long_Long_Float (TempoValue)
+                    / Long_Long_Float (Divisions) / 1_000_000.0;
 
                end;
 
@@ -134,9 +134,9 @@ package body Midi.Stream is
                begin
 
                   TicksPerBeat := (
-                                   Long_Float (Ev.Data (3)) * 256.0 -- * 4.0
-                                   *  Long_Float (Ev.Data (4))) /
-                    Long_Float (Ev.Data (1)) / Long_Float (2 ** Natural (Ev.Data (2)));
+                                   Long_Long_Float (Ev.Data (3)) * 256.0 -- * 4.0
+                                   *  Long_Long_Float (Ev.Data (4))) /
+                    Long_Long_Float (Ev.Data (1)) / Long_Long_Float (2 ** Natural (Ev.Data (2)));
                end;
             end if;
 

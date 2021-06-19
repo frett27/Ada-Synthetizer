@@ -28,7 +28,7 @@ use Ada.Containers;
 package Midi.Stream is
 
    type TimeStampedEvent is record
-      T : Long_Float;
+      T : Long_Long_Float;
       isOn : Boolean;
       Note : Natural;
    end record;

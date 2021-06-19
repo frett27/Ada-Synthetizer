@@ -27,6 +27,7 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 package Midi.Player is
 
 
+
    --  Init the bam_engine
    procedure Init (SoundDriver : Synth.Driver.Sound_Driver_Access);
 
@@ -60,8 +61,11 @@ package Midi.Player is
    --  stop the play, release
    procedure Stop;
 
+
    --  dumping a raised exception
    procedure DumpException (E : Ada.Exceptions.Exception_Occurrence);
+
+
 
 
 end Midi.Player;

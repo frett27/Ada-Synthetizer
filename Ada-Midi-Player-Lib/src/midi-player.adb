@@ -21,7 +21,6 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;
 
 with Ada.Real_Time;
 use Ada.Real_Time;
@@ -58,6 +57,8 @@ use Ada.Containers;
 
 with Ada.Strings.Hash;
 
+with Ada.Text_IO;
+
 
 package body Midi.Player is
 
@@ -71,28 +72,51 @@ package body Midi.Player is
    --  synthetizer
    S : Synth.Synthetizer.Synthetizer_Type;
 
+    -- log function for infos or debug
+   type Log_Function_Access is access
+     procedure (S : String);
 
+   -- default log function
+   LogFunction : Log_Function_Access := null;
+
+   procedure SetLog(L: Log_Function_Access) is
+   begin
+      LogFunction := L;
+   end;
+
+   -- default Print Log
+   procedure P(S: String) is
+   begin
+      Ada.Text_IO.Put_Line(Ada.Text_IO.Standard_Error, s);
+   end;
+
+   procedure DebugPrint(S: String) is
+   begin
+      if LogFunction /= null then
+         LogFunction(S);
+      end if;
+   end DebugPrint;
 
    procedure DumpException (E : Ada.Exceptions.Exception_Occurrence) is
-      use Ada.Text_IO;
    begin
-      New_Line (Standard_Error);
-      Put_Line
-        (Standard_Error,
+      if LogFunction = null then
+         return;
+      end if;
+
+      LogFunction
+        (
          "--------------------[ Unhandled exception ]------"
          & "-----------");
-      Put_Line
-        (Standard_Error,
-         " > Name of exception . . . . .: " &
-           Ada.Exceptions.Exception_Name (E));
-      Put_Line
-        (Standard_Error,
-         " > Message for exception . . .: " &
-           Ada.Exceptions.Exception_Message (E));
-      Put_Line (Standard_Error, " > Trace-back of call stack: ");
-      Put_Line
-        (Standard_Error,
-         GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
+      LogFunction(
+                  " > Name of exception . . . . .: " &
+                    Ada.Exceptions.Exception_Name (E));
+      LogFunction(
+
+                  " > Message for exception . . .: " &
+                    Ada.Exceptions.Exception_Message (E));
+      LogFunction(" > Trace-back of call stack: ");
+      LogFunction(
+                  GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
 
    end DumpException;
 
@@ -110,12 +134,10 @@ package body Midi.Player is
    type Player_Synth_Audit is
      new Synth.Synthetizer.Synthetizer_Audit with record
 
-      --  played time in events
-      StreamTime : Long_Long_Float := 0.0;
+      --  committed played time in events
+      StreamTime : Long_Float := 0.0;
+      Associated_Synth_Time: Synthetizer_Time := Microseconds(0);
 
-      --  associated synthetizer time
-      Synth_Time : Synth.Synthetizer_Time :=
-        Synth.Synthetizer_Time (Microseconds (0));
 
       EventCursor : Event_Vector.Cursor;
 
@@ -161,20 +183,30 @@ package body Midi.Player is
       use Synth.Synthetizer;
 
 
-      Projected_Synthetizer_Next_Time_Frame : Synth.Synthetizer_Time :=
-        Current_Buffer_Time
-          + To_Time_Span (
-                          Duration (Long_Float (
-                            To_Duration (Next_Buffer_Time - Current_Buffer_Time))
-                            * Long_Float (Audit.TempoFactor)));
+      Current_Tempo: Float := Audit.TempoFactor;
+
+      D: Duration := To_Duration (Next_Buffer_Time - Current_Buffer_Time);
+
+      -- compute the next frame time
+      Stream_Projected_Synthetizer_Next_Time_Frame : Long_Float :=
+        Audit.StreamTime
+          + Long_Float (D)
+        / Long_Float (Current_Tempo);
+
+      Current_Stream_Time : Long_Float := Audit.StreamTime;
+      Current_Associated_SynthTime : Synthetizer_Time := audit.Associated_Synth_Time;
+
+      C : Ada.Real_Time.Time := Clock;
    begin
 
       if Audit.Stopped then
          return;
       end if;
 
+      DebugPrint(S => "Handle Frame, tempo factor: " & float'image(Current_Tempo) & "- frame duration :" & Duration'Image(D) & "  stream time :" & Long_Float'image(audit.StreamTime));
+
       while Event_Vector.Has_Element (Audit.EventCursor) and then
-        Audit.Synth_Time < Projected_Synthetizer_Next_Time_Frame
+        Current_Stream_Time < Stream_Projected_Synthetizer_Next_Time_Frame
       loop
          Audit.Event_Counter := Natural'Succ (Audit.Event_Counter);
          declare
@@ -182,16 +214,24 @@ package body Midi.Player is
               Event_Vector.Element (Audit.EventCursor);
             SelectedSound : SoundSample; -- default
 
-            Event_Start_From_Frame_Start_Duration : Synthetizer_Time :=
-              Microseconds (Integer ((Long_Long_Float (E.T) - Audit.StreamTime) *
-                                Long_Long_Float (Audit.TempoFactor) *
-                              Long_Long_Float (1_000_000)));
+            Event_Start_Time : Synthetizer_Time :=
+              Microseconds (Integer(
+                            (Long_Float (E.T) - Audit.StreamTime) *
+                              Long_Float (Current_Tempo) *
+                              Long_Float (1_000_000)))
+              + Audit.Associated_Synth_Time;
+
          begin
-            Audit.Synth_Time := Audit.Synth_Time + Event_Start_From_Frame_Start_Duration;
+            Current_Stream_Time := Long_Float(E.T);
+            Current_Associated_SynthTime := Event_Start_Time;
+            DebugPrint("Current Stream Time " & Long_Float'Image(Current_Stream_Time));
+            DebugPrint("Time in the file " & Duration'Image(To_Duration(Current_Associated_SynthTime)));
 
             if Audit.Sounds /= null then
                if E.Note > 127 or E.Note < 0 then
-                  Ada.Text_IO.Put_Line ("Invalid note :" & Natural'Image (E.Note));
+                  if LogFunction /= null then
+                     LogFunction ("Invalid note :" & Natural'Image (E.Note));
+                  end if;
                else
 
                   --  for each activated sound bank
@@ -219,8 +259,12 @@ package body Midi.Player is
                            exception
                               when others =>
                                  SelectedSound := Null_Sound_Sample;
-                                 Ada.Text_IO.Put_Line ("error getting sound sample for note " & Natural'Image (E.Note));
+                                 if LogFunction /= null then
+                                    LogFunction("error getting sound sample for note " & Natural'Image (E.Note));
+                                 end if;
+
                            end;
+
 
                            if E.isOn then
                               --  bank read ?
@@ -231,26 +275,37 @@ package body Midi.Player is
                                        Frequency    => Synth.MIDICode_To_Frequency (E.Note),
                                        Channel      => 1,
                                        Volume => 0.5,
-                                       Play_Time => Audit.Synth_Time,
+                                       Play_Time => Event_Start_Time,
                                        Opened_Voice => VA (E.Note));
                               end if;
                            else
                               if SelectedSound /= Null_Sound_Sample then
                                  Stop (Synt         => Audit.SynthAccess.all,
                                        Opened_Voice => VA (E.Note),
-                                       Stop_Time => Audit.Synth_Time);
+                                       Stop_Time => Event_Start_Time);
                               end if;
                            end if;
                         end;
-
                      end if;
                   end loop;
                end if;
             end if;
-            Audit.StreamTime := Long_Long_Float (E.T);
+
          end;
          Event_Vector.Next (Audit.EventCursor);
       end loop;
+
+      -- update commited
+
+      Audit.StreamTime := Stream_Projected_Synthetizer_Next_Time_Frame;
+      Audit.Associated_Synth_Time := Audit.Associated_Synth_Time + (Next_Buffer_Time - Current_Buffer_Time);
+
+
+      if (Next_Buffer_Time - Current_Buffer_Time ) < (Clock - C) then
+         P("********** time elapsed to construct the buffer ***************");
+      end if;
+
+
 
    exception
       when e : others =>
@@ -281,8 +336,9 @@ package body Midi.Player is
                          MS : Midi_Event_Stream;
                          S : Synth.SoundBank.SoundBank_Access) do
                Player_Synth :=  Player_Synth_Audit'(
-                                                    StreamTime  => 0.0,
-                                                    Synth_Time => Synth.Synthetizer_Time (Seconds (3)),
+                                                    StreamTime  => -2.0,
+                                                    Associated_Synth_Time => Microseconds(0),
+
                                                     TempoFactor => 1.0,
                                                     Sounds => S,
                                                     Event_Counter => 0,
@@ -294,7 +350,7 @@ package body Midi.Player is
                Synth.Synthetizer.Open (Driver_Access => SoundDriver,
                                        Synt => TheSynthetizer,
                                        Buffers_Number =>  1,
-                                       Buffer_Size => 2_000, -- 10_000
+                                       Buffer_Size => 10_000, -- 10_000
                                        Audit =>  Player_Synth'Unrestricted_Access
                                       );
 
