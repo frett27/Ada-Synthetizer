@@ -19,8 +19,9 @@ library project LibAdaMidiPlayer is
    -- Os : Os_Type := external ("OS");
 
    package Compiler is
-      --  no styles :  "-gnaty"
-      for Switches ("ada") use ("-g", "-gnatn", "-O3", "-gnatf");
+      --  no styles : "-gnaty",
+      for Switches ("ada") use ("-g", "-gnatn", "-O3", "-gnatf",
+                                "-gnatyaAbBcefhiIklnprSmtux");
    end Compiler;
 
    package Linker is
