@@ -21,29 +21,29 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-with Synth;use Synth;
-with Ada.Strings.Unbounded;use Ada.Strings.Unbounded;
+with Synth; use Synth;
+with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 
 package Synth.SoundBank is
-   
-   -- soundbank with a defined number of sounds
-   type SoundBank_Type(Number: Natural) is private;
+
+   --  soundbank with a defined number of sounds
+   type SoundBank_Type (Number : Natural) is private;
 
    type SoundBank_Access is access all SoundBank_Type;
-   
-   -- read instrument file, and return the soundbank access
-   function Read(FileName: String;
-                 Force_No_Stop_For_Sounds: Boolean := False) return SoundBank_Access;
-   
-   -- get sound sample associated to midi note, 
-   -- return null_soundsample if no mapping associated
-   function GetSoundSample(s: SoundBank_Type; Midi_Note: Natural) 
+
+   --  read instrument file, and return the soundbank access
+   function Read (FileName: String;
+                 Force_No_Stop_For_Sounds : Boolean := False) return SoundBank_Access;
+
+   --  get sound sample associated to midi note, 
+   --  return null_soundsample if no mapping associated
+   function GetSoundSample (s: SoundBank_Type; Midi_Note: Natural) 
                            return SoundSample;
-   
-   function GetSoundSample(s: SoundBank_Type; Bank_Name: Unbounded_String; Midi_Note:Natural)
+
+   function GetSoundSample (s: SoundBank_Type; Bank_Name: Unbounded_String; Midi_Note:Natural)
      return SoundSample;
-   
-  --- function GetSoundSample(s: SoundBank_Type; 
+
+  --- function GetSoundSample(s: SoundBank_Type;
   ---                         Bank_Name: String; 
   ---                         Midi_Note:Natural)
   ---                         return SoundSample;

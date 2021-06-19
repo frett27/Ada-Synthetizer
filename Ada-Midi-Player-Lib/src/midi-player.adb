@@ -21,19 +21,16 @@
 --                                                                          --
 ------------------------------------------------------------------------------
 
-
 with Ada.Real_Time;
 use Ada.Real_Time;
 
 with Ada.Exceptions;
-
 
 with Synth; use Synth;
 with Synth.Driver;
 with Synth.Driver.Wav;
 with Synth.Wav;
 with Synth.Synthetizer;
-
 
 with Midi.File;
 use Midi;
@@ -48,7 +45,6 @@ with GNAT.Strings; use GNAT.Strings;
 with GNAT.Traceback;
 with GNAT.Traceback.Symbolic;
 
-
 with Ada.Strings.Unbounded;
 use Ada.Strings.Unbounded;
 
@@ -59,9 +55,7 @@ with Ada.Strings.Hash;
 
 with Ada.Text_IO;
 
-
 package body Midi.Player is
-
 
    package Maps is new Indefinite_Hashed_Maps (Key_Type => String,
                                                Element_Type => Boolean,
@@ -72,28 +66,28 @@ package body Midi.Player is
    --  synthetizer
    S : Synth.Synthetizer.Synthetizer_Type;
 
-    -- log function for infos or debug
+    --  log function for infos or debug
    type Log_Function_Access is access
      procedure (S : String);
 
-   -- default log function
+   --  default log function
    LogFunction : Log_Function_Access := null;
 
-   procedure SetLog(L: Log_Function_Access) is
+   procedure SetLog (L : Log_Function_Access) is
    begin
       LogFunction := L;
-   end;
+   end SetLog;
 
-   -- default Print Log
-   procedure P(S: String) is
+   --  default Print Log
+   procedure P (S : String) is
    begin
-      Ada.Text_IO.Put_Line(Ada.Text_IO.Standard_Error, s);
-   end;
+      Ada.Text_IO.Put_Line (Ada.Text_IO.Standard_Error, S);
+   end P;
 
-   procedure DebugPrint(S: String) is
+   procedure DebugPrint (S : String) is
    begin
       if LogFunction /= null then
-         LogFunction(S);
+         LogFunction (S);
       end if;
    end DebugPrint;
 
@@ -107,19 +101,18 @@ package body Midi.Player is
         (
          "--------------------[ Unhandled exception ]------"
          & "-----------");
-      LogFunction(
+      LogFunction (
                   " > Name of exception . . . . .: " &
                     Ada.Exceptions.Exception_Name (E));
-      LogFunction(
+      LogFunction (
 
                   " > Message for exception . . .: " &
                     Ada.Exceptions.Exception_Message (E));
-      LogFunction(" > Trace-back of call stack: ");
-      LogFunction(
+      LogFunction (" > Trace-back of call stack: ");
+      LogFunction (
                   GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
 
    end DumpException;
-
 
    ----------------------------------------------------------------------------
    --  audit protected interface
@@ -136,8 +129,7 @@ package body Midi.Player is
 
       --  committed played time in events
       StreamTime : Long_Float := 0.0;
-      Associated_Synth_Time: Synthetizer_Time := Microseconds(0);
-
+      Associated_Synth_Time : Synthetizer_Time := Microseconds (0);
 
       EventCursor : Event_Vector.Cursor;
 
@@ -158,14 +150,12 @@ package body Midi.Player is
    type Opened_Voices_Type is array (0 .. 127) of Synth.Synthetizer.Voice;
    type Opened_Voices_Type_Access is access all Opened_Voices_Type;
 
-
    package Maps_Open_Voices is
      new Indefinite_Hashed_Maps (Key_Type => String,
                                  Element_Type => Opened_Voices_Type_Access,
                                  Hash => Ada.Strings.Hash,
                                  Equivalent_Keys => "=");
    use Maps_Open_Voices;
-
 
    --  Opened voices, by bank name
    Opened_Voices : Maps_Open_Voices.Map  := Maps_Open_Voices.Empty_Map;
@@ -177,24 +167,25 @@ package body Midi.Player is
    --  audit procedure for filling the planned events
    --  this call back is called by synthetizer to fill the event buffer
    --
-   overriding procedure Ready_To_Prepare (Audit : in out Player_Synth_Audit;
-                                          Current_Buffer_Time,
-                                          Next_Buffer_Time : Synth.Synthetizer_Time) is
+   overriding
+   procedure Ready_To_Prepare (Audit : in out Player_Synth_Audit;
+                               Current_Buffer_Time,
+                               Next_Buffer_Time : Synth.Synthetizer_Time) is
       use Synth.Synthetizer;
 
+      Current_Tempo : Float := Audit.TempoFactor;
 
-      Current_Tempo: Float := Audit.TempoFactor;
+      D : Duration := To_Duration (Next_Buffer_Time - Current_Buffer_Time);
 
-      D: Duration := To_Duration (Next_Buffer_Time - Current_Buffer_Time);
-
-      -- compute the next frame time
+      --  compute the next frame time
       Stream_Projected_Synthetizer_Next_Time_Frame : Long_Float :=
         Audit.StreamTime
           + Long_Float (D)
         / Long_Float (Current_Tempo);
 
       Current_Stream_Time : Long_Float := Audit.StreamTime;
-      Current_Associated_SynthTime : Synthetizer_Time := audit.Associated_Synth_Time;
+      Current_Associated_SynthTime : Synthetizer_Time :=
+        Audit.Associated_Synth_Time;
 
       C : Ada.Real_Time.Time := Clock;
    begin
@@ -203,7 +194,11 @@ package body Midi.Player is
          return;
       end if;
 
-      DebugPrint(S => "Handle Frame, tempo factor: " & float'image(Current_Tempo) & "- frame duration :" & Duration'Image(D) & "  stream time :" & Long_Float'image(audit.StreamTime));
+      DebugPrint (S =>
+                    "Handle Frame, tempo factor: "
+                  & Float'Image (Current_Tempo)
+                  & "- frame duration :" & Duration'Image (D)
+                  & "  stream time :" & Long_Float'Image (Audit.StreamTime));
 
       while Event_Vector.Has_Element (Audit.EventCursor) and then
         Current_Stream_Time < Stream_Projected_Synthetizer_Next_Time_Frame
@@ -215,20 +210,23 @@ package body Midi.Player is
             SelectedSound : SoundSample; -- default
 
             Event_Start_Time : Synthetizer_Time :=
-              Microseconds (Integer(
+              Microseconds (Integer (
                             (Long_Float (E.T) - Audit.StreamTime) *
                               Long_Float (Current_Tempo) *
                               Long_Float (1_000_000)))
               + Audit.Associated_Synth_Time;
 
          begin
-            Current_Stream_Time := Long_Float(E.T);
+            Current_Stream_Time := Long_Float (E.T);
             Current_Associated_SynthTime := Event_Start_Time;
-            DebugPrint("Current Stream Time " & Long_Float'Image(Current_Stream_Time));
-            DebugPrint("Time in the file " & Duration'Image(To_Duration(Current_Associated_SynthTime)));
+            DebugPrint ("Current Stream Time "
+                        & Long_Float'Image (Current_Stream_Time));
+            DebugPrint ("Time in the file "
+                        & Duration'Image (
+                          To_Duration (Current_Associated_SynthTime)));
 
             if Audit.Sounds /= null then
-               if E.Note > 127 or E.Note < 0 then
+               if E.Note > 127 or else E.Note < 0 then
                   if LogFunction /= null then
                      LogFunction ("Invalid note :" & Natural'Image (E.Note));
                   end if;
@@ -241,30 +239,35 @@ package body Midi.Player is
 
                         declare
                            BankName : String :=  Key (Bank);
-                           OVCur : Maps_Open_Voices.Cursor := Opened_Voices.Find (Key => BankName);
+                           OVCur : Maps_Open_Voices.Cursor :=
+                             Opened_Voices.Find (Key => BankName);
                            VA : Opened_Voices_Type_Access := null;
 
                         begin
                            if not  Has_Element (OVCur) then
-                              Opened_Voices. Insert (Key      => BankName,
-                                                     New_Item => new Opened_Voices_Type'(others => No_Voice));
+                              Opened_Voices.
+                                Insert (Key      => BankName,
+                                        New_Item => new Opened_Voices_Type'
+                                          (others => No_Voice));
                            end if;
                            VA := Opened_Voices.Element (BankName);
 
-
                            begin
-                              SelectedSound := SoundBank.GetSoundSample (Audit.Sounds.all,
-                                                                         To_Unbounded_String (Key (Bank)),
-                                                                         E.Note);
+                              SelectedSound :=
+                                SoundBank.GetSoundSample
+                                  (Audit.Sounds.all,
+                                   To_Unbounded_String (Key (Bank)),
+                                   E.Note);
                            exception
                               when others =>
                                  SelectedSound := Null_Sound_Sample;
                                  if LogFunction /= null then
-                                    LogFunction("error getting sound sample for note " & Natural'Image (E.Note));
+                                    LogFunction
+                                      ("error getting sound sample for note "
+                                       & Natural'Image (E.Note));
                                  end if;
 
                            end;
-
 
                            if E.isOn then
                               --  bank read ?
@@ -295,17 +298,14 @@ package body Midi.Player is
          Event_Vector.Next (Audit.EventCursor);
       end loop;
 
-      -- update commited
+      --  update commited
 
       Audit.StreamTime := Stream_Projected_Synthetizer_Next_Time_Frame;
       Audit.Associated_Synth_Time := Audit.Associated_Synth_Time + (Next_Buffer_Time - Current_Buffer_Time);
 
-
-      if (Next_Buffer_Time - Current_Buffer_Time ) < (Clock - C) then
-         P("********** time elapsed to construct the buffer ***************");
+      if (Next_Buffer_Time - Current_Buffer_Time) < (Clock - C) then
+         P ("********** time elapsed to construct the buffer ***************");
       end if;
-
-
 
    exception
       when e : others =>
@@ -335,17 +335,19 @@ package body Midi.Player is
             accept Play (SoundDriver : Synth.Driver.Sound_Driver_Access;
                          MS : Midi_Event_Stream;
                          S : Synth.SoundBank.SoundBank_Access) do
-               Player_Synth :=  Player_Synth_Audit'(
-                                                    StreamTime  => -2.0,
-                                                    Associated_Synth_Time => Microseconds(0),
-
-                                                    TempoFactor => 1.0,
-                                                    Sounds => S,
-                                                    Event_Counter => 0,
-                                                    EventCursor => Event_Vector.First (MS.Events), SynthAccess => null,
-                                                    Stopped => False,
-                                                    Activated_Banks => Maps.Empty_Map
-                                                   );
+               Player_Synth :=
+                 Player_Synth_Audit'(
+                                     StreamTime  => -2.0,
+                                     Associated_Synth_Time => Microseconds (0),
+                                     TempoFactor => 1.0,
+                                     Sounds => S,
+                                     Event_Counter => 0,
+                                     EventCursor =>
+                                       Event_Vector.First (MS.Events),
+                                     SynthAccess => null,
+                                     Stopped => False,
+                                     Activated_Banks => Maps.Empty_Map
+                                    );
                --  open synth
                Synth.Synthetizer.Open (Driver_Access => SoundDriver,
                                        Synt => TheSynthetizer,
@@ -358,10 +360,9 @@ package body Midi.Player is
                   Cur : Maps.Cursor;
                   Inserted : Boolean;
                begin
-                  -- activate the DEFAULT SOUNDBANK
+                  --  activate the DEFAULT SOUNDBANK
                   Player_Synth.Activated_Banks.Insert ("DEFAULT", True, Cur, Inserted);
                end;
-
 
             end Play;
          or
@@ -462,7 +463,6 @@ package body Midi.Player is
       Task_Player.Stop;
    end Stop;
 
-
    procedure Activate_Bank (Bank_Name : String) is
    begin
       Task_Player.Activate_Bank (Bank_Name);
@@ -472,7 +472,5 @@ package body Midi.Player is
    begin
       Task_Player.Deactivate_Bank (Bank_Name);
    end Deactivate_Bank;
-
-
 
 end Midi.Player;
