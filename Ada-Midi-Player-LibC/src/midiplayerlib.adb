@@ -34,21 +34,19 @@ with Ada.Text_IO;
 
 package body MidiPlayerLib is
 
-
    CurrentSoundBank : SoundBankRef := null;
-
 
    function Init return API_RETURN_CODE is
       D : Synth.Driver.Sound_Driver_Access;
    begin
 
-      -- open the sound driver
+      --  open the sound driver
       Synth.Driver.Open (Driver    => D,
                          Frequency => Synth.Frequency_Type (48_000));
 
-      Midi.Player.init(SoundDriver => D);
+      Midi.Player. Init (SoundDriver => D);
 
-      Ada.text_io.Put_Line("Initied");
+      Ada.Text_IO.Put_Line ("Initied");
 
       return API_OK;
 
@@ -56,21 +54,21 @@ package body MidiPlayerLib is
          when others => return API_GENERIC_ERROR;
    end Init;
 
-
-
-   function Load_SoundBank(FileName: C.Strings.chars_ptr) return SoundBankRef is
+   function Load_SoundBank (FileName : C.Strings.chars_ptr)
+                            return SoundBankRef is
       S : SoundBankRef := null;
    begin
 
-      S := SoundBankRef(
-                        Synth.SoundBank.Read(FileName                 => C.Strings.Value(FileName),
+      S := SoundBankRef (
+                         Synth.SoundBank.Read (
+                           FileName                 =>
+                             C.Strings.Value (FileName),
                            Force_No_Stop_For_Sounds => False));
       CurrentSoundBank := S;
 
-      if Define_SoundBank(SoundBank => S) /= API_OK then
+      if Define_SoundBank (SoundBank => S) /= API_OK then
          return null;
       end if;
-
 
       return S;
    exception
@@ -78,10 +76,11 @@ package body MidiPlayerLib is
    end Load_SoundBank;
 
    --  define the sound bank playing
-   function Define_SoundBank (SoundBank: SoundBankRef) return API_RETURN_CODE is
+   function Define_SoundBank (SoundBank : SoundBankRef)
+                              return API_RETURN_CODE is
    begin
-      Ada.Text_IO.Put_Line("Define SoundBank ");
-      Midi.Player.Define_SoundBank(S => SoundBank_Access(SoundBank));
+      Ada.Text_IO.Put_Line ("Define SoundBank ");
+      Midi.Player.Define_SoundBank (S => SoundBank_Access (SoundBank));
 
       return API_OK;
    exception
@@ -90,20 +89,19 @@ package body MidiPlayerLib is
 
    --  play the given midi filename
    function Play (FileName : C.Strings.chars_ptr) return API_RETURN_CODE is
-      SFileName: String := C.Strings.Value(FileName
+      SFileName : String := C.Strings.Value (FileName
                       );
    begin
       if CurrentSoundBank = null then
-         Ada.Text_IO.Put_Line("No current SoundBank");
+         Ada.Text_IO.Put_Line ("No current SoundBank");
          raise Program_Error with "No current SoundBank";
       end if;
 
+      Ada.Text_IO.Put_Line ("Play " & SFileName);
 
-      Ada.Text_IO.Put_Line("Play " & SFileName);
+      Midi.Player.Play (FileName => SFileName);
 
-      Midi.Player.play(FileName => SFileName);
-
-        Ada.Text_IO.Put_Line("Queued ");
+        Ada.Text_IO.Put_Line ("Queued ");
 
       return API_OK;
 
@@ -111,12 +109,12 @@ package body MidiPlayerLib is
          when others => return API_GENERIC_ERROR;
    end Play;
 
-
-   function Change_Tempo_Factor (Tempo_Factor : C.double) return API_RETURN_CODE
+   function Change_Tempo_Factor (Tempo_Factor : C.double)
+                                 return API_RETURN_CODE
    is
    begin
 
-      Midi.Player.Change_Tempo_Factor(Tempo_Factor => Float(Tempo_Factor));
+      Midi.Player.Change_Tempo_Factor (Tempo_Factor => Float (Tempo_Factor));
 
       return API_OK;
 
@@ -124,11 +122,12 @@ package body MidiPlayerLib is
          when others => return API_GENERIC_ERROR;
    end Change_Tempo_Factor;
 
-   function Activate_Bank (Bank_Name : C.Strings.chars_ptr) return API_RETURN_CODE is
-      sBank: String := C.Strings.Value(Bank_Name);
+   function Activate_Bank (Bank_Name : C.Strings.chars_ptr)
+                           return API_RETURN_CODE is
+      sBank : String := C.Strings.Value (Bank_Name);
    begin
-      Ada.Text_IO.Put_Line("Activate Bank " & sBank);
-      Midi.Player.Activate_Bank(Bank_Name => sBank);
+      Ada.Text_IO.Put_Line ("Activate Bank " & sBank);
+      Midi.Player.Activate_Bank (Bank_Name => sBank);
 
       return API_OK;
 
@@ -136,25 +135,24 @@ package body MidiPlayerLib is
          when others => return API_GENERIC_ERROR;
    end Activate_Bank;
 
-
-   function Deactivate_Bank (Bank_Name : C.Strings.chars_ptr) return API_RETURN_CODE is
-       sBank: String := C.Strings.Value(Bank_Name);
+   function Deactivate_Bank (Bank_Name : C.Strings.chars_ptr)
+                             return API_RETURN_CODE is
+       sBank : String := C.Strings.Value (Bank_Name);
    begin
 
-      Midi.Player.Deactivate_Bank(sBank);
+      Midi.Player.Deactivate_Bank (sBank);
 
       return API_OK;
 
    exception
          when others => return API_GENERIC_ERROR;
-   end;
-
+   end Deactivate_Bank;
 
    --  is it playing ?
    function IsPlaying return Natural is
    begin
 
-      if (Midi.Player.IsPlaying) then
+      if Midi.Player.IsPlaying then
          return 1;
       end if;
 
@@ -172,7 +170,5 @@ package body MidiPlayerLib is
    exception
          when others => return API_GENERIC_ERROR;
    end Stop;
-
-
 
 end MidiPlayerLib;
