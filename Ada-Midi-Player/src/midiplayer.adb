@@ -22,6 +22,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Text_IO; use Ada.Text_IO;
+with Log;
 with GNAT.Command_Line; use GNAT.Command_Line;
 
 with GNAT.Strings; use GNAT.Strings;
@@ -54,36 +55,29 @@ procedure MidiPlayer is
 
    Config : Command_Line_Configuration;
 
-   procedure Print (S : String);
+
    procedure Callback (Switch, Param, Section : String);
    procedure ReadCommandLineParameters;
-
-
-   procedure Print (S : String) is
-      use Ada.Text_IO;
-   begin
-      Put_Line (S);
-   end Print;
 
    procedure Callback (Switch, Param, Section : String) is
    begin
       if Switch = "-f" then
-         Print ("Filename :" & Param);
+         Log.Print ("Filename :" & Param);
          Read_Parameters.FileName := new String'(Param);
       elsif Switch = "-t" then
-         Print ("Tempo :" & Param);
+         Log.Print ("Tempo :" & Param);
          Read_Parameters.TempoFactor := Float'Value (Param);
       elsif Switch = "--tempo" then
-         Print ("Tempo :" & Param);
+         Log.Print ("Tempo :" & Param);
          Read_Parameters.TempoFactor := Float'Value (Param);
       elsif Switch = "-b" then
-         Print ("Sound Bank:" & Param);
+         Log.Print ("Sound Bank:" & Param);
          Read_Parameters.BankName := new String'(Param);
       elsif Switch = "-w" then
-         Print ("Will Output to :" & Param);
+         Log.Print ("Will Output to :" & Param);
          Read_Parameters.WavOutput := new String'(Param);
       elsif Switch = "-m" then
-         Print ("Music Box Behaviour");
+         Log.Print ("Music Box Behaviour");
          Read_Parameters.MusicBoxBehaviour := True;
       elsif Switch = "--help" then
          Display_Help (Config);
@@ -121,6 +115,8 @@ procedure MidiPlayer is
 
 begin
 
+   -- Midi.Player.SetLog(Log.Print'Access);
+
    ReadCommandLineParameters;
 
    if Read_Parameters.FileName = null then
@@ -144,7 +140,7 @@ begin
             & Read_Parameters.FileName.all);
    Midi.Player.Init (D);
    if Read_Parameters.BankName /= null then
-      Print ("Read SoundBank " & Read_Parameters.BankName.all);
+      Log.Print ("Read SoundBank " & Read_Parameters.BankName.all);
       s := Synth.SoundBank.Read
         (FileName => Read_Parameters.BankName.all,
          Force_No_Stop_For_Sounds => Read_Parameters.MusicBoxBehaviour);
@@ -155,6 +151,8 @@ begin
    end if;
 
    Midi.Player.Play (FileName => Read_Parameters.FileName.all);
+   Midi.Player.Change_Tempo_Factor
+     (Tempo_Factor => Read_Parameters.TempoFactor);
    Midi.Player.Activate_Bank ("DEFAULT");
    while Midi.Player.IsPlaying loop
       delay 2.0;

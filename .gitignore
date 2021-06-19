@@ -1,2 +1,5 @@
 *.o
 *.ali
+**/*.stdout
+**/*.stderr
+
