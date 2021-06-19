@@ -54,6 +54,10 @@ procedure MidiPlayer is
 
    Config : Command_Line_Configuration;
 
+   procedure Print (S : String);
+   procedure Callback (Switch, Param, Section : String);
+   procedure ReadCommandLineParameters;
+
 
    procedure Print (S : String) is
       use Ada.Text_IO;
@@ -120,7 +124,7 @@ begin
    ReadCommandLineParameters;
 
    if Read_Parameters.FileName = null then
-      Put_Line ("Filename must be specified");
+      Put_Line ("Filename must be specified, see --help to more informations");
       return;
    end if;
 
@@ -141,8 +145,9 @@ begin
    Midi.Player.Init (D);
    if Read_Parameters.BankName /= null then
       Print ("Read SoundBank " & Read_Parameters.BankName.all);
-      s := Synth.SoundBank.Read (FileName => Read_Parameters.BankName.all,
-                                 Force_No_Stop_For_Sounds => Read_Parameters.MusicBoxBehaviour);
+      s := Synth.SoundBank.Read
+        (FileName => Read_Parameters.BankName.all,
+         Force_No_Stop_For_Sounds => Read_Parameters.MusicBoxBehaviour);
 
       Midi.Player.Define_SoundBank (S => s);
    else
@@ -152,13 +157,17 @@ begin
    Midi.Player.Play (FileName => Read_Parameters.FileName.all);
    Midi.Player.Activate_Bank ("DEFAULT");
    while Midi.Player.IsPlaying loop
-      delay 0.3;
+      delay 2.0;
+      Put_Line ("Playing ... ");
    end loop;
 
-
-   Midi.Player.Stop;
+   delay 3.0;
 
    Put_Line ("End Of Play");
+   Midi.Player.Stop;
+
+   Put_Line ("Close the Sound Device");
+   D.Close;
 
 exception
    when e : Program_Error =>

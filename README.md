@@ -1,6 +1,6 @@
 # Ada-Synthetizer Suite
 
-*Patrice Freydiere - April 2020*
+*Patrice Freydiere - June 2021*
 
 ![CI](https://github.com/frett27/Ada-Synthetizer/workflows/CI/badge.svg)
 
@@ -24,7 +24,7 @@ As this library handle a simple level of synthetizer, there are no notions of in
 
 
 
-A preview **Ada-Midi-Player** has been added in the repository to use the synthetizer with MIDI Files, using the Ada-Midi library. For more information, go to [Ada-Midi-Player](Ada-Midi-Player) folder for more informations.
+A preview **Ada-Midi-Player** has been added in the repository to use the synthetizer with MIDI Files, using the Ada-Midi library. For more information, go to [Ada-Midi-Player](Ada-Midi-Player) folder for more informations. Ada Midi Player is also available as a C library to use it from C compatible languages. A micropython binding is also available.
 
 
 
@@ -145,11 +145,13 @@ The synthetizer behave nicely, there are no large amount or synchro between comp
 
 ## Version changes
 
-The current version is 0.2, see [ChangeLog](CHANGELOG.md) for more informations about updates, and current improvments.
+The current version is 0.25, see [ChangeLog](CHANGELOG.md) for more informations about updates, and current improvements.
 
 
 
 ## Next actions
+
+
 
 Version 0.3
 

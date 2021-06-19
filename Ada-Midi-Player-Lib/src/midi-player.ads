@@ -45,13 +45,14 @@ package Midi.Player is
 --
 --
 
+   --  change the tempo factor
    procedure Change_Tempo_Factor (Tempo_Factor : Float);
 
+   --  activate a given bank name by its name
    procedure Activate_Bank (Bank_Name : String);
 
+   --  deactivate a given bank name by its name
    procedure Deactivate_Bank (Bank_Name : String);
-
-
 
    --  is it playing ?
    function IsPlaying return Boolean;
