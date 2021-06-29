@@ -39,7 +39,7 @@ package Synth.Driver.Alsa is
    ----------
    --  factory
    procedure Open (Driver : out Sound_Driver_Access;
-	   Frequency: Frequency_Type := 44100.0);
+	   Frequency: Frequency_Type := 48200.0);
 
    -----------
    -- Close --

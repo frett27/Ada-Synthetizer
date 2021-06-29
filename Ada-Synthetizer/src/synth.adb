@@ -75,7 +75,7 @@ package body Synth is
    ----------------------
 
    function Frequency_Period (Frequency : Frequency_Type) return Time_Span is
-      Micro : constant Integer := Integer (1_000_000.0 / Frequency);
+      Micro : constant Integer := Integer (Long_Float(1_000_000.0) / Long_Float(Frequency));
    begin
       return Microseconds (Micro);
    end Frequency_Period;

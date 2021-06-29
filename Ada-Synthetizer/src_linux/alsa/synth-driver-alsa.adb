@@ -37,7 +37,7 @@ package body Synth.Driver.Alsa is
    ----------
 
    procedure Open (Driver : out Sound_Driver_Access;
-	   Frequency: Frequency_Type := 44100.0) is
+	   Frequency: Frequency_Type := 48200.0) is
 
       ALSADriver : constant ALSA_Driver_Access := new ALSA_Driver;
        Buffer_Size : Duration := 0.2;
@@ -105,10 +105,6 @@ package body Synth.Driver.Alsa is
                           Last => ToWrite);
       end loop;
       
-      
-
-
-
 
    end;
 

@@ -31,6 +31,7 @@ package body Synth.Synthetizer is
    procedure Open
      (Driver_Access : Driver.Sound_Driver_Access;
       Synt :    out Synthetizer_Type;
+      --  human perceived sound within 0.05 s
       Buffer_Size : Natural := Natural (0.05 * 44_100.0 / 2.0);
       Buffers_Number : Positive := 1;
       Audit : Synthetizer_Audit_Access := null)
@@ -38,7 +39,6 @@ package body Synth.Synthetizer is
       Start_Time : Time;
    begin
 
-      --  human perceived sound within 0.05 s
 
       Synt := new Synthetizer_Structure_Type;
       Init (SST => Synt.all,
@@ -130,6 +130,7 @@ package body Synth.Synthetizer is
    exception
       when E : others =>
          DumpException (E);
+         raise;
 
    end Play;
 
@@ -396,6 +397,12 @@ package body Synth.Synthetizer is
 
       Task_Audit_Interface_Access : Synthetizer_Audit_Access;
 
+      -- time correction
+      Last_Cycle_Clock : Time := Clock;
+      Last_Cycle_Correction_Count : Natural;
+      Last_Buffer_Time_Evaluated : Synthetizer_Time;
+
+
    begin
 
       accept Start (BR : Buffer_Ring_Access;
@@ -411,6 +418,8 @@ package body Synth.Synthetizer is
            Synthetizer_Time (Frequency_Period (Task_Driver_Frequency));
 
          Task_Audit_Interface_Access := Audit_Interface_Access;
+
+         Last_Cycle_Correction_Count := Natural(Task_Buffer_Ring.NBBuffer) + 1;
 
       end Start;
       --  Put_Line("Preparing Task Started");
@@ -440,10 +449,35 @@ package body Synth.Synthetizer is
                Task_Buffer_Ring.Freeze_New_Buffer (T => Current_Buffer_Start_Time,
                                                    Buffer => Preparing_Buffer);
 
+               declare
+                  Buffer_Time : Synthetizer_Time := Driver_Frequency_Period * (Preparing_Buffer.all'Length + 1);
+               begin
+               if Last_Cycle_Correction_Count > 0 then
+                     Last_Cycle_Correction_Count := Natural'Pred(Last_Cycle_Correction_Count);
+                     Last_Cycle_Clock := Clock;
+                     Last_Buffer_Time_Evaluated := Buffer_Time;
+               else
+                     -- reevaluate the time,
+                     -- using clock
+
+                     -- cesari
+                     Last_Buffer_Time_Evaluated := (Last_Buffer_Time_Evaluated  + (Clock - Last_Cycle_Clock) ) / 2;
+
+                     Buffer_time := Last_Buffer_Time_Evaluated;
+
+                     Last_Cycle_Clock := Clock;
+
+
+               end if;
+
+
                --  compute the next buffer start time (inclusive)
                Next_Buffer_Last_Time :=
                  Current_Buffer_Start_Time +
-                   Driver_Frequency_Period * (Preparing_Buffer.all'Length + 1);
+                   Buffer_Time;
+
+               end;
+
 
                --  call back, to populate the new buffer, commit all events before
 

@@ -41,14 +41,20 @@ procedure MidiPlayer is
 
    type MidiPlayerParameters is record
       FileName : String_Access;
-      TempoFactor : Float;
+      TempoFactor : Float := 1.0;
       BankName : String_Access;
       WavOutput : String_Access;
       MusicBoxBehaviour : Boolean := False;
    end record;
 
 
-   Read_Parameters : MidiPlayerParameters;
+   Read_Parameters : MidiPlayerParameters :=
+     MidiPlayerParameters'(FileName          => null,
+                           TempoFactor       => 1.0,
+                           BankName          => null,
+                           WavOutput         => null,
+                           MusicBoxBehaviour => False);
+
    s : Synth.SoundBank.SoundBank_Access := null;
 
    MustSpecifyASoundbank : exception;
@@ -151,6 +157,8 @@ begin
    end if;
 
    Midi.Player.Play (FileName => Read_Parameters.FileName.all);
+
+
    Midi.Player.Change_Tempo_Factor
      (Tempo_Factor => Read_Parameters.TempoFactor);
    Midi.Player.Activate_Bank ("DEFAULT");

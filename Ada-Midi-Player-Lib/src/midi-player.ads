@@ -29,6 +29,12 @@ package Midi.Player is
    --  Init the bam_engine
    procedure Init (SoundDriver : Synth.Driver.Sound_Driver_Access);
 
+
+   -- activate some feature on the player
+   procedure ActivateGlobalFeature(ParameterName: String;
+                            Activated : Boolean);
+
+
    --  define the sound bank playing
    procedure Define_SoundBank (S : Synth.SoundBank.SoundBank_Access);
 
@@ -58,6 +64,13 @@ package Midi.Player is
 
    --  stop the play, release
    procedure Stop;
+
+   --  return the current play stream time,
+   --  -1.0 if not available
+   function Get_Played_Stream_Time return Float;
+
+   function Get_Played_Stream_Length return Float;
+
 
    --  dumping a raised exception
    procedure DumpException (E : Ada.Exceptions.Exception_Occurrence);

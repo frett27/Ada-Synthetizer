@@ -20,7 +20,8 @@ library project CAdaMidiPlayerLib is
 
 
    package Compiler is
-      for Switches ("Ada") use ("-g","-gnatn", "-gnatf", "-O3", "-gnatyaAbBcefhiIklnprSmtux");
+      -- -O3
+      for Switches ("Ada") use ("-g","-gnatn", "-gnatf", "-gnatyaAbBcefhiIklnprSmtux");
    end Compiler;
 
    package Binder is

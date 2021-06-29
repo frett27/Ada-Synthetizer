@@ -36,9 +36,13 @@ package MidiPlayerLib is
 
    API_OK : API_RETURN_CODE := 0;
    API_GENERIC_ERROR : API_RETURN_CODE := 1000;
+   API_ERROR_NO_SOUNDBANK : API_RETURN_CODE := 1100;
 
    --  Init
    function Init return API_RETURN_CODE;
+
+   function Activate_Global_Feature (Feature : C.Strings.chars_ptr;
+                                    Activated : C.int) return API_RETURN_CODE;
 
    --  Load_SoundBank
    function Load_SoundBank (FileName : C.Strings.chars_ptr)
@@ -67,8 +71,18 @@ package MidiPlayerLib is
    --  is it playing ?
    function IsPlaying return Natural;
 
+   --  return the current stream position
+   function CurrentStreamPosition return C.C_float;
+
+   --  return the current stream length
+   function CurrentStreamLength return C.C_float;
+
    --  stop the play, release
    function Stop return API_RETURN_CODE;
+
+   --  stream function
+   --  function Load_Stream_Midi (FileName : C.Strings.chars_ptr)
+   --   return API_RETURN_CODE;
 
 private
 
@@ -76,7 +90,11 @@ private
 
    pragma Export (Convention => C,
                  Entity => Init,
-                 External_Name => "midiplayerlib_init");
+                  External_Name => "midiplayerlib_init");
+
+   pragma Export (Convention => C,
+                 Entity => Activate_Global_Feature,
+                  External_Name => "midiplayerlib_activatefeature");
 
    pragma Export (Convention => C,
                  Entity => Load_SoundBank,
@@ -89,6 +107,14 @@ private
    pragma Export (Convention => C,
                  Entity => Play,
                  External_Name => "midiplayerlib_play");
+
+   pragma Export (Convention => C,
+                 Entity => CurrentStreamPosition,
+                 External_Name => "midiplayerlib_play_currentstreamposition");
+
+   pragma Export (Convention => C,
+                 Entity => CurrentStreamLength,
+                 External_Name => "midiplayerlib_play_currentstreamlength");
 
    pragma Export (Convention => C,
                  Entity => Change_Tempo_Factor,

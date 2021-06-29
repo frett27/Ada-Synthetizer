@@ -32,9 +32,32 @@ use type Synth.SoundBank.SoundBank_Access;
 
 with Ada.Text_IO;
 
+with Ada.Exceptions;
+with GNAT.Traceback.Symbolic;
+
 package body MidiPlayerLib is
 
    CurrentSoundBank : SoundBankRef := null;
+
+   procedure DumpException (E : Ada.Exceptions.Exception_Occurrence) is
+   begin
+
+      Ada.Text_IO.Put_Line
+        (
+         "--------------------[ Unhandled exception ]------"
+         & "-----------");
+      Ada.Text_IO.Put_Line (
+                            " > Name of exception . . . . .: " &
+                              Ada.Exceptions.Exception_Name (E));
+      Ada.Text_IO.Put_Line (
+
+                            " > Message for exception . . .: " &
+                              Ada.Exceptions.Exception_Message (E));
+      Ada.Text_IO.Put_Line (" > Trace-back of call stack: ");
+      Ada.Text_IO.Put_Line (
+                            GNAT.Traceback.Symbolic.Symbolic_Traceback (E));
+
+   end DumpException;
 
    function Init return API_RETURN_CODE is
       D : Synth.Driver.Sound_Driver_Access;
@@ -42,7 +65,7 @@ package body MidiPlayerLib is
 
       --  open the sound driver
       Synth.Driver.Open (Driver    => D,
-                         Frequency => Synth.Frequency_Type (48_000));
+                         Frequency => Synth.Frequency_Type (48_200));
 
       Midi.Player. Init (SoundDriver => D);
 
@@ -51,8 +74,25 @@ package body MidiPlayerLib is
       return API_OK;
 
    exception
-         when others => return API_GENERIC_ERROR;
+      when e : others   =>
+         DumpException (E => e);
+         return API_GENERIC_ERROR;
    end Init;
+
+   function Activate_Global_Feature (Feature : C.Strings.chars_ptr;
+                                     Activated : C.int)
+                                     return API_RETURN_CODE is
+      FeatureName : String := C.Strings.Value (Feature);
+   begin
+
+      Midi.Player.ActivateGlobalFeature (FeatureName, Activated > 0);
+
+      return API_OK;
+   exception
+      when e : others   =>
+         DumpException (E => e);
+         return API_GENERIC_ERROR;
+   end Activate_Global_Feature;
 
    function Load_SoundBank (FileName : C.Strings.chars_ptr)
                             return SoundBankRef is
@@ -67,12 +107,14 @@ package body MidiPlayerLib is
       CurrentSoundBank := S;
 
       if Define_SoundBank (SoundBank => S) /= API_OK then
-         return null;
+         raise Program_Error with "Error in defining soundbank";
       end if;
 
       return S;
    exception
-         when others => return null;
+      when e : others   =>
+         DumpException (E => e);
+         return null;
    end Load_SoundBank;
 
    --  define the sound bank playing
@@ -84,29 +126,26 @@ package body MidiPlayerLib is
 
       return API_OK;
    exception
-         when others => return API_GENERIC_ERROR;
+      when e : others   =>
+         DumpException (E => e);
+         return API_GENERIC_ERROR;
    end Define_SoundBank;
 
    --  play the given midi filename
    function Play (FileName : C.Strings.chars_ptr) return API_RETURN_CODE is
-      SFileName : String := C.Strings.Value (FileName
-                      );
+      SFileName : String := C.Strings.Value (FileName);
    begin
       if CurrentSoundBank = null then
          Ada.Text_IO.Put_Line ("No current SoundBank");
-         raise Program_Error with "No current SoundBank";
+         return API_ERROR_NO_SOUNDBANK;
       end if;
-
-      Ada.Text_IO.Put_Line ("Play " & SFileName);
-
       Midi.Player.Play (FileName => SFileName);
-
-        Ada.Text_IO.Put_Line ("Queued ");
-
       return API_OK;
 
    exception
-         when others => return API_GENERIC_ERROR;
+      when e : others   =>
+         DumpException (E => e);
+         return API_GENERIC_ERROR;
    end Play;
 
    function Change_Tempo_Factor (Tempo_Factor : C.double)
@@ -119,25 +158,30 @@ package body MidiPlayerLib is
       return API_OK;
 
    exception
-         when others => return API_GENERIC_ERROR;
+      when e : others   =>
+         DumpException (E => e);
+         return API_GENERIC_ERROR;
    end Change_Tempo_Factor;
 
    function Activate_Bank (Bank_Name : C.Strings.chars_ptr)
                            return API_RETURN_CODE is
       sBank : String := C.Strings.Value (Bank_Name);
    begin
-      Ada.Text_IO.Put_Line ("Activate Bank " & sBank);
+
       Midi.Player.Activate_Bank (Bank_Name => sBank);
 
       return API_OK;
 
    exception
-         when others => return API_GENERIC_ERROR;
+      when e : others   =>
+         DumpException (E => e);
+
+         return API_GENERIC_ERROR;
    end Activate_Bank;
 
    function Deactivate_Bank (Bank_Name : C.Strings.chars_ptr)
                              return API_RETURN_CODE is
-       sBank : String := C.Strings.Value (Bank_Name);
+      sBank : String := C.Strings.Value (Bank_Name);
    begin
 
       Midi.Player.Deactivate_Bank (sBank);
@@ -145,7 +189,9 @@ package body MidiPlayerLib is
       return API_OK;
 
    exception
-         when others => return API_GENERIC_ERROR;
+      when e : others   =>
+         DumpException (E => e);
+         return API_GENERIC_ERROR;
    end Deactivate_Bank;
 
    --  is it playing ?
@@ -159,16 +205,35 @@ package body MidiPlayerLib is
       return 0;
    end IsPlaying;
 
+   --  return the current stream position
+   function CurrentStreamPosition return C_float is
+   begin
+      return C_float (Midi.Player.Get_Played_Stream_Time);
+   exception
+      when e : others   =>
+         DumpException (E => e);
+         return C_float (-1);
+   end CurrentStreamPosition;
+
+   --  return the current stream length
+   function CurrentStreamLength return C_float is
+   begin
+      return C_float (Midi.Player.Get_Played_Stream_Length);
+   exception
+      when e : others   =>
+         DumpException (E => e);
+         return C_float (-1.0);
+   end CurrentStreamLength;
+
    --  stop the play, release
    function Stop return API_RETURN_CODE is
    begin
-
       Midi.Player.Stop;
-
       return API_OK;
-
    exception
-         when others => return API_GENERIC_ERROR;
+      when e : others   =>
+         DumpException (E => e);
+         return API_GENERIC_ERROR;
    end Stop;
 
 end MidiPlayerLib;
