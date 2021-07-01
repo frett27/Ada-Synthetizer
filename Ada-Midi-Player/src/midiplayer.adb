@@ -157,7 +157,7 @@ begin
    end if;
 
    Midi.Player.Play (FileName => Read_Parameters.FileName.all);
-
+   delay 1.0;
 
    Midi.Player.Change_Tempo_Factor
      (Tempo_Factor => Read_Parameters.TempoFactor);

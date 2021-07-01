@@ -24,6 +24,7 @@ with GNAT.Strings; use GNAT.Strings;
 with Synth.Driver;
 with Synth.SoundBank; use Synth.SoundBank;
 with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
+
 package Midi.Player is
 
    --  Init the bam_engine

@@ -380,7 +380,7 @@ package body Midi.Player is
                                 );
 
          Player_Synth.SynthAccess := GlobalSynth'Access;
-
+         IsOpen := True;
       end Init;
       loop
          select
