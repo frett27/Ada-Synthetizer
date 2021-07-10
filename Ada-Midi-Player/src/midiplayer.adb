@@ -44,6 +44,7 @@ procedure MidiPlayer is
       TempoFactor : Float := 1.0;
       BankName : String_Access;
       WavOutput : String_Access;
+      Frequency : Synth.Frequency_Type := 44_100.0;
       MusicBoxBehaviour : Boolean := False;
    end record;
 
@@ -53,6 +54,7 @@ procedure MidiPlayer is
                            TempoFactor       => 1.0,
                            BankName          => null,
                            WavOutput         => null,
+                           Frequency         => 44_100.0,
                            MusicBoxBehaviour => False);
 
    s : Synth.SoundBank.SoundBank_Access := null;
@@ -82,6 +84,9 @@ procedure MidiPlayer is
       elsif Switch = "-w" then
          Log.Print ("Will Output to :" & Param);
          Read_Parameters.WavOutput := new String'(Param);
+      elsif Switch = "-r" then
+         Log.Print ("Frequency rate " & Param);
+         Read_Parameters.Frequency := Synth.Frequency_Type'Value (Param);
       elsif Switch = "-m" then
          Log.Print ("Music Box Behaviour");
          Read_Parameters.MusicBoxBehaviour := True;
@@ -106,6 +111,8 @@ procedure MidiPlayer is
                      Help => "music box behaviour");
       Define_Switch (Config, "-w:",
                      Help => "Output to Wav File");
+      Define_Switch (Config, "-r:",
+                     Help => "Frequency for playing");
       Define_Switch (Config,
                      Long_Switch => "--tempo=",
                      Help => "Enable long option. Arg is an integer");
@@ -130,16 +137,19 @@ begin
       return;
    end if;
 
+   Put_Line("Opening Audio Device");
+
    if Read_Parameters.WavOutput /= null then
       Synth.Driver.Wav.Open (Driver    => D,
-                            Frequency => Synth.Frequency_Type (44_100),
+                            Frequency => Read_Parameters.Frequency,
                             FileName  => Read_Parameters.WavOutput.all);
    else
       --
       --  open the driver (native plateform)
       --
       Synth.Driver.Open (Driver    => D,
-                         Frequency => Synth.Frequency_Type (48_000));
+                         Frequency => Read_Parameters.Frequency);
+      Put_Line(Synth.Frequency_Type'Image(Synth.Driver.Get_Frequency(D.all)));
    end if;
 
    Put_Line ("Start MusicBox Midi Player and play :"
