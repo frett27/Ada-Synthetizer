@@ -6,7 +6,7 @@
 
 **Ada-Midi-Player-Lib** , a midi player library for playing midi files, and activating sound banks on the fly. This capability has been added to create embedded plateform for playing midi music. 
 
-A simple API is available to play files :
+A simple API provided on midi player to play MIDI files :
 
 ```
    --  Init the bam_engine
@@ -32,6 +32,9 @@ A simple API is available to play files :
 
    --  stop the play, release
    procedure Stop;
+   
+   --  close the midi player task
+   procedure Close;
 ```
 
 

@@ -24,7 +24,7 @@ As this library handle a simple level of synthetizer, there are no notions of in
 
 
 
-A preview **Ada-Midi-Player** has been added in the repository to use the synthetizer with MIDI Files, using the Ada-Midi library. For more information, go to [Ada-Midi-Player](Ada-Midi-Player) folder for more informations. Ada Midi Player is also available as a C library to use it from C compatible languages. A micropython binding is also available.
+A preview **Ada-Midi-Player** has been added in the repository to use the synthetizer with MIDI files, using the Ada-Midi library. For more information, go to [Ada-Midi-Player](Ada-Midi-Player) folder for more informations. Ada Midi Player is also available as a C library to use it from C compatible languages. A micropython binding is also available. The Ada Midi Player permit to control the event play, tempo change and instrument change on the fly. 
 
 
 
@@ -46,10 +46,10 @@ Implementing your own file format reading is possible in populating the **SoundS
 
 #### Synthetizer capabilities 
 
-- Real Time Playing and Offline Playing
-- The max number of voice depends on the hardware provided, there is no hardcoded limitations, one can change the **MAX_VOICES** constant, and see whether it match the requirements. (As the number of polyphony is increased, the processing may be heavier and can lead to increase the jitter and buffer sizes).
+- Real Time Playing and Offline Playing (Ahead of time)
+- The max number of voice depends on the hardware provided, there is no design limitations for the number of parallel voices, but a limit is define at compiled time and can change using the **MAX_VOICES** constant. Remind that, as the number of polyphony is increased, the processing needs to be heavier for CPU. Increasing the process buffer size may smooth the load, but increase the jitter.
 - Parametrized volume for each playing sound.
-- Variable Output frequency, permit to adjust CPU consumption (default 44 100 Khz)
+- Variable output frequency, permit to adjust CPU consumption (default  44 100 Khz)
 
 #### Current Drivers
 
@@ -61,19 +61,19 @@ Implementing your own file format reading is possible in populating the **SoundS
 
 Can be extended outside the library, depending on needs. Theses drivers show how to implement one.
 
-### Supported Plateforms
+### Supported plateforms
 
-The Synthetizer has been tested on x64, x32 desktop computers (linux, windows, arm v6/v7)
+The Synthetizer is tested on :
 
-It also works well on ARM based processor (RPI/Orangepi)
+- x64, x32 desktop computers (multiple Os : linux, windows)
+
+- ARM based processor (RPI/Orangepi/leechipi)
 
 
 
+## Using the synthetizer : the code
 
-
-## Using the Synthetizer by example : the code
-
-Below, an example of the 5 mins , **RealTime** use of the synthetizer :
+Below, a 5 mins example using the **RealTime** capability of the synthetizer :
 
 
 
@@ -137,19 +137,21 @@ More information about the API and internals can be found in the link below, esp
 
 
 
-## Feedbacks
-
-The synthetizer behave nicely, there are no large amount or synchro between components. Playing Midi file is really amazing, and the quality for a first shot is quite interessing, but can be improved. Any Help, or efforts welcome.
-
-
-
 ## Version changes
 
 The current version is 0.25, see [ChangeLog](CHANGELOG.md) for more informations about updates, and current improvements.
 
 
 
-## Next actions
+
+
+## Library usage, and applications
+
+This project is used in embedded projects (using micropython, to play), IOT project for creating ambiant sounds, and melody. 
+
+
+
+## RoadMap
 
 
 
@@ -166,3 +168,10 @@ Mid Term Version, may be a rewrite targeting smaller footprint architectures:
 ### Areas That can be covered next (if time permit)
 
 Oscillators / FM generators : The current buffers are filled with Wav samples, but a short abstraction can be done to introduce signal generators and modulators to extends the use to "analog like" synthetizers.
+
+
+
+## Contributions
+
+Contributions are welcome, playing Midi file is really amazing, and the quality for a first shot is quite interesting, but can be improved. Any help, or efforts are welcome (testing, using , documentation ..).
+

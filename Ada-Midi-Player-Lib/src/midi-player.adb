@@ -360,37 +360,37 @@ package body Midi.Player is
    begin
 
       while not IsInited loop
-      select
+         select
             accept Init(SoundDriver : Synth.Driver.Sound_Driver_Access) do
                -- Initialize the Synth
-         Player_Synth :=
-           Player_Synth_Audit'(
-                               StreamTime  => -2.0,
-                               Associated_Synth_Time => Microseconds (0),
-                               TempoFactor => 1.0,
-                               Sounds => null,
-                               Event_Counter => 0,
-                               EventCursor =>
-                                 Event_Vector.First (Event_Vector.Empty_Vector),
-                               SynthAccess => null,
-                               Stopped => True,
-                               Activated_Banks => Maps.Empty_Map
-                              );
-         --  open synth
-         Synth.Synthetizer.Open (Driver_Access => SoundDriver,
-                                 Synt => GlobalSynth,
-                                 Buffers_Number =>  1,
-                                 Buffer_Size => 10_000, -- 10_000
-                                 Audit =>  Player_Synth'Unrestricted_Access
-                                );
+               Player_Synth :=
+                 Player_Synth_Audit'(
+                                     StreamTime  => -2.0,
+                                     Associated_Synth_Time => Microseconds (0),
+                                     TempoFactor => 1.0,
+                                     Sounds => null,
+                                     Event_Counter => 0,
+                                     EventCursor =>
+                                       Event_Vector.First (Event_Vector.Empty_Vector),
+                                     SynthAccess => null,
+                                     Stopped => True,
+                                     Activated_Banks => Maps.Empty_Map
+                                    );
+               --  open synth
+               Synth.Synthetizer.Open (Driver_Access => SoundDriver,
+                                       Synt => GlobalSynth,
+                                       Buffers_Number =>  1,
+                                       Buffer_Size => 10_000, -- 10_000
+                                       Audit =>  Player_Synth'Unrestricted_Access
+                                      );
 
-         Player_Synth.SynthAccess := GlobalSynth'Access;
+               Player_Synth.SynthAccess := GlobalSynth'Access;
                IsOpen := True;
 
                isInited := True;
 
-         end Init;
-      or
+            end Init;
+         or
             accept Close do
                -- for task termination, the normal way, freeing resources
                IsInited := True;
@@ -495,7 +495,6 @@ package body Midi.Player is
                Synth.Synthetizer.Close (Synt => GlobalSynth);
                IsOpen := False;
             end Close;
-
          or
             accept Get_Played_Stream_Time (Stream_Time: out Long_Float)  do
                if not IsOpen then
@@ -506,12 +505,8 @@ package body Midi.Player is
                end if;
 
             end Get_Played_Stream_Time;
-
-
          or
-
             terminate;
-
          end select;
 
       end loop;
