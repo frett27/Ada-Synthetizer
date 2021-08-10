@@ -19,7 +19,7 @@ project AdaMidiPlayer is
    -- Os : Os_Type := external ("OS");
 
    package Compiler is --  "-gnaty", "-g",
-      for Switches ("ada") use ("-g", "-funroll-loops", "-gnatn", "-O3", "-gnatf");
+      for Switches ("ada") use ("-g", "-gnatn", "-O3", "-gnatf");
    end Compiler;
 
    package Linker is

@@ -63,8 +63,11 @@ package Midi.Player is
    --  is it playing ?
    function IsPlaying return Boolean;
 
-   --  stop the play, release
+   --  stop the play, release current play
    procedure Stop;
+
+   -- close the player
+   procedure Close;
 
    --  return the current play stream time,
    --  -1.0 if not available

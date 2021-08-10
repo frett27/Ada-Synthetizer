@@ -64,6 +64,9 @@ package body Midi.Player is
    use Maps;
 
    --  synthetizer
+   --  this is a global access because the synth audit is not directly
+   --  associated in the design with the synth itself
+
    GlobalSynth : aliased Synth.Synthetizer.Synthetizer_Type;
 
    CurrentStreamLength : Float;
@@ -284,7 +287,7 @@ package body Midi.Player is
                                           declare
                                              VTA : Synth.Synthetizer.Voice;
                                           begin
-                                             Play (Synt         =>  GlobalSynth, -- Audit.SynthAccess.all,
+                                             Play (Synt         =>  Audit.SynthAccess.all,
                                                    S            => SelectedSound,
                                                    Frequency    => Synth.MIDICode_To_Frequency (E.Note),
                                                    Channel      => 1,
@@ -352,12 +355,14 @@ package body Midi.Player is
 
    task body Task_Player is
       Player_Synth : Player_Synth_Audit;
-      --  synthetizer
-      TheSynthetizer : Synth.Synthetizer.Synthetizer_Type;
       IsOpen : Boolean := False;
+      IsInited : Boolean := False;
    begin
 
-      accept Init(SoundDriver : Synth.Driver.Sound_Driver_Access) do
+      while not IsInited loop
+      select
+            accept Init(SoundDriver : Synth.Driver.Sound_Driver_Access) do
+               -- Initialize the Synth
          Player_Synth :=
            Player_Synth_Audit'(
                                StreamTime  => -2.0,
@@ -380,9 +385,24 @@ package body Midi.Player is
                                 );
 
          Player_Synth.SynthAccess := GlobalSynth'Access;
-         IsOpen := True;
-      end Init;
-      loop
+               IsOpen := True;
+
+               isInited := True;
+
+         end Init;
+      or
+            accept Close do
+               -- for task termination, the normal way, freeing resources
+               IsInited := True;
+
+            end Close;
+         end select;
+
+      end loop;
+
+
+
+      while IsOpen loop
          select
             accept Play (MS : Midi_Event_Stream;
                          S : Synth.SoundBank.SoundBank_Access) do
@@ -403,7 +423,6 @@ package body Midi.Player is
                   -- should not be before the current time
                   Player_Synth.Associated_Synth_Time :=
                     Synth.Synthetizer.Get_Time(GlobalSynth) + Microseconds(2_000_000);
-
 
                   Player_Synth.Stopped := False;
 
@@ -473,7 +492,7 @@ package body Midi.Player is
             end Deactivate_Bank;
          or
             accept Close do
-               Synth.Synthetizer.Close (Synt => TheSynthetizer);
+               Synth.Synthetizer.Close (Synt => GlobalSynth);
                IsOpen := False;
             end Close;
 
@@ -566,6 +585,11 @@ package body Midi.Player is
    begin
       Task_Player.Stop;
    end Stop;
+
+   procedure Close is
+   begin
+      Task_Player.Close;
+   end;
 
    procedure Activate_Bank (Bank_Name : String) is
    begin

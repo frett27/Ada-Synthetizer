@@ -54,7 +54,7 @@ package body Synth.Driver.Alsa is
       --  open speakers
 
       Driver := ALSADriver.all'Access;
-      ALSADriver.Frequency := Frequency;
+      ALSADriver.Frequency := Frequency_Type(Resolution);
 
    end Open;
 

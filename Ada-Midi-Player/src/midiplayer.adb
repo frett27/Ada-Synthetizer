@@ -134,6 +134,7 @@ begin
 
    if Read_Parameters.FileName = null then
       Put_Line ("Filename must be specified, see --help to more informations");
+      Midi.Player.Close;
       return;
    end if;
 
@@ -141,8 +142,8 @@ begin
 
    if Read_Parameters.WavOutput /= null then
       Synth.Driver.Wav.Open (Driver    => D,
-                            Frequency => Read_Parameters.Frequency,
-                            FileName  => Read_Parameters.WavOutput.all);
+                             Frequency => Read_Parameters.Frequency,
+                             FileName  => Read_Parameters.WavOutput.all);
    else
       --
       --  open the driver (native plateform)
@@ -153,8 +154,9 @@ begin
    end if;
 
    Put_Line ("Start MusicBox Midi Player and play :"
-            & Read_Parameters.FileName.all);
+             & Read_Parameters.FileName.all);
    Midi.Player.Init (D);
+
    if Read_Parameters.BankName /= null then
       Log.Print ("Read SoundBank " & Read_Parameters.BankName.all);
       s := Synth.SoundBank.Read
@@ -167,6 +169,7 @@ begin
    end if;
 
    Midi.Player.Play (FileName => Read_Parameters.FileName.all);
+
    delay 1.0;
 
    Midi.Player.Change_Tempo_Factor
@@ -182,12 +185,21 @@ begin
    Put_Line ("End Of Play");
    Midi.Player.Stop;
 
+
+   Put_Line ("Close the Player");
+   -- this terminate the player task
+   Midi.Player.Close;
+
    Put_Line ("Close the Sound Device");
    D.Close;
 
 exception
    when e : Program_Error =>
       Midi.Player.DumpException (e);
+      Midi.Player.Close;
    when GNAT.Command_Line.Exit_From_Command_Line =>
+      Midi.Player.Close;
       return;
+   when others =>
+      Midi.Player.Close;
 end MidiPlayer;

@@ -163,7 +163,7 @@ package body Sound.Mono is
       declare
          Sample_Rate   : aliased Interfaces.C.unsigned :=
            Interfaces.C.unsigned (Resolution);
-         Approximation : aliased Sound.ALSA.Approximation_Direction := 0;
+         Approximation : aliased Sound.ALSA.Approximation_Direction := 1;
       begin
          Error := snd_pcm_hw_params_set_rate_near
            (pcm    => Local_Line,
@@ -171,7 +171,7 @@ package body Sound.Mono is
             val    => Sample_Rate'Access,
             dir    => Approximation'Access);
 
-         if Error /= 0 then
+         if Error < 0 then
             raise Program_Error with
               "Error code (snd_pcm_hw_params_set_rate_near): " & Error'Img;
          end if;
