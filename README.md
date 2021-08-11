@@ -137,11 +137,19 @@ More information about the API and internals can be found in the link below, esp
 
 
 
+## Additional sub projects
+
+Other additional projects are bundled with the library, but optionals. These library and projects demonstrate the capabilities of the synthetizer.
+
+![](doc/logical_blocks.png)
+
+
+
 ## Version changes
 
-The current version is 0.25, see [ChangeLog](CHANGELOG.md) for more informations about updates, and current improvements.
+The current version is 0.25, 
 
-
+see [ChangeLog](CHANGELOG.md) for more informations about updates, changes.
 
 
 

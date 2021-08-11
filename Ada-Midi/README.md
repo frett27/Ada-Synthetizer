@@ -3,11 +3,11 @@ Ada-Midi
 
 ![](https://travis-ci.org/frett27/Ada-Midi.svg)
 
-*Patrice Freydiere - 2003 - Avril 2015*
+*Patrice Freydiere - 2003 - 2021*
 
 
+Implementation of Midi event parsing, as well as MidiFile reading and writing, and event generation. This use the Midi 1.0 specification
 
-Implementation of Midi / MidiFile reading and writing, event generation.
 
 ## Features
 
