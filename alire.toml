@@ -1,0 +1,15 @@
+name = "adasynthetizer"
+description = "Ada Synthetizer Suite"
+version = "0.25"
+
+licenses = "Apache-2.0"
+authors = ["Patrice Freydiere"]
+maintainers = ["Patrice Freydiere <frett27@gmail.com>"]
+maintainers-logins = ["frett27"]
+
+project-files = [
+"Ada-Synthetizer/synthetizer.gpr",
+"Ada-Midi-Player/adamidiplayer.gpr",
+"Ada-Midi/adamidi.gpr"
+]
+
