@@ -15,5 +15,5 @@ project-files = [
 
 [[actions.'case(os)'.linux]]
 type="pre-build"
-command = "make"
+command = ["make"]
 
