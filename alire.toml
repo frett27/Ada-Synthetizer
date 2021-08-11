@@ -13,3 +13,7 @@ project-files = [
 "Ada-Midi/adamidi.gpr"
 ]
 
+[[actions.'case(os)'.linux]]
+type="pre-build"
+command = "make"
+
