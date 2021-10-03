@@ -136,8 +136,9 @@ package body Midi.Player is
    type Player_Synth_Audit is
      new Synth.Synthetizer.Synthetizer_Audit with record
 
-      --  committed played time in events
+      --  committed played time in events, in stream time
       StreamTime : Long_Float := 0.0;
+
       Associated_Synth_Time : Synthetizer_Time := Microseconds (0);
 
       EventCursor : Event_Vector.Cursor;
@@ -257,7 +258,7 @@ package body Midi.Player is
                                     VA : Opened_Voices_Type_Access := null;
 
                                  begin
-                                    if not  Has_Element (OVCur) then
+                                    if not Has_Element (OVCur) then
                                        Opened_Voices.
                                          Insert (Key      => BankName,
                                                  New_Item => new Opened_Voices_Type'
@@ -341,7 +342,8 @@ package body Midi.Player is
 
    --  player task, handling the play / stop
    task Task_Player is
-      entry Init(SoundDriver : Synth.Driver.Sound_Driver_Access);
+      entry Init(SoundDriver : Synth.Driver.Sound_Driver_Access;
+                 InitialStreamTempo : Float := 1.0);
       entry Play (MS : Midi_Event_Stream;
                   S : Synth.SoundBank.SoundBank_Access);
       entry isPlaying (result : out Boolean);
@@ -361,13 +363,13 @@ package body Midi.Player is
 
       while not IsInited loop
          select
-            accept Init(SoundDriver : Synth.Driver.Sound_Driver_Access) do
+            accept Init(SoundDriver : Synth.Driver.Sound_Driver_Access; InitialStreamTempo : Float := 1.0) do
                -- Initialize the Synth
                Player_Synth :=
                  Player_Synth_Audit'(
                                      StreamTime  => -2.0,
                                      Associated_Synth_Time => Microseconds (0),
-                                     TempoFactor => 1.0,
+                                     TempoFactor => InitialStreamTempo,
                                      Sounds => null,
                                      Event_Counter => 0,
                                      EventCursor =>
@@ -379,7 +381,7 @@ package body Midi.Player is
                --  open synth
                Synth.Synthetizer.Open (Driver_Access => SoundDriver,
                                        Synt => GlobalSynth,
-                                       Buffers_Number =>  1,
+                                       Buffers_Number =>  3,
                                        Buffer_Size => 10_000, -- 10_000
                                        Audit =>  Player_Synth'Unrestricted_Access
                                       );
@@ -419,15 +421,14 @@ package body Midi.Player is
                   Player_Synth.Activated_Banks.Insert
                     ("DEFAULT", True, Cur, Inserted);
 
-                  Player_Synth.StreamTime := 0.0;
+                  Player_Synth.StreamTime := 2.0;
+
                   -- should not be before the current time
                   Player_Synth.Associated_Synth_Time :=
                     Synth.Synthetizer.Get_Time(GlobalSynth) + Microseconds(2_000_000);
 
                   Player_Synth.Stopped := False;
-
                end;
-
             end Play;
          or
             accept isPlaying (result : out Boolean) do
@@ -436,9 +437,7 @@ package body Midi.Player is
                else
                   result := not Player_Synth.Stopped and Event_Vector.Has_Element (Player_Synth.EventCursor);
                end if;
-
             end isPlaying;
-
          or
             accept Stop  do
                if IsOpen then
@@ -498,7 +497,6 @@ package body Midi.Player is
          or
             accept Get_Played_Stream_Time (Stream_Time: out Long_Float)  do
                if not IsOpen then
-
                   Stream_Time := -1.0;
                else
                   Stream_Time := Player_Synth.StreamTime;
@@ -519,10 +517,12 @@ package body Midi.Player is
 
 
 
-   procedure Init (SoundDriver : Synth.Driver.Sound_Driver_Access) is
+   procedure Init (SoundDriver : Synth.Driver.Sound_Driver_Access;
+                   InitStreamTempo : Float := 1.0) is
    begin
       TheSoundDriver := SoundDriver;
-      Task_Player.Init(SoundDriver => SoundDriver);
+      Task_Player.Init(SoundDriver => SoundDriver,
+                       InitialStreamTempo => InitStreamTempo);
    end Init;
 
 

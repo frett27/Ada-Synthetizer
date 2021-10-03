@@ -155,7 +155,7 @@ begin
 
    Put_Line ("Start MusicBox Midi Player and play :"
              & Read_Parameters.FileName.all);
-   Midi.Player.Init (D);
+   Midi.Player.Init (D, Read_Parameters.TempoFactor);
 
    if Read_Parameters.BankName /= null then
       Log.Print ("Read SoundBank " & Read_Parameters.BankName.all);

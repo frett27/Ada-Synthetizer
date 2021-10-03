@@ -28,7 +28,8 @@ with Ada.Strings.Unbounded; use Ada.Strings.Unbounded;
 package Midi.Player is
 
    --  Init the bam_engine
-   procedure Init (SoundDriver : Synth.Driver.Sound_Driver_Access);
+   procedure Init (SoundDriver : Synth.Driver.Sound_Driver_Access;
+                   InitStreamTempo : Float := 1.0);
 
 
    -- activate some feature on the player
