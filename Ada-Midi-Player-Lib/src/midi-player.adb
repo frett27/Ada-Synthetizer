@@ -136,21 +136,24 @@ package body Midi.Player is
    type Player_Synth_Audit is
      new Synth.Synthetizer.Synthetizer_Audit with record
 
-      --  committed played time in events, in stream time
+      --  committed played time in events, in stream time seconds
       StreamTime : Long_Float := 0.0;
 
       Associated_Synth_Time : Synthetizer_Time := Microseconds (0);
 
+      -- cursor on events
       EventCursor : Event_Vector.Cursor;
 
-      --  play tempo factor
+      --  current play tempo factor
       TempoFactor : Float := 1.0;
 
-      --  played event counter
+      --  played event counter, for statistics
       Event_Counter : Natural := 0;
 
+      -- sounds banks
       Sounds : SoundBank_Access := null;
 
+      -- activated sound banks
       Activated_Banks : Map;
 
       --  stopped flag
@@ -185,15 +188,20 @@ package body Midi.Player is
 
       Current_Tempo : Float := Audit.TempoFactor;
 
-      D : Duration := To_Duration (Next_Buffer_Time - Current_Buffer_Time);
+      -- Duration of the play buffer
+      WindowDuration : Duration := To_Duration (Next_Buffer_Time - Current_Buffer_Time);
 
-      --  compute the next frame time in Synth Space
+
+      --  Compute the next frame time in Synth Space (using tempo, and start time)
       Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space : Long_Float :=
+
         Audit.StreamTime
-          + Long_Float(Long_Long_Float (D)
+          + Long_Float(Long_Long_Float (WindowDuration)
         / Long_Long_Float (Current_Tempo));
 
+      -- when entering, this is the start of the frame
       Current_Stream_Time : Long_Float := Audit.StreamTime;
+      -- current associated synthtime is the time in synth associated to the stream time
       Current_Associated_SynthTime : Synthetizer_Time :=
         Audit.Associated_Synth_Time;
 
@@ -202,18 +210,23 @@ package body Midi.Player is
       if not Audit.Stopped then
          begin
 
-            -- DebugPrint (S =>
-            --               "Handle Frame, tempo factor: "
-            --             & Float'Image (Current_Tempo)
-            --             & "- frame duration :" & Duration'Image (D)
-            --             & "  stream time :" & Long_Float'Image (Audit.StreamTime)
-            --             & " projected : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space)
-            --             & " diff : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space - Audit.StreamTime)
-            --             & " synth_time " & Duration'Image(To_Duration(Current_Associated_SynthTime)));
+             DebugPrint (S =>
+                           "Handle Frame, tempo factor: "
+                         & Float'Image (Current_Tempo)
+                         & "- frame duration :" & Duration'Image (WindowDuration)
+                         & "  stream time :" & Long_Float'Image (Audit.StreamTime)
+                         & " projected : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space)
+                         & " diff : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space - Audit.StreamTime)
+                         & " synth_time " & Duration'Image(To_Duration(Current_Associated_SynthTime)));
+
+
+
+
 
             while Event_Vector.Has_Element (Audit.EventCursor) and then
               Current_Stream_Time < Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space
             loop
+
                Audit.Event_Counter := Natural'Succ (Audit.Event_Counter);
                declare
                   E : TimeStampedEvent :=
@@ -329,6 +342,7 @@ package body Midi.Player is
 
       end if;
 
+      -- update the stream time, and synth time
       Audit.StreamTime := Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space;
       Audit.Associated_Synth_Time := Audit.Associated_Synth_Time +
         (Next_Buffer_Time - Current_Buffer_Time);
@@ -367,7 +381,7 @@ package body Midi.Player is
                -- Initialize the Synth
                Player_Synth :=
                  Player_Synth_Audit'(
-                                     StreamTime  => -2.0,
+                                     StreamTime  => 0.0,
                                      Associated_Synth_Time => Microseconds (0),
                                      TempoFactor => InitialStreamTempo,
                                      Sounds => null,
@@ -382,7 +396,7 @@ package body Midi.Player is
                Synth.Synthetizer.Open (Driver_Access => SoundDriver,
                                        Synt => GlobalSynth,
                                        Buffers_Number =>  3,
-                                       Buffer_Size => 10_000, -- 10_000
+                                       Buffer_Size => 5_000, -- 10_000
                                        Audit =>  Player_Synth'Unrestricted_Access
                                       );
 
@@ -421,12 +435,7 @@ package body Midi.Player is
                   Player_Synth.Activated_Banks.Insert
                     ("DEFAULT", True, Cur, Inserted);
 
-                  Player_Synth.StreamTime := 2.0;
-
-                  -- should not be before the current time
-                  Player_Synth.Associated_Synth_Time :=
-                    Synth.Synthetizer.Get_Time(GlobalSynth) + Microseconds(2_000_000);
-
+                  Player_Synth.StreamTime := -2.0; -- wait 2s, before starting
                   Player_Synth.Stopped := False;
                end;
             end Play;
@@ -512,7 +521,7 @@ package body Midi.Player is
    end Task_Player;
 
 
-
+   -- The currently played stream
    MidiStream : Midi.Stream.Midi_Event_Stream;
 
 
