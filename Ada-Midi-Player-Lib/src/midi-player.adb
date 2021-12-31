@@ -210,17 +210,14 @@ package body Midi.Player is
       if not Audit.Stopped then
          begin
 
-             DebugPrint (S =>
-                           "Handle Frame, tempo factor: "
-                         & Float'Image (Current_Tempo)
-                         & "- frame duration :" & Duration'Image (WindowDuration)
-                         & "  stream time :" & Long_Float'Image (Audit.StreamTime)
-                         & " projected : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space)
-                         & " diff : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space - Audit.StreamTime)
-                         & " synth_time " & Duration'Image(To_Duration(Current_Associated_SynthTime)));
-
-
-
+            --               DebugPrint (S =>
+            --                             "Handle Frame, tempo factor: "
+            --                           & Float'Image (Current_Tempo)
+            --                           & "- frame duration :" & Duration'Image (WindowDuration)
+            --                           & "  stream time :" & Long_Float'Image (Audit.StreamTime)
+            --                           & " projected : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space)
+            --                           & " diff : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space - Audit.StreamTime)
+            --                           & " synth_time " & Duration'Image(To_Duration(Current_Associated_SynthTime)));
 
 
             while Event_Vector.Has_Element (Audit.EventCursor) and then
