@@ -200,26 +200,26 @@ package body Sound.Mono is
          Buffer_Size := Duration (Buffer_Time) / 1_000_000.0;
       end Set_Buffer_Time;
 
-      Set_Period :
-      declare
-         Period_Time   : aliased Interfaces.C.unsigned :=
-           Interfaces.C.unsigned (1_000_000 * Period);
-         Approximation : aliased Sound.ALSA.Approximation_Direction := 0;
-      begin
-         Error := snd_pcm_hw_params_set_period_time_near
-           (pcm    => Local_Line,
-            params => Settings,
-            val    => Period_Time'Access,
-            dir    => Approximation'Access);
-
-         if Error < 0 then
-            raise Program_Error with
-              "Error code (snd_pcm_hw_params_set_period_time_near): " &
-              Error'Img;
-         end if;
-
-         Period := Duration (Period_Time) / 1_000_000.0;
-      end Set_Period;
+--        Set_Period :
+--        declare
+--           Period_Time   : aliased Interfaces.C.unsigned :=
+--             Interfaces.C.unsigned (1_000_000 * Period);
+--           Approximation : aliased Sound.ALSA.Approximation_Direction := 0;
+--        begin
+--           Error := snd_pcm_hw_params_set_period_time_near
+--             (pcm    => Local_Line,
+--              params => Settings,
+--              val    => Period_Time'Access,
+--              dir    => Approximation'Access);
+--
+--           if Error < 0 then
+--              raise Program_Error with
+--                "Error code (snd_pcm_hw_params_set_period_time_near): " &
+--                Error'Img;
+--           end if;
+--
+--           Period := Duration (Period_Time) / 1_000_000.0;
+--        end Set_Period;
 
       Register_Settings :
       begin

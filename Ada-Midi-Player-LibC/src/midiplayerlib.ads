@@ -41,6 +41,7 @@ package MidiPlayerLib is
    --  Init
    function Init return API_RETURN_CODE;
 
+   -- activate some global features in the API
    function Activate_Global_Feature (Feature : C.Strings.chars_ptr;
                                     Activated : C.int) return API_RETURN_CODE;
 
@@ -60,7 +61,7 @@ package MidiPlayerLib is
    function Change_Tempo_Factor (Tempo_Factor : C.double)
                                  return API_RETURN_CODE;
 
-   --  activate bank
+   --  activate bank (to change some instruments)
    function Activate_Bank (Bank_Name : C.Strings.chars_ptr)
                            return API_RETURN_CODE;
 

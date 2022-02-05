@@ -141,7 +141,7 @@ package body Synth.Synthetizer is
       return Get_Synthetizer_Time (Synth.all);
    end Get_Time;
 
-   --  Compute a buffer time
+   --  Compute a buffer time in milliseconds
    function Get_Buffer_Time
      (Synth : Synthetizer_Type) return Synthetizer_Time is
       Drv : constant Driver.Sound_Driver_Access := Synth.D;
@@ -190,7 +190,7 @@ package body Synth.Synthetizer is
    procedure Process_Buffer (VSA : Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
-                             Driver_Play_Frequency : Frequency_Type := 44_100.0;
+                             Driver_Play_Frequency : Frequency_Type;
                              Start_Buffer_Time : Synthetizer_Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second);
@@ -1073,7 +1073,7 @@ package body Synth.Synthetizer is
    procedure Internal_Process_Buffer (VSA : Voice_Structure_Type;
                                       Buffer : Frame_Array_Access;
                                       Volume_Factor : Float := 1.0;
-                                      Driver_Play_Frequency : Frequency_Type := 44_100.0;
+                                      Driver_Play_Frequency : Frequency_Type;
                                       Start_Buffer_Time : Synthetizer_Time;
                                       ReachEndSample : out Boolean;
                                       Returned_Current_Sample_Position : out Play_Second);
@@ -1081,7 +1081,7 @@ package body Synth.Synthetizer is
    procedure Process_Buffer (VSA : Voice_Structure_Type;
                              Buffer : Frame_Array_Access;
                              Volume_Factor : Float := 1.0;
-                             Driver_Play_Frequency : Frequency_Type := 44_100.0;
+                             Driver_Play_Frequency : Frequency_Type;
                              Start_Buffer_Time : Synthetizer_Time;
                              ReachEndSample : out Boolean;
                              Returned_Current_Sample_Position : out Play_Second) is
@@ -1100,7 +1100,7 @@ package body Synth.Synthetizer is
    procedure Internal_Process_Buffer (VSA : Voice_Structure_Type;
                                       Buffer : Frame_Array_Access;
                                       Volume_Factor : Float := 1.0;
-                                      Driver_Play_Frequency : Frequency_Type := 44_100.0;
+                                      Driver_Play_Frequency : Frequency_Type;
                                       Start_Buffer_Time : Synthetizer_Time;
                                       ReachEndSample : out Boolean;
                                       Returned_Current_Sample_Position : out Play_Second) is

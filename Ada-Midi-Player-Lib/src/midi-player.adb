@@ -138,8 +138,9 @@ package body Midi.Player is
 
       --  committed played time in events, in stream time seconds
       StreamTime : Long_Float := 0.0;
-
       Associated_Synth_Time : Synthetizer_Time := Microseconds (0);
+
+      Latest_Buffer_Time : Synthetizer_Time := Microseconds (0);
 
       -- cursor on events
       EventCursor : Event_Vector.Cursor;
@@ -191,162 +192,161 @@ package body Midi.Player is
       -- Duration of the play buffer
       WindowDuration : Duration := To_Duration (Next_Buffer_Time - Current_Buffer_Time);
 
-
-      --  Compute the next frame time in Synth Space (using tempo, and start time)
-      Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space : Long_Float :=
-
-        Audit.StreamTime
-          + Long_Float(Long_Long_Float (WindowDuration)
-        / Long_Long_Float (Current_Tempo));
-
       -- when entering, this is the start of the frame
       Current_Stream_Time : Long_Float := Audit.StreamTime;
-      -- current associated synthtime is the time in synth associated to the stream time
-      Current_Associated_SynthTime : Synthetizer_Time :=
-        Audit.Associated_Synth_Time;
 
-      C : Ada.Real_Time.Time := Clock;
+
    begin
-      if not Audit.Stopped then
+      Audit.Latest_Buffer_Time := Current_Buffer_Time;
+
+      if Current_Tempo > 0.01  then
+
+         declare
+            --  Compute the next frame time in Synth Space (using tempo, and start time)
+            Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space : Long_Float :=
+              Audit.StreamTime +
+                Long_Float(Long_Long_Float (WindowDuration)
+                           / Long_Long_Float (Current_Tempo));
+
+            C : Ada.Real_Time.Time := Clock;
          begin
 
-            --               DebugPrint (S =>
-            --                             "Handle Frame, tempo factor: "
-            --                           & Float'Image (Current_Tempo)
-            --                           & "- frame duration :" & Duration'Image (WindowDuration)
-            --                           & "  stream time :" & Long_Float'Image (Audit.StreamTime)
-            --                           & " projected : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space)
-            --                           & " diff : " &   Long_Float'Image (Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space - Audit.StreamTime)
-            --                           & " synth_time " & Duration'Image(To_Duration(Current_Associated_SynthTime)));
+            if not Audit.Stopped then
 
-
-            while Event_Vector.Has_Element (Audit.EventCursor) and then
-              Current_Stream_Time < Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space
-            loop
-
-               Audit.Event_Counter := Natural'Succ (Audit.Event_Counter);
-               declare
-                  E : TimeStampedEvent :=
-                    Event_Vector.Element (Audit.EventCursor);
-                  SelectedSound : SoundSample; -- default
-
-                  Event_Start_Time_In_SynthSpace : Synthetizer_Time :=
-                    Microseconds (Integer (
-                                  (Long_Long_Float (E.T) - Long_Long_Float(Audit.StreamTime)) *
-                                    Long_Long_Float (Current_Tempo) *
-                                    Long_Long_Float (1_000_000)))
-                    + Audit.Associated_Synth_Time;
 
                begin
-                  Current_Stream_Time := Long_Float (E.T);
-                  Current_Associated_SynthTime := Event_Start_Time_In_SynthSpace;
 
-                  -- DebugPrint ("Current Stream Time "
-                  --            & Long_Float'Image (Current_Stream_Time));
-                  -- DebugPrint ("Time in the file "
-                  --            & Duration'Image (
-                  --              To_Duration (Current_Associated_SynthTime)));
+                  Main_Cycle: while Event_Vector.Has_Element (Audit.EventCursor) and then
+                    Current_Stream_Time < Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space
+                  loop
 
-                  declare
-                     SBAccess : SoundBank_Access := Audit.Sounds;
-                  begin
 
-                     if SBAccess /= null then
-                        if E.Note > 127 or else E.Note < 0 then
-                           if LogFunction /= null then
-                              LogFunction ("Invalid note :" & Natural'Image (E.Note));
-                           end if;
-                        else
-                           --  for each activated sound bank
-                           for Bank in Audit.Activated_Banks.Iterate loop
+                     Audit.Event_Counter := Natural'Succ (Audit.Event_Counter);
+                     declare
+                        E : TimeStampedEvent :=
+                          Event_Vector.Element (Audit.EventCursor);
+                        SelectedSound : SoundSample; -- default
 
-                              if Element (Bank) then
-                                 declare
-                                    BankName : String :=  Key (Bank);
-                                    OVCur : Maps_Open_Voices.Cursor :=
-                                      Opened_Voices.Find (Key => BankName);
-                                    VA : Opened_Voices_Type_Access := null;
+                        Event_Start_Time_In_SynthSpace : Synthetizer_Time :=
+                          Microseconds (Integer (
+                                        (Long_Long_Float (E.T) - Long_Long_Float(Audit.StreamTime)) *
+                                          Long_Long_Float (Current_Tempo) *
+                                          Long_Long_Float (1_000_000))
+                                       )
+                            + Current_Buffer_Time;
 
-                                 begin
-                                    if not Has_Element (OVCur) then
-                                       Opened_Voices.
-                                         Insert (Key      => BankName,
-                                                 New_Item => new Opened_Voices_Type'
-                                                   (others => No_Voice));
-                                    end if;
-                                    VA := Opened_Voices.Element (BankName);
-                                    begin
-                                       SelectedSound :=
-                                         SoundBank.GetSoundSample
-                                           (SBAccess.all,
-                                            To_Unbounded_String (Key (Bank)),
-                                            E.Note);
-                                    exception
-                                       when others =>
-                                          SelectedSound := Null_Sound_Sample;
-                                          if LogFunction /= null then
-                                             LogFunction
-                                               ("error getting sound sample for note "
-                                                & Natural'Image (E.Note));
+                     begin
+                        Current_Stream_Time := Long_Float (E.T);
+                        if Event_Start_Time_In_SynthSpace > Next_Buffer_Time then
+                           exit Main_cycle;
+                        end if;
+
+                        declare
+                           SBAccess : SoundBank_Access := Audit.Sounds;
+                        begin
+
+                           if SBAccess /= null then
+                              if E.Note > 127 or else E.Note < 0 then
+                                 if LogFunction /= null then
+                                    LogFunction ("Invalid note :" & Natural'Image (E.Note));
+                                 end if;
+                              else
+                                 --  for each activated sound bank
+                                 for Bank in Audit.Activated_Banks.Iterate loop
+
+                                    if Element (Bank) then
+                                       declare
+                                          BankName : String :=  Key (Bank);
+                                          OVCur : Maps_Open_Voices.Cursor :=
+                                            Opened_Voices.Find (Key => BankName);
+                                          VA : Opened_Voices_Type_Access := null;
+
+                                       begin
+                                          if not Has_Element (OVCur) then
+                                             Opened_Voices.
+                                               Insert (Key      => BankName,
+                                                       New_Item => new Opened_Voices_Type'
+                                                         (others => No_Voice));
                                           end if;
-
-                                    end;
-                                    if E.isOn then
-                                       --  bank read ?
-                                       if SelectedSound /= Null_Sound_Sample and then SelectedSound.Mono_Data /= null then
-                                          pragma Assert (SelectedSound.Mono_Data /= null);
-                                          declare
-                                             VTA : Synth.Synthetizer.Voice;
+                                          VA := Opened_Voices.Element (BankName);
                                           begin
-                                             Play (Synt         =>  Audit.SynthAccess.all,
-                                                   S            => SelectedSound,
-                                                   Frequency    => Synth.MIDICode_To_Frequency (E.Note),
-                                                   Channel      => 1,
-                                                   Volume => 0.5,
-                                                   Play_Time => Event_Start_Time_In_SynthSpace,
-                                                   Opened_Voice => VTA);
-                                             VA (E.Note) := VTA;
+                                             SelectedSound :=
+                                               SoundBank.GetSoundSample
+                                                 (SBAccess.all,
+                                                  To_Unbounded_String (Key (Bank)),
+                                                  E.Note);
                                           exception
-                                             when e: others =>
-                                                DumpException(E => e);
+                                             when others =>
+                                                SelectedSound := Null_Sound_Sample;
+                                                if LogFunction /= null then
+                                                   LogFunction
+                                                     ("error getting sound sample for note "
+                                                      & Natural'Image (E.Note));
+                                                end if;
                                           end;
 
-                                       end if;
-                                    else
-                                       if SelectedSound /= Null_Sound_Sample and then not MusicBoxBehaviour then
-                                          Stop (Synt         => Audit.SynthAccess.all,
-                                                Opened_Voice => VA (E.Note),
-                                                Stop_Time => Event_Start_Time_In_SynthSpace);
-                                       end if;
+                                          if E.isOn then
+                                             --  bank read ?
+                                             if SelectedSound /= Null_Sound_Sample and then SelectedSound.Mono_Data /= null then
+                                                pragma Assert (SelectedSound.Mono_Data /= null);
+                                                declare
+                                                   VTA : Synth.Synthetizer.Voice;
+                                                begin
+                                                   Play (Synt         => Audit.SynthAccess.all,
+                                                         S            => SelectedSound,
+                                                         Frequency    => Synth.MIDICode_To_Frequency (E.Note),
+                                                         Channel      => 1,
+                                                         Volume => 0.5,
+                                                         Play_Time => Event_Start_Time_In_SynthSpace,
+                                                         Opened_Voice => VTA);
+                                                   VA (E.Note) := VTA;
+                                                exception
+                                                   when e: others =>
+                                                      DumpException(E => e);
+                                                end;
+
+                                             end if;
+                                          else
+                                             if SelectedSound /= Null_Sound_Sample and then not MusicBoxBehaviour then
+                                                -- stop note
+                                                Stop (Synt         => Audit.SynthAccess.all,
+                                                      Opened_Voice => VA (E.Note),
+                                                      Stop_Time => Event_Start_Time_In_SynthSpace);
+                                             end if;
+                                          end if;
+                                       end;
                                     end if;
-                                 end;
+                                 end loop;
                               end if;
-                           end loop;
-                        end if;
-                     end if;
+                           end if;
 
 
-                  end;
+                        end;
 
+                     end;
+                     Event_Vector.Next (Audit.EventCursor);
+                  end loop Main_Cycle;
+
+               exception
+                  when e : others =>
+                     DumpException (E => e);
                end;
-               Event_Vector.Next (Audit.EventCursor);
-            end loop;
 
-         exception
-            when e : others =>
-               DumpException (E => e);
-         end;
+               -- update the stream time, and synth time
+               Audit.StreamTime := Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space;
+               Audit.Associated_Synth_Time := Audit.Associated_Synth_Time +
+                 (Next_Buffer_Time - Current_Buffer_Time);
+            end if;
 
-      end if;
+            if (Next_Buffer_Time - Current_Buffer_Time) < (Clock - C) then
+               P ("********** WARNING , time elapsed to construct the buffer is larger than the buffer ***************");
+            end if;
 
-      -- update the stream time, and synth time
-      Audit.StreamTime := Stream_Projected_Synthetizer_Next_Time_Frame_In_Stream_Space;
-      Audit.Associated_Synth_Time := Audit.Associated_Synth_Time +
-        (Next_Buffer_Time - Current_Buffer_Time);
 
-      if (Next_Buffer_Time - Current_Buffer_Time) < (Clock - C) then
-         P ("********** WARNING , time elapsed to construct the buffer is larger than the buffer ***************");
-      end if;
+         end; -- for frame declaration
+
+
+      end if; -- tempo positif and not small
 
 
    end Ready_To_Prepare;
@@ -370,6 +370,7 @@ package body Midi.Player is
       Player_Synth : Player_Synth_Audit;
       IsOpen : Boolean := False;
       IsInited : Boolean := False;
+      MidiStream: Midi_Event_Stream;
    begin
 
       while not IsInited loop
@@ -379,6 +380,7 @@ package body Midi.Player is
                Player_Synth :=
                  Player_Synth_Audit'(
                                      StreamTime  => 0.0,
+                                     Latest_Buffer_Time => Microseconds (0),
                                      Associated_Synth_Time => Microseconds (0),
                                      TempoFactor => InitialStreamTempo,
                                      Sounds => null,
@@ -424,6 +426,8 @@ package body Midi.Player is
                   Cur : Maps.Cursor;
                   Inserted : Boolean;
                begin
+                  MidiStream := MS;
+
                   Player_Synth.Sounds := S;
                   Player_Synth.EventCursor := Event_Vector.First (MS.Events);
 
@@ -432,26 +436,26 @@ package body Midi.Player is
                   Player_Synth.Activated_Banks.Insert
                     ("DEFAULT", True, Cur, Inserted);
 
-                  Player_Synth.StreamTime := -2.0; -- wait 2s, before starting
+                  Player_Synth.StreamTime := 0.0; -- wait 2s, before starting
+                  Player_Synth.Associated_Synth_Time := Player_Synth.Latest_Buffer_Time;
+
                   Player_Synth.Stopped := False;
                end;
             end Play;
          or
             accept isPlaying (result : out Boolean) do
-               if not IsOpen then
-                  result := False;
-               else
-                  result := not Player_Synth.Stopped and Event_Vector.Has_Element (Player_Synth.EventCursor);
-               end if;
+
+               result := not Player_Synth.Stopped and Event_Vector.Has_Element (Player_Synth.EventCursor);
+
             end isPlaying;
          or
             accept Stop  do
-               if IsOpen then
-                  Player_Synth.Stopped := True;
-                  Player_Synth.EventCursor := Event_Vector.No_Element;
-                  delay 0.1;
+               Player_Synth.Stopped := True;
 
-               end if;
+               Player_Synth.EventCursor := Event_Vector.No_Element;
+               delay 0.1;
+
+
             end Stop;
          or
             accept Change_Tempo_Factor (Tempo_Factor : Float) do
@@ -534,7 +538,7 @@ package body Midi.Player is
 
    -- activate some feature on the player
    procedure ActivateGlobalFeature(ParameterName: String;
-                                  Activated : Boolean) is
+                                   Activated : Boolean) is
    begin
       if ParameterName = "MUSICBOX" then
          MusicBoxBehaviour := Activated;
@@ -549,6 +553,10 @@ package body Midi.Player is
    begin
       if CurrentSounds = null then
          raise Program_Error with "No current SoundBank";
+      end if;
+
+      if IsPlaying then
+         Task_Player.Stop;
       end if;
 
       Read_Midi_File (File, MidiStream);

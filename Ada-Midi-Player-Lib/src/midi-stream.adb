@@ -167,6 +167,8 @@ package body Midi.Stream is
    begin
       Divisions :=  Get_Division (Midi_File);
 
+      -- clear stream
+      M.Events.Clear;
 
       --  Get Header Tempo
       --  Ada.Text_IO.Put_Line("Division " & Natural'Image(Divisions));

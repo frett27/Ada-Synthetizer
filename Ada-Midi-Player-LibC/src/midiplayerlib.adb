@@ -67,7 +67,7 @@ package body MidiPlayerLib is
       Synth.Driver.Open (Driver    => D,
                          Frequency => Synth.Frequency_Type (48_200));
 
-      Midi.Player. Init (SoundDriver => D);
+      Midi.Player.Init (SoundDriver => D);
 
       Ada.Text_IO.Put_Line ("Initied");
 
@@ -139,9 +139,10 @@ package body MidiPlayerLib is
          Ada.Text_IO.Put_Line ("No current SoundBank");
          return API_ERROR_NO_SOUNDBANK;
       end if;
-      Midi.Player.Play (FileName => SFileName);
-      return API_OK;
 
+      Midi.Player.Play (FileName => SFileName);
+
+      return API_OK;
    exception
       when e : others   =>
          DumpException (E => e);
