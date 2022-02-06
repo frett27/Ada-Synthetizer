@@ -251,7 +251,7 @@ package body Midi.Player is
                                     LogFunction ("Invalid note :" & Natural'Image (E.Note));
                                  end if;
                               else
-                                 --  for each activated sound bank
+                                 --  for each activated sound bank, play the event or stop it
                                  for Bank in Audit.Activated_Banks.Iterate loop
 
                                     if Element (Bank) then

@@ -24,6 +24,7 @@
 with System;
 with Synth.Driver;
 
+
 package Synth.Synthetizer is
 
    Not_Defined_Clock : constant Synthetizer_Time :=
@@ -149,6 +150,21 @@ package Synth.Synthetizer is
 
 private
 
+
+   -- Oscillator
+
+   type Oscillator_Type is record
+
+      Note_Play_Frequency          : Frequency_Type; -- the played frequency
+      Play_Sample             : SoundSample; -- the sound sample to play
+      Start_Play_Sample : Synthetizer_Time;
+      Stop_Play_Sample : Synthetizer_Time := Synth.Synthetizer.Not_Defined_Clock;
+      Current_Sample_Position : Play_Second := 0.0; -- the position in second
+
+   end record;
+
+
+
    --  The voice represent a play of a sound sample
    --  at a given frequency, it also remember the state of the play
    --  (given position), and loop possibility
@@ -157,11 +173,10 @@ private
    --  for reuse
    --
    type Voice_Structure_Type is record
-      Note_Play_Frequency          : Frequency_Type; -- the played frequency
-      Play_Sample             : SoundSample; -- the sound sample to play
-      Start_Play_Sample : Synthetizer_Time;
-      Stop_Play_Sample : Synthetizer_Time := Not_Defined_Clock;
-      Current_Sample_Position : Play_Second := 0.0; -- the position in second
+
+      -- oscillator type
+      Oscillator : Oscillator_Type;
+
       Volume       : Float := 1.0; -- volume factor
       Stopped : Boolean := False;
       Channel : Positive := 1; -- used for getting associated voices
@@ -265,12 +280,13 @@ private
    --  constant null Voice Structure
    Null_Voice_Structure : constant Voice_Structure_Type :=
      Voice_Structure_Type'
-       (Current_Sample_Position => 0.0,
-        Stopped                 => True,
+       (Stopped                 => True,
+        Oscillator => Oscillator_Type'(
+        Current_Sample_Position => 0.0,
         Play_Sample             => Null_Sound_Sample,
         Stop_Play_Sample => Not_Defined_Clock,
         Start_Play_Sample => Synthetizer_Time_First,
-        Note_Play_Frequency => 440.0,
+        Note_Play_Frequency => 440.0),
         Channel => 1, Volume => 1.0
        );
 
