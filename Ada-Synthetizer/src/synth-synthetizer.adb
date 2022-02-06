@@ -23,6 +23,215 @@
 with Ada.Text_IO; use Ada.Text_IO;
 package body Synth.Synthetizer is
 
+
+
+     function Can_Be_Stopped(O: in Oscillator_Type) return Boolean is
+      begin
+           if O.Play_Sample.Cant_Stop then
+            return False;
+         end if;
+
+         if O.Stop_Play_Sample /= Not_Defined_Clock then
+            return False;
+         end if;
+
+         return True;
+
+   end Can_Be_Stopped;
+
+
+   procedure Stop(X: in out Oscillator_Type) is
+   begin
+       X.Stop_Play_Sample := Synthetizer_Time_First;
+
+   end;
+
+   procedure Stop(X: in out Oscillator_Type; Stop: in Synthetizer_Time) is
+   begin
+       X.Stop_Play_Sample := Stop;
+
+   end;
+
+   procedure Change_Current_Play_Position(X: in out Oscillator_Type;
+                                          Position: in Play_Second) is
+   begin
+      X.Current_Sample_Position := position;
+   end;
+
+   function Is_EndLess(X : in Oscillator_Type) return Boolean is
+   begin
+      return X.Play_Sample.HasLoop;
+   end Is_EndLess;
+
+
+
+   procedure Apply_Oscillator_To_Buffer (O : in out Oscillator_Type;
+                                         Buffer : Frame_Array_Access;
+                                         Volume_Factor : Float := 1.0;
+                                         Driver_Play_Frequency : Frequency_Type;
+                                         Start_Buffer_Time : Synthetizer_Time;
+                                         ReachEndOscillator : out Boolean;
+                                         Returned_Current_Oscillator_Position : out Play_Second) is
+
+      Current_Sample_Position : Play_Second :=
+        O.Current_Sample_Position;
+
+      Driver_Play_Period : constant Play_Second :=
+        Play_Second (1) / Play_Second (Driver_Play_Frequency);
+
+      One_Sample_Frame_Period : constant Play_Second :=
+        Play_Second (1.0) /
+        Play_Second( Driver_Play_Frequency *
+             O.Play_Sample.Frequency /
+               Driver_Play_Frequency);
+
+      One_Played_Sample_Frame_Period : constant Play_Second :=
+        One_Sample_Frame_Period *
+          Play_Second(O.Play_Sample.Note_Frequency /
+            O.Note_Play_Frequency);
+
+      function To_Second (Frame_Pos : Natural) return Play_Second is
+      begin
+         return Play_Second (Frame_Pos - O.Play_Sample.Mono_Data'First) *
+           One_Played_Sample_Frame_Period;
+      end To_Second;
+
+      SS : constant SoundSample := O.Play_Sample;
+
+      Sample_Data_Seconds : constant Play_Second :=
+        To_Second (SS.Mono_Data'Length);
+
+      function To_Pos_InSample (Pos : Play_Second) return Natural is
+         Pos_In_Array : constant Natural :=
+           Natural (Pos / One_Played_Sample_Frame_Period);
+      begin
+         return SS.Mono_Data'First + Pos_In_Array;
+      end To_Pos_InSample;
+
+      procedure Move_Next
+        (Pos_In_Sample       : in out Play_Second;
+         Reach_End :    out Boolean)
+      is
+      begin
+         --  increment
+
+         Pos_In_Sample := Pos_In_Sample + Driver_Play_Period;
+
+         Reach_End := False;
+
+         case O.Play_Sample.HasLoop is
+            when True =>
+               if Pos_In_Sample > To_Second (SS.Loop_End) then
+                  Pos_In_Sample := Pos_In_Sample - To_Second (SS.Loop_Start);
+               end if;
+            when False =>
+               begin
+                  if Pos_In_Sample > Sample_Data_Seconds then
+                     Reach_End := True;
+                  end if;
+               end;
+
+         end case;
+      end Move_Next;
+
+   begin
+
+      --  if VSA.Stopped and then VSA.Stop_Play_Sample = Not_Defined_Clock then
+      --   ReachEndSample := True;
+      --   return;
+      --  end if;
+
+      if O.Play_Sample = Null_Sound_Sample then
+         Put_Line ("Null sample");
+         ReachEndOscillator := True;
+         return;
+      end if;
+
+      for i in Buffer'Range loop
+
+         declare
+            From_Start : constant Synthetizer_Time :=
+              Synthetizer_Time (
+                                Microseconds (Natural (Driver_Play_Period * Play_Second (i - Buffer'First)
+                                  * Play_Second (1_000_000.0))));
+            IsStarted : Boolean := True;
+            CurrentTime : constant Synthetizer_Time := Start_Buffer_Time + From_Start;
+         begin
+
+            if Current_Sample_Position = 0.0 then -- sample has not started yet
+
+               --  check if sample has started
+               if CurrentTime < O.Start_Play_Sample then
+                  --  continue loop
+                  IsStarted := False;
+               end if;
+            end if;
+
+            if  O.Stop_Play_Sample /= Not_Defined_Clock
+              and then O.Stop_Play_Sample < CurrentTime then
+               IsStarted := False;
+               ReachEndOscillator := True;
+               return;
+            end if;
+
+            if IsStarted then
+
+               --  interpolate ?
+               declare
+                  Pos_In_Sample  : constant Natural :=
+                    To_Pos_InSample (Current_Sample_Position);
+               begin
+
+                  if Pos_In_Sample > O.Play_Sample.Mono_Data'Last then
+                     --  debug info,
+                     Ada.Text_IO.Put_Line (" pos : " & Natural'Image (Pos_In_Sample));
+                     Ada.Text_IO.Put_Line (" index pos : "
+                                           & Natural'Image (SS.Mono_Data'Last));
+
+                  end if;
+
+                  pragma Assert (Pos_In_Sample >= SS.Mono_Data'First);
+                  pragma Assert (Pos_In_Sample <= SS.Mono_Data'Last);
+                  pragma Assert (Pos_In_Sample in SS.Mono_Data'Range);
+
+                  declare
+                     V1 : constant Float := SS.Mono_Data (Pos_In_Sample);
+                     R  : Boolean;
+                     F : Float :=  Buffer (i) + V1 * Volume_Factor; -- * VSA.Volume;
+                  begin
+
+                     if F > 1.0 then
+                        F := 1.0;  -- saturation
+                     end if;
+
+                     if F < -1.0 then
+                        F := -1.0;  -- saturation
+                     end if;
+
+                     Buffer (i) := F;
+
+                     Move_Next (Pos_In_Sample => Current_Sample_Position,
+                                Reach_End => R);
+                     if R then
+                        ReachEndOscillator := True;
+                        Returned_Current_Oscillator_Position := Current_Sample_Position;
+                        return;
+                     end if;
+                  end;
+               end;
+
+            end if;
+
+         end;
+
+      end loop;
+      ReachEndOscillator := False;
+      Returned_Current_Oscillator_Position := Current_Sample_Position;
+
+   end Apply_Oscillator_To_Buffer;
+
+
+
    ----------
    -- Open --
    ----------
@@ -693,17 +902,11 @@ package body Synth.Synthetizer is
       function Can_Be_Stopped (V : Voice) return Boolean is
          VSA : constant Voice_Structure_Type := All_Voices (V);
       begin
-
-         if VSA.Oscillator.Play_Sample.Cant_Stop then
-            return False;
-         end if;
-
-         if VSA.Oscillator.Stop_Play_Sample /= Not_Defined_Clock then
-            return False;
-         end if;
-
-         return True;
+         return Can_Be_Stopped(VSA.Oscillator.all);
       end Can_Be_Stopped;
+
+
+
 
       -----------------
       -- Close_Voice --
@@ -718,7 +921,8 @@ package body Synth.Synthetizer is
             return;
          end if;
 
-         All_Voices (V).Oscillator.Stop_Play_Sample := Synthetizer_Time_First;
+
+         All_Voices (V).Oscillator.Stop;
 
       end Close_Voice;
 
@@ -735,7 +939,7 @@ package body Synth.Synthetizer is
             return;
          end if;
 
-         All_Voices (V).Oscillator.Stop_Play_Sample := Stop_Time;
+         All_Voices (V).Oscillator.Stop(Stop_Time);
 
       end Close_Voice;
 
@@ -776,7 +980,7 @@ package body Synth.Synthetizer is
 
       procedure Update_Position (V : Voice; Current_Sample_Position : Play_Second)  is
       begin
-         All_Voices (V).Oscillator.Current_Sample_Position := Current_Sample_Position;
+         All_Voices (V).Oscillator.Change_Current_Play_Position(Current_Sample_Position);
       end Update_Position;
 
       ------------------------------------------
@@ -817,7 +1021,7 @@ package body Synth.Synthetizer is
                   Opened_Voice (TheVoice) := False;
                   All_Voices (TheVoice).Stopped := True;
                end if;
-               All_Voices (TheVoice).Oscillator.Current_Sample_Position := V.UpdatedPosition;
+               All_Voices (TheVoice).Oscillator.Change_Current_Play_Position( V.UpdatedPosition);
             end;
 
          end loop;
@@ -922,7 +1126,8 @@ package body Synth.Synthetizer is
       --  Put_Line("Allocate_New_Voice");
       SST.Voices.Allocate_New_Voice (Voice_Structure_Type'(
 
-                                     Oscillator => Oscillator_Type'(Note_Play_Frequency     => Frequency,
+                                     Oscillator =>
+                                       new Oscillator_Type'(Note_Play_Frequency     => Frequency,
                                                                     Play_Sample             => S,
                                                                     Current_Sample_Position => 0.0,
                                                                     Start_Play_Sample => Play_Time,
@@ -1014,7 +1219,7 @@ package body Synth.Synthetizer is
       end if;
 
       if not SST.Voices.Can_Be_Stopped (V)
-        and then (not SST.Voices.Get_Voice (V).Oscillator.Play_Sample.HasLoop)
+        and then (not SST.Voices.Get_Voice (V).Oscillator.Is_EndLess)
       then
          return; -- wait for the end of sound
       end if;
@@ -1041,7 +1246,7 @@ package body Synth.Synthetizer is
       end if;
 
       if not SST.Voices.Can_Be_Stopped (V)
-        and then (not SST.Voices.Get_Voice (V).Oscillator.Play_Sample.HasLoop)
+        and then (not SST.Voices.Get_Voice (V).Oscillator.Is_EndLess)
       then
          return; -- wait for the end of sound
       end if;
@@ -1119,14 +1324,6 @@ package body Synth.Synthetizer is
       return f * Play_Second (f2);
    end "*";
 
-   --  forward
-   procedure Apply_Oscillator_To_Buffer (Oscillator : in out Oscillator_Type;
-                                         Buffer : Frame_Array_Access;
-                                         Volume_Factor : Float := 1.0;
-                                         Driver_Play_Frequency : Frequency_Type;
-                                         Start_Buffer_Time : Synthetizer_Time;
-                                         ReachEndOscillator : out Boolean;
-                                         Returned_Current_Oscillator_Position : out Play_Second);
 
    --------------------
    -- Process_Buffer --
@@ -1140,177 +1337,12 @@ package body Synth.Synthetizer is
                              ReachEndOscillator : out Boolean;
                              Returned_Current_Oscillator_Position : out Play_Second) is
    begin
-      Apply_Oscillator_To_Buffer (VSA.Oscillator, Buffer, Volume_Factor,
+      VSA.Oscillator.Apply_Oscillator_To_Buffer (Buffer, Volume_Factor,
                                   Driver_Play_Frequency,
                                   Start_Buffer_Time, ReachEndOscillator,
                                   Returned_Current_Oscillator_Position);
 
    end Process_Buffer;
 
-
-   procedure Apply_Oscillator_To_Buffer (Oscillator : in out Oscillator_Type;
-                                         Buffer : Frame_Array_Access;
-                                         Volume_Factor : Float := 1.0;
-                                         Driver_Play_Frequency : Frequency_Type;
-                                         Start_Buffer_Time : Synthetizer_Time;
-                                         ReachEndOscillator : out Boolean;
-                                         Returned_Current_Oscillator_Position : out Play_Second) is
-
-      Current_Sample_Position : Play_Second :=
-        Oscillator.Current_Sample_Position;
-
-      Driver_Play_Period : constant Play_Second :=
-        Play_Second (1) / Play_Second (Driver_Play_Frequency);
-
-      One_Sample_Frame_Period : constant Play_Second :=
-        Play_Second (1.0) /
-        (Play_Second (Driver_Play_Frequency) *
-             Oscillator.Play_Sample.Frequency /
-               Driver_Play_Frequency);
-
-      One_Played_Sample_Frame_Period : constant Play_Second :=
-        One_Sample_Frame_Period *
-          Oscillator.Play_Sample.Note_Frequency /
-            Oscillator.Note_Play_Frequency;
-
-      function To_Second (Frame_Pos : Natural) return Play_Second is
-      begin
-         return Play_Second (Frame_Pos - Oscillator.Play_Sample.Mono_Data'First) *
-           One_Played_Sample_Frame_Period;
-      end To_Second;
-
-      SS : constant SoundSample := Oscillator.Play_Sample;
-
-      Sample_Data_Seconds : constant Play_Second :=
-        To_Second (SS.Mono_Data'Length);
-
-      function To_Pos_InSample (Pos : Play_Second) return Natural is
-         Pos_In_Array : constant Natural :=
-           Natural (Pos / One_Played_Sample_Frame_Period);
-      begin
-         return SS.Mono_Data'First + Pos_In_Array;
-      end To_Pos_InSample;
-
-      procedure Move_Next
-        (Pos_In_Sample       : in out Play_Second;
-         Reach_End :    out Boolean)
-      is
-      begin
-         --  increment
-
-         Pos_In_Sample := Pos_In_Sample + Driver_Play_Period;
-
-         Reach_End := False;
-
-         case Oscillator.Play_Sample.HasLoop is
-            when True =>
-               if Pos_In_Sample > To_Second (SS.Loop_End) then
-                  Pos_In_Sample := Pos_In_Sample - To_Second (SS.Loop_Start);
-               end if;
-            when False =>
-               begin
-                  if Pos_In_Sample > Sample_Data_Seconds then
-                     Reach_End := True;
-                  end if;
-               end;
-
-         end case;
-      end Move_Next;
-
-   begin
-
-      --  if VSA.Stopped and then VSA.Stop_Play_Sample = Not_Defined_Clock then
-      --   ReachEndSample := True;
-      --   return;
-      --  end if;
-
-      if Oscillator.Play_Sample = Null_Sound_Sample then
-         Put_Line ("Null sample");
-         ReachEndOscillator := True;
-         return;
-      end if;
-
-      for i in Buffer'Range loop
-
-         declare
-            From_Start : constant Synthetizer_Time :=
-              Synthetizer_Time (
-                                Microseconds (Natural (Driver_Play_Period * Play_Second (i - Buffer'First)
-                                  * Play_Second (1_000_000.0))));
-            IsStarted : Boolean := True;
-            CurrentTime : constant Synthetizer_Time := Start_Buffer_Time + From_Start;
-         begin
-
-            if Current_Sample_Position = 0.0 then -- sample has not started yet
-
-               --  check if sample has started
-               if CurrentTime < Oscillator.Start_Play_Sample then
-                  --  continue loop
-                  IsStarted := False;
-               end if;
-            end if;
-
-            if  Oscillator.Stop_Play_Sample /= Not_Defined_Clock
-              and then Oscillator.Stop_Play_Sample < CurrentTime then
-               IsStarted := False;
-               ReachEndOscillator := True;
-               return;
-            end if;
-
-            if IsStarted then
-
-               --  interpolate ?
-               declare
-                  Pos_In_Sample  : constant Natural :=
-                    To_Pos_InSample (Current_Sample_Position);
-               begin
-
-                  if Pos_In_Sample > Oscillator.Play_Sample.Mono_Data'Last then
-                     --  debug info,
-                     Ada.Text_IO.Put_Line (" pos : " & Natural'Image (Pos_In_Sample));
-                     Ada.Text_IO.Put_Line (" index pos : "
-                                           & Natural'Image (SS.Mono_Data'Last));
-
-                  end if;
-
-                  pragma Assert (Pos_In_Sample >= SS.Mono_Data'First);
-                  pragma Assert (Pos_In_Sample <= SS.Mono_Data'Last);
-                  pragma Assert (Pos_In_Sample in SS.Mono_Data'Range);
-
-                  declare
-                     V1 : constant Float := SS.Mono_Data (Pos_In_Sample);
-                     R  : Boolean;
-                     F : Float :=  Buffer (i) + V1 * Volume_Factor; -- * VSA.Volume;
-                  begin
-
-                     if F > 1.0 then
-                        F := 1.0;  -- saturation
-                     end if;
-
-                     if F < -1.0 then
-                        F := -1.0;  -- saturation
-                     end if;
-
-                     Buffer (i) := F;
-
-                     Move_Next (Pos_In_Sample => Current_Sample_Position,
-                                Reach_End => R);
-                     if R then
-                        ReachEndOscillator := True;
-                        Returned_Current_Oscillator_Position := Current_Sample_Position;
-                        return;
-                     end if;
-                  end;
-               end;
-
-            end if;
-
-         end;
-
-      end loop;
-      ReachEndOscillator := False;
-      Returned_Current_Oscillator_Position := Current_Sample_Position;
-
-   end Apply_Oscillator_To_Buffer;
 
 end Synth.Synthetizer;
