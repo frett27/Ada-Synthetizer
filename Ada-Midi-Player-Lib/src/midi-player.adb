@@ -362,6 +362,8 @@ package body Midi.Player is
       entry Deactivate_Bank (Bank_Name : String);
       entry Activate_Bank (Bank_Name : String);
       entry Get_Played_Stream_Time (Stream_Time: out Long_Float);
+      entry Pause_Resume(result: out Boolean);
+      entry Stop_All;
       entry Stop;
       entry Close;
    end Task_Player;
@@ -412,10 +414,7 @@ package body Midi.Player is
 
             end Close;
          end select;
-
       end loop;
-
-
 
       while IsOpen loop
          select
@@ -505,6 +504,10 @@ package body Midi.Player is
                IsOpen := False;
             end Close;
          or
+            accept Stop_All  do
+               Synth.Synthetizer.Stop_All(GlobalSynth);
+            end Stop_All;
+         or
             accept Get_Played_Stream_Time (Stream_Time: out Long_Float)  do
                if not IsOpen then
                   Stream_Time := -1.0;
@@ -513,6 +516,18 @@ package body Midi.Player is
                end if;
 
             end Get_Played_Stream_Time;
+         or
+            accept  Pause_Resume(result: out Boolean) do
+               declare
+                  Status : Boolean := Player_Synth.Stopped;
+               begin
+
+                  Player_Synth.Stopped := Not Status;
+                  result := Status;
+               end;
+            end Pause_Resume;
+
+
          or
             terminate;
          end select;
@@ -594,6 +609,16 @@ package body Midi.Player is
    begin
       Task_Player.Stop;
    end Stop;
+
+   procedure Stop_All is
+   begin
+      Task_Player.Stop_All;
+   end Stop_All;
+
+   procedure Pause_Resume(result: out Boolean) is
+   begin
+      Task_Player.Pause_Resume(result);
+   end Pause_Resume;
 
    procedure Close is
    begin

@@ -125,6 +125,15 @@ package Synth.Synthetizer is
                    Opened_Voice : in out Voice;
                    Stop_Time     : Synthetizer_Time);
 
+
+   --------------
+   -- Stop_All --
+   --------------
+
+   -- Stop All current opened voices
+
+   procedure Stop_All(Synth: Synthetizer_Type);
+
    -----------------------
    -- Get_Opened_Voices --
    -----------------------
@@ -256,14 +265,14 @@ private
    --  constant null Voice Structure
    Null_Voice_Structure : constant Voice_Structure_Type :=
      Voice_Structure_Type'
-     (Current_Sample_Position => 0.0,
-      Stopped                 => True,
-      Play_Sample             => Null_Sound_Sample,
-      Stop_Play_Sample => Not_Defined_Clock,
-      Start_Play_Sample => Synthetizer_Time_First,
-      Note_Play_Frequency => 440.0,
-      Channel => 1, Volume => 1.0
-     );
+       (Current_Sample_Position => 0.0,
+        Stopped                 => True,
+        Play_Sample             => Null_Sound_Sample,
+        Stop_Play_Sample => Not_Defined_Clock,
+        Start_Play_Sample => Synthetizer_Time_First,
+        Note_Play_Frequency => 440.0,
+        Channel => 1, Volume => 1.0
+       );
 
    type Voice_Play_Structure is record
       V : Voice;
@@ -288,6 +297,7 @@ private
       function Can_Be_Stopped (V : Voice) return Boolean;
       procedure Close_Voice (V : Voice);
       procedure Close_Voice (V : Voice; Stop_Time : Synthetizer_Time);
+      procedure Close_All_Voices;
 
       function Get_All_Opened_Voices return Voice_Array;
       procedure Update_Position (V : Voice;
@@ -327,9 +337,9 @@ private
       --  Start the prepepare of the buffer
       --  Return the Reference time for the next buffer
       entry Start (BR : Buffer_Ring_Access;
-                    VSA : Voices_Access;
-                    Driver_Frequency : Frequency_Type;
-                    Audit_Interface_Access : Synthetizer_Audit_Access := null);
+                   VSA : Voices_Access;
+                   Driver_Frequency : Frequency_Type;
+                   Audit_Interface_Access : Synthetizer_Audit_Access := null);
       entry Stop;
 
    end Buffer_Preparing_Task_Type;
@@ -365,40 +375,42 @@ private
    procedure Init (SST : in out Synthetizer_Structure_Type;
 
                    D : Synth.Driver.Sound_Driver_Access;
-                      NBBuffer : Positive;
-                      Buffer_Length : Positive;
-                      Audit : Synthetizer_Audit_Access;
-                      T : out Time);
+                   NBBuffer : Positive;
+                   Buffer_Length : Positive;
+                   Audit : Synthetizer_Audit_Access;
+                   T : out Time);
 
-      --  Play a sound sample, with the given frequency
-      --  Return the allocated voice
-      procedure Play
+   --  Play a sound sample, with the given frequency
+   --  Return the allocated voice
+   procedure Play
      (
       SST : Synthetizer_Structure_Type;
       S            : SoundSample;
-         Frequency    : Float;
-         Volume : Float := 1.0;
-         Channel : Natural := 1;
-         Opened_Voice :    out Voice);
+      Frequency    : Float;
+      Volume : Float := 1.0;
+      Channel : Natural := 1;
+      Opened_Voice :    out Voice);
 
-      procedure Play
+   procedure Play
      (
       SST : Synthetizer_Structure_Type;
       S            : SoundSample;
-         Frequency    : Float;
-         Play_Time    : Synthetizer_Time;
-         Volume       : Float := 1.0;
-         Channel : Positive := 1;
-         Opened_Voice :    out Voice);
+      Frequency    : Float;
+      Play_Time    : Synthetizer_Time;
+      Volume       : Float := 1.0;
+      Channel : Positive := 1;
+      Opened_Voice :    out Voice);
 
-      procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice);
-      procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice;
-                      Stop_Time : Synthetizer_Time);
+   procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice);
+   procedure Stop (SST : Synthetizer_Structure_Type; V : in out Voice;
+                   Stop_Time : Synthetizer_Time);
 
-      procedure Close (SST : in out Synthetizer_Structure_Type);
+   procedure Stop_All (SST : Synthetizer_Structure_Type);
 
-      function Get_Synthetizer_Time (SST : Synthetizer_Structure_Type) return Synthetizer_Time;
-      function Get_Allocated_Voices (SST : Synthetizer_Structure_Type) return Natural;
+   procedure Close (SST : in out Synthetizer_Structure_Type);
+
+   function Get_Synthetizer_Time (SST : Synthetizer_Structure_Type) return Synthetizer_Time;
+   function Get_Allocated_Voices (SST : Synthetizer_Structure_Type) return Natural;
 
    type Synthetizer_Type is access Synthetizer_Structure_Type;
 

@@ -94,7 +94,6 @@ package body Midi.Stream is
 
       DelayPerTick : Long_Long_Float := 1_000_000.0 / (24.0 * 100.0);
 
-
       QuarterNotePerMinutes : Long_Float := 120.0;
 
       --  Parsing events

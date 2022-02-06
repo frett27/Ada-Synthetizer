@@ -6,7 +6,9 @@ extern void midiplayerlibcinit();
 extern int midiplayerlib_init(void);
 extern void *midiplayerlib_loadsoundbank(const char* filename);
 extern int midiplayerlib_play(const char* filename);
+extern int midiplayerlib_pauseresume(void); // return -1, 0: false, 1:true
 extern int midiplayerlib_stop(void);
+extern int midiplayerlib_stopallvoices(void);
 extern int midiplayerlib_definesoundbank(const void* soundbank);
 extern int midiplayerlib_activatebank(const char* bank);
 extern int midiplayerlib_deactivatebank(const char* bank);
@@ -94,6 +96,15 @@ STATIC mp_obj_t midiplayer_stop() {
 }
 
 
+STATIC mp_obj_t midiplayer_stop_all_voices() {
+    int resultCode = midiplayerlib_stopallvoices();
+    if (resultCode != 0) {
+        mp_raise_ValueError(MP_ROM_QSTR(MP_QSTR_api_failed));
+    }
+    return mp_const_none;
+}
+
+
 STATIC mp_obj_t midiplayer_play(mp_obj_t filename) {
 	const char * sFileName = mp_obj_str_get_str(filename); 
     int resultCode = midiplayerlib_play(sFileName);
@@ -124,6 +135,12 @@ STATIC mp_obj_t midiplayer_currentstreamlength() {
 
 STATIC mp_obj_t midiplayer_isplaying() {
     int r = midiplayerlib_isplaying();
+    return mp_obj_new_int(r);
+}
+
+
+STATIC mp_obj_t midiplayer_pause_resume() {
+    int r = midiplayerlib_pauseresume();
     return mp_obj_new_int(r);
 }
 
@@ -177,6 +194,8 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_0(midiplayer_currentstreamlength_obj, midiplayer_
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(midiplayer_currentstreampos_obj, midiplayer_currentstreamposition);
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(midiplayer_activatefeature_obj, midiplayer_activatefeature);
 STATIC MP_DEFINE_CONST_FUN_OBJ_0(midiplayer_isplaying_obj, midiplayer_isplaying);
+STATIC MP_DEFINE_CONST_FUN_OBJ_0(midiplayer_pause_resume_obj, midiplayer_pause_resume);
+STATIC MP_DEFINE_CONST_FUN_OBJ_0(midiplayer_stop_all_voices_obj, midiplayer_stop_all_voices);
 
 
 
@@ -198,7 +217,9 @@ STATIC const mp_rom_map_elem_t midiplayer_module_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_playstreamlength), MP_ROM_PTR(&midiplayer_currentstreamlength_obj) },
     { MP_ROM_QSTR(MP_QSTR_playstreamposition), MP_ROM_PTR(&midiplayer_currentstreampos_obj) },
     { MP_ROM_QSTR(MP_QSTR_feature_set), MP_ROM_PTR(&midiplayer_activatefeature_obj) },
+    { MP_ROM_QSTR(MP_QSTR_stopallvoices), MP_ROM_PTR(&midiplayer_stop_all_voices_obj) },
     { MP_ROM_QSTR(MP_QSTR_isplaying), MP_ROM_PTR(&midiplayer_isplaying_obj) },
+    { MP_ROM_QSTR(MP_QSTR_pauseresume), MP_ROM_PTR(&midiplayer_pause_resume_obj) },
     
 };
 STATIC MP_DEFINE_CONST_DICT(midiplayer_module_globals, midiplayer_module_globals_table);

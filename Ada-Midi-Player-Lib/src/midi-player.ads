@@ -64,8 +64,14 @@ package Midi.Player is
    --  is it playing ?
    function IsPlaying return Boolean;
 
+    procedure Pause_Resume(result: out Boolean) ;
+
    --  stop the play, release current play
    procedure Stop;
+
+   procedure Stop_All;
+
+
 
    -- close the player
    procedure Close;

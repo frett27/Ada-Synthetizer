@@ -41,7 +41,7 @@ package MidiPlayerLib is
    --  Init
    function Init return API_RETURN_CODE;
 
-   -- activate some global features in the API
+   --  activate some global features in the API
    function Activate_Global_Feature (Feature : C.Strings.chars_ptr;
                                     Activated : C.int) return API_RETURN_CODE;
 
@@ -80,6 +80,11 @@ package MidiPlayerLib is
 
    --  stop the play, release
    function Stop return API_RETURN_CODE;
+
+   --  pause/resume the play
+    function PauseResume return C.int;
+
+   function StopAllVoices return API_RETURN_CODE;
 
    --  stream function
    --  function Load_Stream_Midi (FileName : C.Strings.chars_ptr)
@@ -135,6 +140,14 @@ private
 
    pragma Export (Convention => C,
                  Entity => Stop,
-                 External_Name => "midiplayerlib_stop");
+                  External_Name => "midiplayerlib_stop");
+
+   pragma Export (Convention => C,
+                 Entity => StopAllVoices,
+                  External_Name => "midiplayerlib_stopallvoices");
+
+   pragma Export (Convention => C,
+                 Entity => PauseResume,
+                  External_Name => "midiplayerlib_pauseresume");
 
 end MidiPlayerLib;

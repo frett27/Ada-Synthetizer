@@ -178,6 +178,19 @@ package body Synth.Synthetizer is
          DumpException (E);
    end Stop;
 
+   --------------
+   -- Stop_All --
+   --------------
+
+   procedure Stop_All(Synth: Synthetizer_Type) is
+   begin
+      Stop_All(Synth.all);
+        exception
+      when E : others =>
+         DumpException (E);
+   end;
+
+
    --  may be to remove
    function Get_Opened_Voices (Synt : Synthetizer_Type) return Natural is
    begin
@@ -358,7 +371,7 @@ package body Synth.Synthetizer is
                   --         Put_Line("Done");
 
                end if;
-                delay 0.01;
+               delay 0.01;
             exception
                when E : others =>
                   DumpException (E);
@@ -452,11 +465,11 @@ package body Synth.Synthetizer is
                declare
                   Buffer_Time : Synthetizer_Time := Driver_Frequency_Period * (Preparing_Buffer.all'Length + 1);
                begin
-               if Last_Cycle_Correction_Count > 0 then
+                  if Last_Cycle_Correction_Count > 0 then
                      Last_Cycle_Correction_Count := Natural'Pred(Last_Cycle_Correction_Count);
                      Last_Cycle_Clock := Clock;
                      Last_Buffer_Time_Evaluated := Buffer_Time;
-               else
+                  else
                      -- reevaluate the time,
                      -- using clock
 
@@ -468,13 +481,13 @@ package body Synth.Synthetizer is
                      Last_Cycle_Clock := Clock;
 
 
-               end if;
+                  end if;
 
 
-               --  compute the next buffer start time (inclusive)
-               Next_Buffer_Last_Time :=
-                 Current_Buffer_Start_Time +
-                   Buffer_Time;
+                  --  compute the next buffer start time (inclusive)
+                  Next_Buffer_Last_Time :=
+                    Current_Buffer_Start_Time +
+                      Buffer_Time;
 
                end;
 
@@ -484,14 +497,14 @@ package body Synth.Synthetizer is
                if Task_Audit_Interface_Access /= null then
                   --  call the audit interface to fill the next buffer
                   begin
-                  --  Ada.Text_IO.Put_Line("Call from Ada");
+                     --  Ada.Text_IO.Put_Line("Call from Ada");
 
                      Ready_To_Prepare (Task_Audit_Interface_Access.all,
-                                    --  give the next buffer to prepare start
-                                    Current_Buffer_Start_Time,
-                                    --  give the next buffer end time
-                                    Next_Buffer_Last_Time);
-                  --  Ada.Text_IO.Put_Line("End Call from Ada");
+                                       --  give the next buffer to prepare start
+                                       Current_Buffer_Start_Time,
+                                       --  give the next buffer end time
+                                       Next_Buffer_Last_Time);
+                     --  Ada.Text_IO.Put_Line("End Call from Ada");
                   exception
                      when e : others =>
                         DumpException (E => e);
@@ -708,6 +721,11 @@ package body Synth.Synthetizer is
 
       end Close_Voice;
 
+
+      -----------------
+      -- Close Voice --
+      -----------------
+
       procedure Close_Voice (V : Voice; Stop_Time : Synthetizer_Time) is
       begin
          pragma Assert (Opened_Voice (V));
@@ -719,6 +737,20 @@ package body Synth.Synthetizer is
          All_Voices (V).Stop_Play_Sample := Stop_Time;
 
       end Close_Voice;
+
+
+      ----------------------
+      -- Close All Voices --
+      ----------------------
+
+      procedure Close_All_Voices is
+      begin
+         for It in Min_All_Opened_Voice_Indice .. Max_All_Opened_Voice_Indice loop
+            if Opened_Voice (Voice (It)) then
+               Close_Voice(Voice (It));
+            end if;
+         end loop;
+      end Close_All_Voices;
 
       ---------------------------
       -- Get_All_Opened_Voices --
@@ -1017,6 +1049,20 @@ package body Synth.Synthetizer is
       V := No_Voice;
 
    end Stop;
+
+   --------------
+   -- Stop All --
+   --------------
+
+   procedure Stop_All (SST : Synthetizer_Structure_Type) is
+   begin
+      if not SST.Inited then
+         raise Synthetizer_Not_Inited;
+      end if;
+
+      SST.Voices.Close_All_Voices;
+   end Stop_All;
+
 
    ---------------------------
    --  Get_Synthetizer_Time --
