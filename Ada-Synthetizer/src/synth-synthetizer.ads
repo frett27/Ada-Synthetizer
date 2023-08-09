@@ -23,15 +23,10 @@
 
 with System;
 with Synth.Driver;
-
+with Synth.Oscillators;
 
 package Synth.Synthetizer is
 
-   Not_Defined_Clock : constant Synthetizer_Time :=
-     Synthetizer_Time (Time_Span_Last);
-
-   Synthetizer_Time_First : constant Synthetizer_Time :=
-     Synthetizer_Time (Time_Span_First);
 
    type Voice is private;
 
@@ -149,63 +144,7 @@ package Synth.Synthetizer is
    MAX_VOICES : constant Natural := 600;
 
 private
-
-
-   -- Oscillator
-
-   type Oscillator is abstract tagged null record;
-
-   function Can_Be_Stopped(X : in Oscillator) return Boolean is abstract;
-   function Is_EndLess(X : in Oscillator) return Boolean is abstract;
-
-   procedure Stop(X: in out Oscillator) is abstract;
-   procedure Stop(X: in out Oscillator; Stop: in Synthetizer_Time) is abstract;
-   procedure Change_Current_Play_Position(X: in out Oscillator;
-                                          Position: in Play_Second) is abstract;
-
-    procedure Apply_Oscillator_To_Buffer (O : in out Oscillator;
-                                         Buffer : Frame_Array_Access;
-                                         Volume_Factor : Float := 1.0;
-                                         Driver_Play_Frequency : Frequency_Type;
-                                         Start_Buffer_Time : Synthetizer_Time;
-                                         ReachEndOscillator : out Boolean;
-                                          Returned_Current_Oscillator_Position : out Play_Second) is abstract;
-
-
-
-
-   type Oscillator_Type is new Oscillator with record
-
-      Note_Play_Frequency          : Frequency_Type; -- the played frequency
-      Play_Sample             : SoundSample; -- the sound sample to play
-      Start_Play_Sample : Synthetizer_Time;
-      Stop_Play_Sample : Synthetizer_Time := Synth.Synthetizer.Not_Defined_Clock;
-      Current_Sample_Position : Play_Second := 0.0; -- the position in second
-
-   end record;
-
-   function Can_Be_Stopped(O : in Oscillator_Type) return Boolean;
-   function Is_EndLess(X : in Oscillator_Type) return Boolean;
-
-   procedure Stop(X: in out Oscillator_Type);
-   procedure Stop(X: in out Oscillator_Type; Stop: in Synthetizer_Time);
-   procedure Change_Current_Play_Position(X: in out Oscillator_Type;
-                                          Position: in Play_Second);
-
-   procedure Apply_Oscillator_To_Buffer (O : in out Oscillator_Type;
-                                         Buffer : Frame_Array_Access;
-                                         Volume_Factor : Float := 1.0;
-                                         Driver_Play_Frequency : Frequency_Type;
-                                         Start_Buffer_Time : Synthetizer_Time;
-                                         ReachEndOscillator : out Boolean;
-                                          Returned_Current_Oscillator_Position : out Play_Second);
-
-
-
-   type Oscillator_Reference is access all Oscillator'Class;
-
-
-
+   
    --  The voice represent a play of a sound sample
    --  at a given frequency, it also remember the state of the play
    --  (given position), and loop possibility
@@ -216,7 +155,7 @@ private
    type Voice_Structure_Type is record
 
       -- oscillator type
-      Oscillator : Oscillator_Reference ;
+      Oscillator : Oscillators.Oscillator_Reference;
 
       Volume       : Float := 1.0; -- volume factor
       Stopped : Boolean := False;
@@ -322,7 +261,7 @@ private
    Null_Voice_Structure : constant Voice_Structure_Type :=
      Voice_Structure_Type'
        (Stopped                 => True,
-        Oscillator => new Oscillator_Type'(
+        Oscillator => new Synth.Oscillators.Wav_Oscillator_Type'(
           Current_Sample_Position => 0.0,
           Play_Sample             => Null_Sound_Sample,
           Stop_Play_Sample => Not_Defined_Clock,

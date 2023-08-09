@@ -18,10 +18,9 @@ type="pre-build"
 command = ["make"]
 
 
-; https://github.com/alire-project/alire-index/blob/stable-1.0/index/li/libfreetype/libfreetype-external.toml
 
-[[external]]
-kind = "system"
-[external.origin."case(distribution)"]
-"debian|ubuntu" = ["libasound-dev"]
-
+#[[external]]
+#kind = "system"
+#[external.origin."case(distribution)"]
+#"debian|ubuntu" = ["libasound-dev"]
+#

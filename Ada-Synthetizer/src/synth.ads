@@ -28,8 +28,13 @@ with Ada.Unchecked_Deallocation;
 package Synth is
 
    --  basic types used in this synthetizer
-
    subtype Synthetizer_Time is Time_Span;
+
+   Not_Defined_Clock : constant Synthetizer_Time :=
+     Synthetizer_Time (Time_Span_Last);
+
+   Synthetizer_Time_First : constant Synthetizer_Time :=
+     Synthetizer_Time (Time_Span_First);
 
    subtype Frame is Float range -1.0 .. 1.0;
 
